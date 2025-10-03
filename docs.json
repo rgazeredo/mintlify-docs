@@ -15,12 +15,10 @@
         "groups": [
           {
             "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
+            "pages": ["api-reference/introduction"]
           },
           {
-            "group": "Endpointsxx",
+            "group": "Endpoints",
             "openapi": "api-reference/openapi.json"
           }
         ]
