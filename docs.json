@@ -12,14 +12,32 @@
     "tabs": [
       {
         "tab": "API",
-        "groups": [
+        "icon": "square-terminal",
+        "menu": [
           {
-            "group": "API documentation",
-            "pages": ["api-reference/introduction"]
+            "item": "API reference",
+            "icon": "rocket",
+            "groups": [
+              {
+                "group": "Core endpoints",
+                "icon": "square-terminal",
+                "pages": [
+                  "api-reference/get",
+                  "api-reference/post",
+                  "api-reference/delete"
+                ]
+              }
+            ]
           },
           {
-            "group": "Endpoints",
-            "openapi": "api-reference/openapi.json"
+            "item": "SDKs",
+            "icon": "code",
+            "description": "SDKs are used to interact with the API.",
+            "pages": [
+              "sdk/fetch",
+              "sdk/create",
+              "sdk/delete"
+            ]
           }
         ]
       }
