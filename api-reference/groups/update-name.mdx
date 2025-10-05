@@ -1,0 +1,767 @@
+---
+title: "Atualizar Nome"
+api: "POST /group/updateName"
+description: "Modificar o nome de um grupo do WhatsApp"
+---
+
+Altera o nome de um grupo do WhatsApp, permitindo personalizar a identificação visível a todos os participantes.
+
+## Gerenciamento do Nome
+
+<AccordionGroup>
+  <Accordion title="Importância do Nome" icon="signature">
+    Como o nome do grupo influencia a experiência dos usuários.
+
+    **Características:**
+    - Primeira informação visível do grupo
+    - Aparece em listas de conversas
+    - Identifica o propósito do grupo
+    - Facilita busca e organização
+    - Pode conter emojis para destaque
+    - Reflete a identidade do grupo
+
+    Um bom nome ajuda na identificação rápida e contextualização.
+  </Accordion>
+
+  <Accordion title="Restrições do WhatsApp" icon="ruler">
+    Limites técnicos impostos pela plataforma.
+
+    **Requisitos:**
+    - Mínimo: 1 caractere
+    - Máximo: 25 caracteres
+    - Permite letras, números e símbolos
+    - Aceita emojis (contam como caracteres)
+    - Espaços são permitidos
+    - Não pode estar vazio
+
+    **Validação:**
+    - Nome muito longo retorna erro 400
+    - String vazia é rejeitada
+    - Caracteres especiais são aceitos
+  </Accordion>
+
+  <Accordion title="Boas Práticas de Nomenclatura" icon="lightbulb-on">
+    Dicas para criar nomes eficazes de grupos.
+
+    **Recomendações:**
+    - Seja descritivo e claro
+    - Use emojis para categorização visual
+    - Inclua ano ou período quando relevante
+    - Evite abreviações obscuras
+    - Mantenha consistência em grupos relacionados
+    - Considere ordem alfabética em listagens
+    - Use prefixos para agrupamento lógico
+
+    **Exemplos:**
+    - "📊 Vendas 2024"
+    - "🛠️ Suporte Técnico"
+    - "👥 RH - Comunicados"
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="list-check">
+    Situações comuns para atualizar o nome do grupo.
+
+    **Aplicações práticas:**
+    - Renomear para refletir mudanças de propósito
+    - Adicionar ano ou período atual
+    - Incluir emojis para melhor organização
+    - Corrigir erros ortográficos
+    - Padronizar nomenclatura corporativa
+    - Atualizar após eventos ou campanhas
+    - Sincronizar com sistemas externos
+    - Aplicar políticas de nomenclatura
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="groupjid" type="string" required>
+  Identificador único do grupo (JID). <br />
+  Formato: `número@g.us` <br />
+  Exemplo: `120363339858396166@g.us`
+</ParamField>
+
+<ParamField path="name" type="string" required>
+  Novo nome do grupo. <br />
+  Mínimo: 1 caractere <br />
+  Máximo: 25 caracteres <br />
+  Exemplo: `"Equipe de Vendas 2024"`
+</ParamField>
+
+<Warning>
+  **Limite de caracteres:** O nome do grupo deve ter entre 1 e 25 caracteres. Emojis contam como caracteres e podem ocupar mais de uma posição.
+</Warning>
+
+<RequestExample>
+
+```bash cURL - Atualizar nome
+curl -X POST https://zapclass.com.br/api/group/updateName \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363339858396166@g.us",
+    "name": "Equipe de Vendas 2024"
+  }'
+```
+
+```bash cURL - Nome com emoji
+curl -X POST https://zapclass.com.br/api/group/updateName \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363339858396166@g.us",
+    "name": "📊 Vendas - Q1 2024"
+  }'
+```
+
+```javascript JavaScript - Atualizar nome
+const response = await fetch("https://zapclass.com.br/api/group/updateName", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    groupjid: "120363339858396166@g.us",
+    name: "Equipe de Vendas 2024"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Nome do grupo atualizado com sucesso");
+}
+```
+
+```javascript JavaScript - Validar e atualizar
+async function updateGroupName(groupJid, newName) {
+  // Validações
+  if (!newName || newName.trim().length === 0) {
+    throw new Error("Nome não pode estar vazio");
+  }
+
+  if (newName.length > 25) {
+    throw new Error("Nome deve ter no máximo 25 caracteres");
+  }
+
+  const response = await fetch("https://zapclass.com.br/api/group/updateName", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid, name: newName }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message);
+  }
+
+  console.log(`✓ Nome atualizado para: "${newName}"`);
+  console.log(`  Caracteres utilizados: ${newName.length}/25`);
+
+  return data;
+}
+
+// Uso
+try {
+  await updateGroupName(
+    "120363339858396166@g.us",
+    "📊 Vendas 2024"
+  );
+} catch (error) {
+  console.error("Erro:", error.message);
+}
+```
+
+```javascript JavaScript - Adicionar ano automaticamente
+async function updateGroupNameWithYear(groupJid, baseName) {
+  const currentYear = new Date().getFullYear();
+  const newName = `${baseName} ${currentYear}`;
+
+  // Verifica limite de caracteres
+  if (newName.length > 25) {
+    // Tenta sem ano se ultrapassar
+    console.warn(`Nome muito longo: "${newName}" (${newName.length} chars)`);
+    console.log("Usando apenas nome base...");
+
+    if (baseName.length > 25) {
+      throw new Error("Nome base excede 25 caracteres");
+    }
+
+    const finalName = baseName;
+  } else {
+    var finalName = newName;
+  }
+
+  const response = await fetch("https://zapclass.com.br/api/group/updateName", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid, name: finalName }),
+  });
+
+  const data = await response.json();
+
+  if (data.success) {
+    console.log(`✓ Nome atualizado: "${finalName}"`);
+  }
+
+  return data;
+}
+
+// Uso
+await updateGroupNameWithYear("120363339858396166@g.us", "Vendas");
+```
+
+```javascript JavaScript - Padronizar nomenclatura
+async function standardizeGroupName(groupJid, department, purpose) {
+  const emojiMap = {
+    vendas: "📊",
+    suporte: "🛠️",
+    rh: "👥",
+    marketing: "📢",
+    ti: "💻",
+    financeiro: "💰"
+  };
+
+  const emoji = emojiMap[department.toLowerCase()] || "📁";
+  const name = `${emoji} ${department} - ${purpose}`;
+
+  // Trunca se necessário
+  let finalName = name;
+  if (name.length > 25) {
+    // Remove descrição se muito longo
+    finalName = `${emoji} ${department}`;
+
+    if (finalName.length > 25) {
+      // Remove emoji se ainda muito longo
+      finalName = department.substring(0, 25);
+    }
+  }
+
+  const response = await fetch("https://zapclass.com.br/api/group/updateName", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid, name: finalName }),
+  });
+
+  const data = await response.json();
+
+  if (data.success) {
+    console.log(`✓ Nome padronizado: "${finalName}"`);
+  }
+
+  return data;
+}
+
+// Uso
+await standardizeGroupName(
+  "120363339858396166@g.us",
+  "Vendas",
+  "Comunicados"
+);
+```
+
+```javascript JavaScript - Atualizar múltiplos grupos
+async function updateMultipleGroupNames(updates) {
+  const results = [];
+
+  for (const update of updates) {
+    try {
+      const response = await fetch("https://zapclass.com.br/api/group/updateName", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        },
+        body: JSON.stringify({
+          groupjid: update.groupJid,
+          name: update.name
+        }),
+      });
+
+      const data = await response.json();
+
+      results.push({
+        groupJid: update.groupJid,
+        oldName: update.oldName,
+        newName: update.name,
+        success: data.success,
+        message: data.message
+      });
+
+      // Aguarda 1 segundo entre operações
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      results.push({
+        groupJid: update.groupJid,
+        success: false,
+        message: error.message
+      });
+    }
+  }
+
+  return results;
+}
+
+// Uso - atualizar ano em todos os grupos
+const currentYear = new Date().getFullYear();
+const updates = [
+  {
+    groupJid: "120363339858396166@g.us",
+    oldName: "Vendas 2023",
+    name: `Vendas ${currentYear}`
+  },
+  {
+    groupJid: "120363339858396167@g.us",
+    oldName: "Suporte 2023",
+    name: `Suporte ${currentYear}`
+  }
+];
+
+const results = await updateMultipleGroupNames(updates);
+
+console.log("=== RESULTADOS ===");
+results.forEach(result => {
+  if (result.success) {
+    console.log(`✓ ${result.oldName} → ${result.newName}`);
+  } else {
+    console.log(`✗ ${result.groupJid}: ${result.message}`);
+  }
+});
+```
+
+```javascript JavaScript - Backup antes de renomear
+async function renameWithBackup(groupJid, newName) {
+  // Busca nome atual
+  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid }),
+  });
+
+  const groupInfo = await infoResponse.json();
+
+  if (!groupInfo.success) {
+    throw new Error(groupInfo.message);
+  }
+
+  const oldName = groupInfo.group.name;
+
+  console.log(`Nome atual: "${oldName}"`);
+  console.log(`Novo nome: "${newName}"`);
+
+  // Atualiza nome
+  const updateResponse = await fetch("https://zapclass.com.br/api/group/updateName", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid, name: newName }),
+  });
+
+  const result = await updateResponse.json();
+
+  if (result.success) {
+    console.log("✓ Nome atualizado com sucesso");
+  }
+
+  return {
+    success: result.success,
+    oldName,
+    newName,
+    timestamp: new Date().toISOString()
+  };
+}
+
+// Uso
+const backup = await renameWithBackup(
+  "120363339858396166@g.us",
+  "📊 Vendas 2024"
+);
+
+console.log("Backup:", backup);
+```
+
+```php PHP - Atualizar nome
+<?php
+$ch = curl_init('https://zapclass.com.br/api/group/updateName');
+
+$payload = [
+    "groupjid" => "120363339858396166@g.us",
+    "name" => "Equipe de Vendas 2024"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Nome do grupo atualizado com sucesso\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Validar e atualizar
+<?php
+function updateGroupName($groupJid, $newName) {
+    // Validações
+    if (empty(trim($newName))) {
+        throw new Exception("Nome não pode estar vazio");
+    }
+
+    if (strlen($newName) > 25) {
+        throw new Exception("Nome deve ter no máximo 25 caracteres");
+    }
+
+    $ch = curl_init('https://zapclass.com.br/api/group/updateName');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid,
+        'name' => $newName
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $data = json_decode($response, true);
+    curl_close($ch);
+
+    if (!$data['success']) {
+        throw new Exception($data['message']);
+    }
+
+    echo "✓ Nome atualizado para: \"{$newName}\"\n";
+    echo "  Caracteres utilizados: " . strlen($newName) . "/25\n";
+
+    return $data;
+}
+
+// Uso
+try {
+    updateGroupName("120363339858396166@g.us", "📊 Vendas 2024");
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+```php PHP - Adicionar ano automaticamente
+<?php
+function updateGroupNameWithYear($groupJid, $baseName) {
+    $currentYear = date('Y');
+    $newName = "{$baseName} {$currentYear}";
+
+    // Verifica limite de caracteres
+    if (strlen($newName) > 25) {
+        echo "⚠️  Nome muito longo: \"{$newName}\" (" . strlen($newName) . " chars)\n";
+        echo "Usando apenas nome base...\n";
+
+        if (strlen($baseName) > 25) {
+            throw new Exception("Nome base excede 25 caracteres");
+        }
+
+        $finalName = $baseName;
+    } else {
+        $finalName = $newName;
+    }
+
+    $ch = curl_init('https://zapclass.com.br/api/group/updateName');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid,
+        'name' => $finalName
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $data = json_decode($response, true);
+    curl_close($ch);
+
+    if ($data['success']) {
+        echo "✓ Nome atualizado: \"{$finalName}\"\n";
+    }
+
+    return $data;
+}
+
+// Uso
+updateGroupNameWithYear("120363339858396166@g.us", "Vendas");
+?>
+```
+
+```php PHP - Classe gerenciadora completa
+<?php
+class GroupNameManager {
+    private $token;
+    private $baseUrl = 'https://zapclass.com.br/api';
+
+    public function __construct($token) {
+        $this->token = $token;
+    }
+
+    private function makeRequest($endpoint, $payload) {
+        $ch = curl_init($this->baseUrl . $endpoint);
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+    public function validateName($name) {
+        if (empty(trim($name))) {
+            return ['valid' => false, 'error' => 'Nome não pode estar vazio'];
+        }
+
+        if (strlen($name) > 25) {
+            return ['valid' => false, 'error' => 'Nome excede 25 caracteres'];
+        }
+
+        return ['valid' => true, 'length' => strlen($name)];
+    }
+
+    public function updateName($groupJid, $name) {
+        $validation = $this->validateName($name);
+
+        if (!$validation['valid']) {
+            throw new Exception($validation['error']);
+        }
+
+        $data = $this->makeRequest('/group/updateName', [
+            'groupjid' => $groupJid,
+            'name' => $name
+        ]);
+
+        if (!$data['success']) {
+            throw new Exception($data['message']);
+        }
+
+        return $data;
+    }
+
+    public function getCurrentName($groupJid) {
+        $data = $this->makeRequest('/group/info', [
+            'groupjid' => $groupJid
+        ]);
+
+        if (!$data['success']) {
+            throw new Exception($data['message']);
+        }
+
+        return $data['group']['name'];
+    }
+
+    public function updateWithYear($groupJid, $baseName) {
+        $year = date('Y');
+        $name = "{$baseName} {$year}";
+
+        if (strlen($name) > 25) {
+            $name = $baseName;
+        }
+
+        return $this->updateName($groupJid, $name);
+    }
+
+    public function standardize($groupJid, $department, $purpose = null) {
+        $emojiMap = [
+            'vendas' => '📊',
+            'suporte' => '🛠️',
+            'rh' => '👥',
+            'marketing' => '📢',
+            'ti' => '💻',
+            'financeiro' => '💰'
+        ];
+
+        $emoji = $emojiMap[strtolower($department)] ?? '📁';
+        $name = $purpose
+            ? "{$emoji} {$department} - {$purpose}"
+            : "{$emoji} {$department}";
+
+        // Trunca se necessário
+        if (strlen($name) > 25) {
+            $name = "{$emoji} {$department}";
+
+            if (strlen($name) > 25) {
+                $name = substr($department, 0, 25);
+            }
+        }
+
+        return $this->updateName($groupJid, $name);
+    }
+
+    public function updateMultiple($updates, $delay = 1) {
+        $results = [];
+
+        foreach ($updates as $update) {
+            try {
+                $this->updateName($update['groupJid'], $update['name']);
+                $results[$update['groupJid']] = [
+                    'success' => true,
+                    'name' => $update['name']
+                ];
+            } catch (Exception $e) {
+                $results[$update['groupJid']] = [
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ];
+            }
+
+            if ($delay > 0) {
+                sleep($delay);
+            }
+        }
+
+        return $results;
+    }
+
+    public function renameWithBackup($groupJid, $newName) {
+        $oldName = $this->getCurrentName($groupJid);
+
+        $this->updateName($groupJid, $newName);
+
+        return [
+            'oldName' => $oldName,
+            'newName' => $newName,
+            'timestamp' => date('Y-m-d H:i:s')
+        ];
+    }
+}
+
+// Uso
+$manager = new GroupNameManager('zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk');
+
+try {
+    // Validar nome
+    $validation = $manager->validateName("Vendas 2024");
+    if ($validation['valid']) {
+        echo "✓ Nome válido ({$validation['length']} caracteres)\n\n";
+    }
+
+    // Atualizar nome
+    $manager->updateName("120363339858396166@g.us", "Vendas 2024");
+    echo "✓ Nome atualizado\n\n";
+
+    // Atualizar com ano
+    $manager->updateWithYear("120363339858396166@g.us", "Vendas");
+    echo "✓ Nome com ano atualizado\n\n";
+
+    // Padronizar
+    $manager->standardize("120363339858396166@g.us", "Vendas", "Q1");
+    echo "✓ Nome padronizado\n\n";
+
+    // Renomear com backup
+    $backup = $manager->renameWithBackup(
+        "120363339858396166@g.us",
+        "📊 Vendas 2024"
+    );
+    echo "✓ Renomeado: {$backup['oldName']} → {$backup['newName']}\n";
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Nome atualizado
+{
+  "success": true,
+  "message": "Group name updated successfully",
+  "groupJid": "120363339858396166@g.us",
+  "name": "Equipe de Vendas 2024"
+}
+```
+
+```json 400 - Nome vazio
+{
+  "success": false,
+  "message": "O nome do grupo não pode estar vazio"
+}
+```
+
+```json 400 - Nome muito longo
+{
+  "success": false,
+  "message": "O nome do grupo deve ter no máximo 25 caracteres"
+}
+```
+
+```json 401 - Token inválido
+{
+  "success": false,
+  "message": "Token de autenticação inválido ou expirado"
+}
+```
+
+```json 403 - Sem permissão de admin
+{
+  "success": false,
+  "message": "Você precisa ser administrador do grupo para alterar o nome"
+}
+```
+
+```json 404 - Grupo não encontrado
+{
+  "success": false,
+  "message": "Grupo não encontrado ou você não é membro"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao atualizar nome do grupo. Tente novamente"
+}
+```
+
+</ResponseExample>

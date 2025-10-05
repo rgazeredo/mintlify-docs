@@ -1,0 +1,441 @@
+---
+title: "Criar Campanha Simples"
+api: "POST /sender/simple"
+description: "Criar campanha de envio em massa com configurações básicas"
+---
+
+Cria uma nova campanha de envio em massa com configurações simplificadas. Ideal para disparos rápidos com delay aleatório entre mensagens e agendamento opcional.
+
+## Sobre Campanhas Simples
+
+<AccordionGroup>
+  <Accordion title="O que são Campanhas Simples" icon="paper-plane">
+    Sistema de envio em massa com configuração facilitada.
+
+    **Características:**
+    - Envio para múltiplos destinatários
+    - Delay aleatório entre mensagens
+    - Agendamento flexível (imediato ou futuro)
+    - Suporta todos os tipos de mensagem
+    - Rastreamento de status e entrega
+    - Prevenção contra bloqueios do WhatsApp
+
+    **Casos de Uso:**
+    - Disparos promocionais
+    - Notificações em massa
+    - Comunicados importantes
+    - Campanhas de marketing
+    - Pesquisas de satisfação
+    - Lembretes e confirmações
+  </Accordion>
+
+  <Accordion title="Delay entre Mensagens" icon="clock">
+    Sistema de intervalo randomizado para evitar bloqueios.
+
+    **Configuração:**
+    - `delayMin`: Intervalo mínimo em segundos
+    - `delayMax`: Intervalo máximo em segundos
+    - Sistema escolhe valor aleatório entre min e max
+    - Simula comportamento humano natural
+
+    **Recomendações:**
+    - Pequeno volume (até 100): 5-15 segundos
+    - Médio volume (100-500): 10-30 segundos
+    - Grande volume (500+): 20-60 segundos
+    - Campanhas VIP: 30-120 segundos
+
+    **Importante:**
+    - Delays muito curtos podem causar bloqueio
+    - Randomização evita padrões detectáveis
+    - Considere horário de pico do destinatário
+  </Accordion>
+
+  <Accordion title="Agendamento de Campanhas" icon="calendar-clock">
+    Como programar envios para data/hora específica.
+
+    **Formato do scheduled_for:**
+    - Timestamp em milissegundos: `1706198400000`
+    - Minutos a partir de agora: `30` (envia em 30 min)
+    - `0` ou omitir: Executa imediatamente
+
+    **Exemplos:**
+    - Agendar para amanhã 10h:
+      ```js
+      const tomorrow10am = new Date();
+      tomorrow10am.setDate(tomorrow10am.getDate() + 1);
+      tomorrow10am.setHours(10, 0, 0, 0);
+      scheduled_for = tomorrow10am.getTime();
+      ```
+    - Agendar para daqui 2 horas:
+      ```js
+      scheduled_for = 120; // minutos
+      ```
+
+    **Boas Práticas:**
+    - Evite horários noturnos (22h-8h)
+    - Considere fuso horário do destinatário
+    - Teste com grupo pequeno primeiro
+    - Agende com antecedência mínima de 5 minutos
+  </Accordion>
+
+  <Accordion title="Tipos de Mensagem Suportados" icon="message-circle">
+    Formatos disponíveis para campanhas.
+
+    **Tipos Básicos:**
+    - `text`: Texto simples ou com formatação
+    - `image`: Imagem com legenda opcional
+    - `video`: Vídeo com legenda opcional
+    - `audio`: Áudio ou nota de voz
+    - `document`: Arquivo PDF, DOC, etc
+
+    **Tipos Interativos:**
+    - `button`: Mensagem com botões de resposta
+    - `list`: Lista de opções selecionáveis
+    - `poll`: Enquete com múltiplas opções
+    - `carousel`: Carrossel de cards com imagens
+
+    **Tipos Especiais:**
+    - `contact`: Compartilhar contato
+    - `location`: Compartilhar localização
+    - `linkpreview`: Link com preview customizado
+
+    **Campos por Tipo:**
+    - Texto: `text`, opcional `linkPreview`
+    - Mídia: `file`, opcional `text` (legenda)
+    - Documento: `file`, `docName`, opcional `text`
+    - Contato: `fullName`, `phoneNumber`, `organization`, `email`, `url`
+    - Localização: `latitude`, `longitude`, `name`, `address`
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="numbers" type="array" required>
+  Lista de números para envio. <br />
+  Formato: `numero@s.whatsapp.net` <br />
+  Exemplo: `["5511999999999@s.whatsapp.net"]`
+</ParamField>
+
+<ParamField path="type" type="string" required>
+  Tipo da mensagem. <br />
+  **Opções:** `text`, `image`, `video`, `audio`, `document`, `button`, `list`, `poll`, `carousel`, `contact`, `location` <br />
+  Exemplo: `"text"`
+</ParamField>
+
+<ParamField path="delayMin" type="integer" required>
+  Delay mínimo entre mensagens em segundos. <br />
+  Exemplo: `10`
+</ParamField>
+
+<ParamField path="delayMax" type="integer" required>
+  Delay máximo entre mensagens em segundos. <br />
+  Deve ser maior que delayMin. <br />
+  Exemplo: `30`
+</ParamField>
+
+<ParamField path="scheduled_for" type="integer" required>
+  Agendamento do envio. <br />
+  **Formatos:** <br />
+  - Timestamp em ms: `1706198400000` <br />
+  - Minutos a partir de agora: `30` <br />
+  - Imediato: `0`
+</ParamField>
+
+<ParamField path="info" type="string">
+  Informações adicionais sobre a campanha. <br />
+  Útil para identificação e relatórios. <br />
+  Exemplo: `"Promoção Black Friday 2024"`
+</ParamField>
+
+<ParamField path="text" type="string">
+  Texto da mensagem. <br />
+  Obrigatório para tipo `text`. <br />
+  Opcional como legenda para mídias. <br />
+  Exemplo: `"Olá! Confira nossa promoção!"`
+</ParamField>
+
+<ParamField path="linkPreview" type="boolean">
+  Habilitar preview de links. <br />
+  Apenas para tipo `text`. <br />
+  Preview gerado automaticamente da URL. <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="linkPreviewTitle" type="string">
+  Título customizado do preview. <br />
+  Requer `linkPreview: true`. <br />
+  Exemplo: `"Ofertas Especiais"`
+</ParamField>
+
+<ParamField path="linkPreviewDescription" type="string">
+  Descrição customizada do preview. <br />
+  Requer `linkPreview: true`. <br />
+  Exemplo: `"Descontos de até 50%"`
+</ParamField>
+
+<ParamField path="linkPreviewImage" type="string">
+  Imagem do preview (URL ou base64). <br />
+  Requer `linkPreview: true`. <br />
+  Exemplo: `"https://exemplo.com/banner.jpg"`
+</ParamField>
+
+<ParamField path="linkPreviewLarge" type="boolean">
+  Usar preview grande. <br />
+  Padrão: `false` (preview pequeno). <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="file" type="string">
+  URL ou base64 do arquivo. <br />
+  Obrigatório para tipos de mídia. <br />
+  Exemplo: `"https://exemplo.com/video.mp4"`
+</ParamField>
+
+<ParamField path="docName" type="string">
+  Nome do documento. <br />
+  Usado com tipo `document`. <br />
+  Exemplo: `"Catalogo_2024.pdf"`
+</ParamField>
+
+<ParamField path="fullName" type="string">
+  Nome completo do contato. <br />
+  Usado com tipo `contact`. <br />
+  Exemplo: `"João Silva"`
+</ParamField>
+
+<ParamField path="phoneNumber" type="string">
+  Telefone do contato. <br />
+  Usado com tipo `contact`. <br />
+  Exemplo: `"5511999999999"`
+</ParamField>
+
+<ParamField path="organization" type="string">
+  Organização do contato. <br />
+  Usado com tipo `contact`. <br />
+  Exemplo: `"Empresa XYZ"`
+</ParamField>
+
+<ParamField path="email" type="string">
+  Email do contato. <br />
+  Usado com tipo `contact`. <br />
+  Exemplo: `"contato@exemplo.com"`
+</ParamField>
+
+<ParamField path="url" type="string">
+  Website do contato. <br />
+  Usado com tipo `contact`. <br />
+  Exemplo: `"https://exemplo.com"`
+</ParamField>
+
+<ParamField path="latitude" type="number">
+  Latitude da localização. <br />
+  Usado com tipo `location`. <br />
+  Exemplo: `-23.5505`
+</ParamField>
+
+<ParamField path="longitude" type="number">
+  Longitude da localização. <br />
+  Usado com tipo `location`. <br />
+  Exemplo: `-46.6333`
+</ParamField>
+
+<ParamField path="name" type="string">
+  Nome do local. <br />
+  Usado com tipo `location`. <br />
+  Exemplo: `"Av. Paulista, São Paulo"`
+</ParamField>
+
+<ParamField path="address" type="string">
+  Endereço completo. <br />
+  Usado com tipo `location`. <br />
+  Exemplo: `"Av. Paulista, 1578 - Bela Vista"`
+</ParamField>
+
+<ParamField path="footerText" type="string">
+  Texto do rodapé. <br />
+  Usado com tipos `list`, `button`, `poll`, `carousel`. <br />
+  Exemplo: `"Escolha uma opção"`
+</ParamField>
+
+<ParamField path="buttonText" type="string">
+  Texto do botão. <br />
+  Usado com tipos `button`. <br />
+  Exemplo: `"Saiba Mais"`
+</ParamField>
+
+<ParamField path="listButton" type="string">
+  Texto do botão da lista. <br />
+  Usado com tipo `list`. <br />
+  Exemplo: `"Ver opções"`
+</ParamField>
+
+<ParamField path="selectableCount" type="integer">
+  Número de opções selecionáveis. <br />
+  Usado com tipo `poll`. <br />
+  Exemplo: `3`
+</ParamField>
+
+<ParamField path="choices" type="array">
+  Lista de opções/botões. <br />
+  Formato varia por tipo. <br />
+  **Button:** `["Opção 1", "Opção 2"]` <br />
+  **List:** Array de objetos com seções <br />
+  **Poll:** `["Opção A", "Opção B"]` <br />
+  **Carousel:** Formato especial com imagens
+</ParamField>
+
+<ParamField path="imageButton" type="string">
+  URL da imagem do botão. <br />
+  Usado com tipo `button`. <br />
+  Exemplo: `"https://exemplo.com/btn.jpg"`
+</ParamField>
+
+<Info>
+  **Importante:** Campos obrigatórios variam conforme o tipo de mensagem escolhido. Consulte a documentação de cada tipo.
+</Info>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://zapclass.com.br/api/sender/simple \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "numbers": [
+      "5511999999999@s.whatsapp.net",
+      "5511888888888@s.whatsapp.net"
+    ],
+    "type": "text",
+    "text": "Olá! Temos uma oferta especial para você!",
+    "delayMin": 10,
+    "delayMax": 30,
+    "scheduled_for": 0,
+    "info": "Campanha Promoção Janeiro"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/sender/simple", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    numbers: [
+      "5511999999999@s.whatsapp.net",
+      "5511888888888@s.whatsapp.net"
+    ],
+    type: "text",
+    text: "Olá! Temos uma oferta especial para você!",
+    delayMin: 10,
+    delayMax: 30,
+    scheduled_for: 0,
+    info: "Campanha Promoção Janeiro"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Campanha criada:", data.campaign.id);
+}
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/sender/simple');
+
+$payload = [
+    "numbers" => [
+        "5511999999999@s.whatsapp.net",
+        "5511888888888@s.whatsapp.net"
+    ],
+    "type" => "text",
+    "text" => "Olá! Temos uma oferta especial para você!",
+    "delayMin" => 10,
+    "delayMax" => 30,
+    "scheduled_for" => 0,
+    "info" => "Campanha Promoção Janeiro"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Campanha criada: {$data['campaign']['id']}\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "success": true,
+  "message": "Campaign created successfully",
+  "campaign": {
+    "id": "cmp_9a8b7c6d5e4f",
+    "status": "scheduled",
+    "numbers": [
+      "5511999999999@s.whatsapp.net",
+      "5511888888888@s.whatsapp.net"
+    ],
+    "type": "text",
+    "text": "Olá! Temos uma oferta especial para você!",
+    "delayMin": 10,
+    "delayMax": 30,
+    "scheduled_for": 1706198400000,
+    "info": "Campanha Promoção Janeiro",
+    "totalRecipients": 2,
+    "createdAt": 1672531200000
+  }
+}
+```
+
+```json 200
+{
+  "success": true,
+  "message": "Campaign created successfully",
+  "campaign": {
+    "id": "cmp_1f2e3d4c5b6a",
+    "status": "scheduled",
+    "numbers": ["5511999999999@s.whatsapp.net"],
+    "type": "image",
+    "file": "https://exemplo.com/promocao.jpg",
+    "text": "Confira nossa promoção!",
+    "delayMin": 15,
+    "delayMax": 45,
+    "scheduled_for": 1706201940000,
+    "info": "Disparo Promoção - Imagem",
+    "totalRecipients": 1,
+    "createdAt": 1672531200000
+  }
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "Campo 'numbers' é obrigatório"
+}
+```
+
+</ResponseExample>

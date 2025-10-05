@@ -1,0 +1,209 @@
+---
+title: "Limpar Toda Fila"
+api: "DELETE /sender/clearall"
+description: "Remover todas as mensagens da fila de envio"
+---
+
+Remove todas as mensagens da fila de envio em massa, incluindo mensagens pendentes e já enviadas. Esta é uma operação irreversível e destrutiva que limpa completamente a fila.
+
+## Sobre Limpeza Total da Fila
+
+<AccordionGroup>
+  <Accordion title="O que é a Limpeza Total" icon="broom-wide">
+    Operação destrutiva que remove tudo da fila.
+
+    **O que é removido:**
+    - TODAS as mensagens pendentes
+    - TODAS as mensagens já enviadas
+    - TODAS as campanhas ativas e concluídas
+    - Metadados e configurações de envio
+    - Histórico completo de campanhas
+    - Estatísticas e relatórios
+
+    **O que NÃO é afetado:**
+    - Configurações da instância
+    - Tokens e autenticações
+    - Contatos e leads
+    - Mensagens individuais (não em campanha)
+    - Templates e respostas rápidas
+
+    **Características:**
+    - Operação irreversível
+    - Execução imediata
+    - Sem confirmação adicional
+    - Remove independente do status
+    - Limpa tudo de uma vez
+  </Accordion>
+
+  <Accordion title="Diferença: clearall vs cleardone" icon="code-compare">
+    Entenda as diferenças entre os endpoints de limpeza.
+
+    **DELETE /sender/clearall:**
+    - Remove TUDO da fila
+    - Mensagens pendentes E enviadas
+    - Todas as campanhas
+    - Sem filtro de data
+    - Operação mais destrutiva
+    - Use com extremo cuidado
+
+    **POST /sender/cleardone:**
+    - Remove apenas mensagens enviadas (done)
+    - Filtra por período (hours)
+    - Preserva mensagens pendentes
+    - Limpeza seletiva
+    - Operação mais segura
+    - Use para manutenção regular
+
+    **Quando usar cada um:**
+    - clearall: Reset completo, ambiente de teste, emergência
+    - cleardone: Manutenção regular, otimização de espaço
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="list-check">
+    Situações onde a limpeza total é apropriada.
+
+    **Ambientes de Desenvolvimento/Teste:**
+    - Limpar dados de teste
+    - Reset entre ciclos de teste
+    - Preparar ambiente limpo
+    - Remover campanhas de debug
+
+    **Situações de Emergência:**
+    - Cancelar todas campanhas urgentemente
+    - Corrigir erro crítico em massa
+    - Dados sensíveis enviados por engano
+    - Violação de política detectada
+
+    **Manutenção Planejada:**
+    - Migração de sistema
+    - Mudança de estratégia completa
+    - Reorganização total de campanhas
+    - Antes de backup/restore
+
+    **Reset Operacional:**
+    - Início de novo período
+    - Mudança de cliente/conta
+    - Reestruturação de processos
+    - Limpeza de dados obsoletos
+  </Accordion>
+
+  <Accordion title="Segurança e Precauções" icon="shield-exclamation">
+    Cuidados essenciais antes de executar.
+
+    **ANTES de executar:**
+    - ⚠️ Faça backup completo
+    - ⚠️ Pause todas campanhas ativas
+    - ⚠️ Notifique a equipe
+    - ⚠️ Documente o motivo
+    - ⚠️ Tenha plano de recuperação
+
+    **Verifique se:**
+    - Realmente precisa limpar TUDO
+    - Não há campanhas críticas ativas
+    - Backup está atualizado
+    - Possui autorização necessária
+    - Entende que é irreversível
+
+    **Alternativas mais seguras:**
+    - Pausar campanhas individualmente
+    - Usar /sender/edit com action delete
+    - Usar /sender/cleardone com período
+    - Deletar campanhas específicas
+    - Exportar dados antes de limpar
+
+    **Pós-execução:**
+    - Verificar se limpeza ocorreu
+    - Validar estado do sistema
+    - Recriar campanhas se necessário
+    - Atualizar documentação
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+<Warning>
+  **⚠️ ATENÇÃO CRÍTICA:** Esta operação é IRREVERSÍVEL e remove TODAS as mensagens e campanhas da fila, incluindo mensagens pendentes e já enviadas. Use com extremo cuidado e apenas quando absolutamente necessário.
+</Warning>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE https://zapclass.com.br/api/sender/clearall \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/sender/clearall", {
+  method: "DELETE",
+  headers: {
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Fila limpa completamente:", data.message);
+}
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/sender/clearall');
+
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Fila limpa completamente: {$data['message']}\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "success": true,
+  "message": "All messages cleared successfully",
+  "result": {
+    "messagesDeleted": 1534,
+    "campaignsDeleted": 12,
+    "clearedAt": 1672531200000
+  }
+}
+```
+
+```json 200
+{
+  "success": true,
+  "message": "Queue was already empty",
+  "result": {
+    "messagesDeleted": 0,
+    "campaignsDeleted": 0,
+    "clearedAt": 1672531200000
+  }
+}
+```
+
+```json 401
+{
+  "success": false,
+  "message": "Token de autenticação inválido ou ausente"
+}
+```
+
+</ResponseExample>

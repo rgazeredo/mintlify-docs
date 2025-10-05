@@ -1,0 +1,472 @@
+---
+title: "Informações por Convite"
+api: "POST /group/inviteInfo"
+description: "Obter informações de um grupo usando código de convite"
+---
+
+Recupera informações detalhadas de um grupo através de um código ou URL de convite, permitindo validar e visualizar dados antes de entrar no grupo.
+
+## Funcionalidades de Consulta
+
+<AccordionGroup>
+  <Accordion title="Validação de Convite" icon="shield-check">
+    Verifica se um link de convite é válido e ativo.
+
+    **Validações realizadas:**
+    - Link está ativo e não expirado
+    - Grupo ainda existe
+    - Convite não foi revogado
+    - Formato do código está correto
+
+    Útil para validar links antes de compartilhar ou processar.
+  </Accordion>
+
+  <Accordion title="Informações Disponíveis" icon="circle-info">
+    Dados retornados sobre o grupo sem precisar entrar.
+
+    **Informações incluídas:**
+    - ID do grupo (JID)
+    - Nome do grupo
+    - Descrição
+    - Foto de perfil (URL)
+    - Número total de participantes
+    - Criador do grupo
+    - Restrições de entrada
+    - Se requer aprovação de administrador
+
+    Permite decidir se deseja entrar no grupo.
+  </Accordion>
+
+  <Accordion title="Formatos Aceitos" icon="link">
+    O endpoint aceita múltiplos formatos de convite.
+
+    **Formatos suportados:**
+    - Código curto: `AbCdEfGhIjKlMnOpQrSt`
+    - URL completa: `https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt`
+    - URL encurtada: links bit.ly, tinyurl, etc (que redirecionam para WhatsApp)
+
+    O sistema extrai automaticamente o código do convite.
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações comuns para usar este endpoint.
+
+    **Aplicações:**
+    - Validar links compartilhados em campanhas
+    - Pré-visualizar grupo antes de entrar
+    - Sistemas de moderação de convites
+    - Auditoria de grupos da empresa
+    - Verificação de convites suspeitos
+    - Integração com sistemas de aprovação
+    - Coleta de informações para relatórios
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="inviteCode" type="string" required>
+  Código de convite ou URL completa do grupo. <br />
+  Aceita código curto ou URL do WhatsApp. <br />
+  Exemplo: `AbCdEfGhIjKlMnOpQrSt` ou `https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt`
+</ParamField>
+
+<Info>
+  **Nota:** Este endpoint não requer que você seja membro do grupo. As informações são públicas para qualquer pessoa com o link de convite.
+</Info>
+
+<RequestExample>
+
+```bash cURL - Código curto
+curl -X POST https://zapclass.com.br/api/group/inviteInfo \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "inviteCode": "AbCdEfGhIjKlMnOpQrSt"
+  }'
+```
+
+```bash cURL - URL completa
+curl -X POST https://zapclass.com.br/api/group/inviteInfo \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "inviteCode": "https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt"
+  }'
+```
+
+```javascript JavaScript - Validar convite
+const response = await fetch("https://zapclass.com.br/api/group/inviteInfo", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    inviteCode: "https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Grupo:", data.group.name);
+  console.log("Participantes:", data.group.participantsCount);
+  console.log("Descrição:", data.group.description);
+}
+```
+
+```javascript JavaScript - Extrair e validar
+function extractInviteCode(input) {
+  // Extrai código de diferentes formatos
+  const urlMatch = input.match(/chat\.whatsapp\.com\/([A-Za-z0-9]+)/);
+  if (urlMatch) return urlMatch[1];
+
+  // Se já é um código
+  if (/^[A-Za-z0-9]+$/.test(input)) return input;
+
+  throw new Error("Formato de convite inválido");
+}
+
+async function validateGroupInvite(inviteLink) {
+  try {
+    const code = extractInviteCode(inviteLink);
+
+    const response = await fetch("https://zapclass.com.br/api/group/inviteInfo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({ inviteCode: code }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      return {
+        valid: false,
+        error: data.message
+      };
+    }
+
+    return {
+      valid: true,
+      group: {
+        name: data.group.name,
+        description: data.group.description,
+        participants: data.group.participantsCount,
+        requiresApproval: data.group.memberAddMode === 'admin_approval'
+      }
+    };
+  } catch (error) {
+    return {
+      valid: false,
+      error: error.message
+    };
+  }
+}
+
+// Uso
+const result = await validateGroupInvite("https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt");
+if (result.valid) {
+  console.log("✓ Convite válido:", result.group.name);
+} else {
+  console.log("✗ Convite inválido:", result.error);
+}
+```
+
+```javascript JavaScript - Pré-visualização para usuário
+async function previewGroup(inviteCode) {
+  const response = await fetch("https://zapclass.com.br/api/group/inviteInfo", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ inviteCode }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    console.error("Erro:", data.message);
+    return;
+  }
+
+  const group = data.group;
+
+  console.log("═══════════════════════════════");
+  console.log("       PRÉ-VISUALIZAÇÃO DO GRUPO");
+  console.log("═══════════════════════════════");
+  console.log(`\nNome: ${group.name}`);
+  console.log(`\nDescrição:\n${group.description || 'Sem descrição'}`);
+  console.log(`\nParticipantes: ${group.participantsCount}`);
+  console.log(`\nCriado por: ${group.creator || 'Desconhecido'}`);
+
+  if (group.memberAddMode === 'admin_approval') {
+    console.log("\n⚠️  Requer aprovação de administrador");
+  }
+
+  console.log("\n═══════════════════════════════");
+}
+
+// Uso
+await previewGroup("AbCdEfGhIjKlMnOpQrSt");
+```
+
+```php PHP - Validar convite
+<?php
+$ch = curl_init('https://zapclass.com.br/api/group/inviteInfo');
+
+$payload = [
+    "inviteCode" => "https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Grupo: {$data['group']['name']}\n";
+    echo "Participantes: {$data['group']['participantsCount']}\n";
+    echo "Descrição: " . ($data['group']['description'] ?? 'Sem descrição');
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Extrair e validar
+<?php
+function extractInviteCode($input) {
+    // Tenta extrair código de URL
+    if (preg_match('/chat\.whatsapp\.com\/([A-Za-z0-9]+)/', $input, $matches)) {
+        return $matches[1];
+    }
+
+    // Se já é um código
+    if (preg_match('/^[A-Za-z0-9]+$/', $input)) {
+        return $input;
+    }
+
+    throw new Exception("Formato de convite inválido");
+}
+
+function validateGroupInvite($inviteLink) {
+    try {
+        $code = extractInviteCode($inviteLink);
+
+        $ch = curl_init('https://zapclass.com.br/api/group/inviteInfo');
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            'inviteCode' => $code
+        ]));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $data = json_decode($response, true);
+        curl_close($ch);
+
+        if (!$data['success']) {
+            return [
+                'valid' => false,
+                'error' => $data['message']
+            ];
+        }
+
+        return [
+            'valid' => true,
+            'group' => [
+                'name' => $data['group']['name'],
+                'description' => $data['group']['description'] ?? null,
+                'participants' => $data['group']['participantsCount'],
+                'requiresApproval' => ($data['group']['memberAddMode'] ?? '') === 'admin_approval'
+            ]
+        ];
+    } catch (Exception $e) {
+        return [
+            'valid' => false,
+            'error' => $e->getMessage()
+        ];
+    }
+}
+
+// Uso
+$result = validateGroupInvite("https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt");
+
+if ($result['valid']) {
+    echo "✓ Convite válido\n";
+    echo "Grupo: {$result['group']['name']}\n";
+    echo "Participantes: {$result['group']['participants']}\n";
+
+    if ($result['group']['requiresApproval']) {
+        echo "⚠️  Requer aprovação de administrador\n";
+    }
+} else {
+    echo "✗ Convite inválido: {$result['error']}\n";
+}
+?>
+```
+
+```php PHP - Sistema de moderação
+<?php
+class GroupInviteModerator {
+    private $token;
+    private $baseUrl = 'https://zapclass.com.br/api';
+
+    public function __construct($token) {
+        $this->token = $token;
+    }
+
+    public function checkInvite($inviteCode) {
+        $ch = curl_init($this->baseUrl . '/group/inviteInfo');
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            'inviteCode' => $inviteCode
+        ]));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+    public function isApproved($inviteCode, $rules) {
+        $data = $this->checkInvite($inviteCode);
+
+        if (!$data['success']) {
+            return false;
+        }
+
+        $group = $data['group'];
+
+        // Verifica regras
+        if (isset($rules['maxParticipants']) &&
+            $group['participantsCount'] > $rules['maxParticipants']) {
+            return false;
+        }
+
+        if (isset($rules['requireDescription']) &&
+            empty($group['description'])) {
+            return false;
+        }
+
+        if (isset($rules['bannedKeywords'])) {
+            $text = strtolower($group['name'] . ' ' . ($group['description'] ?? ''));
+            foreach ($rules['bannedKeywords'] as $keyword) {
+                if (strpos($text, strtolower($keyword)) !== false) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+}
+
+// Uso
+$moderator = new GroupInviteModerator('zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk');
+
+$rules = [
+    'maxParticipants' => 500,
+    'requireDescription' => true,
+    'bannedKeywords' => ['spam', 'scam', 'phishing']
+];
+
+if ($moderator->isApproved("AbCdEfGhIjKlMnOpQrSt", $rules)) {
+    echo "✓ Convite aprovado\n";
+} else {
+    echo "✗ Convite rejeitado pelas regras de moderação\n";
+}
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Informações do grupo
+{
+  "success": true,
+  "group": {
+    "id": "120363153742561022@g.us",
+    "name": "Equipe de Vendas 2024",
+    "description": "Grupo oficial da equipe de vendas",
+    "participantsCount": 45,
+    "creator": "5511999999999@s.whatsapp.net",
+    "profilePicUrl": "https://example.com/group-pic.jpg",
+    "memberAddMode": "all",
+    "inviteCode": "AbCdEfGhIjKlMnOpQrSt"
+  }
+}
+```
+
+```json 200 - Grupo com aprovação
+{
+  "success": true,
+  "group": {
+    "id": "120363153742561022@g.us",
+    "name": "Grupo Privado VIP",
+    "description": "Acesso restrito - requer aprovação",
+    "participantsCount": 12,
+    "memberAddMode": "admin_approval",
+    "profilePicUrl": null
+  }
+}
+```
+
+```json 400 - Código inválido
+{
+  "success": false,
+  "message": "Código de convite inválido ou mal formatado"
+}
+```
+
+```json 404 - Link expirado
+{
+  "success": false,
+  "message": "Grupo não encontrado ou link de convite expirado"
+}
+```
+
+```json 404 - Convite revogado
+{
+  "success": false,
+  "message": "Link de convite foi revogado pelo administrador"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao buscar informações do grupo"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,411 @@
+---
+title: "Listar Labels"
+api: "GET /labels"
+description: "Retornar lista completa de labels da instância"
+---
+
+Recupera todas as labels (etiquetas) criadas na instância, permitindo visualizar e gerenciar as categorias disponíveis para organização de conversas.
+
+## Informações das Labels
+
+<AccordionGroup>
+  <Accordion title="Dados Retornados" icon="list">
+    Cada label inclui informações completas para identificação e uso.
+
+    **Campos disponíveis:**
+    - `id`: Identificador único da label
+    - `labelid`: ID alternativo para compatibilidade
+    - `name`: Nome de exibição da label
+    - `color`: Código numérico da cor (0-19)
+    - `colorHex`: Cor em formato hexadecimal
+    - `predefined`: Se é uma label padrão do sistema
+
+    Informações completas para gerenciamento e integração.
+  </Accordion>
+
+  <Accordion title="Labels Predefinidas" icon="bookmark">
+    O WhatsApp Business inclui labels padrão do sistema.
+
+    **Labels comuns:**
+    - Novo cliente
+    - Nova venda
+    - Pagamento pendente
+    - Pago
+    - Concluído
+
+    **Características:**
+    - Marcadas com `predefined: true`
+    - Podem ser editadas normalmente
+    - Cores e nomes customizáveis
+  </Accordion>
+
+  <Accordion title="Códigos de Cores" icon="palette">
+    As labels suportam 20 cores diferentes (0-19).
+
+    **Paleta de cores:**
+    - 0-3: Tons de azul
+    - 4-6: Tons de verde
+    - 7-9: Tons de amarelo
+    - 10-12: Tons de laranja
+    - 13-15: Tons de vermelho
+    - 16-19: Rosa, roxo e outros
+
+    Use cores consistentes para categorias relacionadas.
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações comuns para consultar a lista de labels.
+
+    **Aplicações:**
+    - Listar opções em interface de usuário
+    - Validar IDs antes de aplicar labels
+    - Sincronização com sistema CRM
+    - Exportação de configurações
+    - Auditoria de categorias
+    - Documentação de processos
+    - Migração de dados
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+<Info>
+  **Nota:** Este é um endpoint GET que não requer parâmetros no body. Apenas inclua o token no header de autenticação.
+</Info>
+
+<RequestExample>
+
+```bash cURL - Listar labels
+curl -X GET https://zapclass.com.br/api/labels \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+```
+
+```bash cURL - Listar e salvar em arquivo
+curl -X GET https://zapclass.com.br/api/labels \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -o labels.json
+```
+
+```javascript JavaScript - Listar labels
+const response = await fetch("https://zapclass.com.br/api/labels", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+});
+
+const data = await response.json();
+console.log(`Total de labels: ${data.labels.length}`);
+data.labels.forEach(label => {
+  console.log(`[${label.id}] ${label.name} - Cor: ${label.color}`);
+});
+```
+
+```javascript JavaScript - Buscar label por nome
+async function findLabelByName(searchName) {
+  const response = await fetch("https://zapclass.com.br/api/labels", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    console.error("Erro ao buscar labels:", data.message);
+    return null;
+  }
+
+  const found = data.labels.find(label =>
+    label.name.toLowerCase().includes(searchName.toLowerCase())
+  );
+
+  return found || null;
+}
+
+// Uso
+const vipLabel = await findLabelByName("VIP");
+if (vipLabel) {
+  console.log(`Label encontrada: ${vipLabel.name} (ID: ${vipLabel.id})`);
+}
+```
+
+```javascript JavaScript - Gerar seletor HTML
+const response = await fetch("https://zapclass.com.br/api/labels", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+});
+
+const data = await response.json();
+
+if (data.success) {
+  // Gera HTML de seletor de labels
+  const selectHTML = `
+    <select id="labelSelector">
+      <option value="">Selecione uma label</option>
+      ${data.labels.map(label => `
+        <option value="${label.id}" data-color="${label.color}">
+          ${label.name}${label.predefined ? ' (Padrão)' : ''}
+        </option>
+      `).join('')}
+    </select>
+  `;
+
+  console.log(selectHTML);
+}
+```
+
+```javascript JavaScript - Agrupar por cores
+const response = await fetch("https://zapclass.com.br/api/labels", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+});
+
+const data = await response.json();
+
+if (data.success) {
+  // Agrupa labels por cor
+  const byColor = data.labels.reduce((acc, label) => {
+    const color = label.color;
+    if (!acc[color]) acc[color] = [];
+    acc[color].push(label);
+    return acc;
+  }, {});
+
+  console.log("Labels agrupadas por cor:");
+  Object.entries(byColor).forEach(([color, labels]) => {
+    console.log(`\nCor ${color}:`);
+    labels.forEach(label => console.log(`  - ${label.name}`));
+  });
+}
+```
+
+```php PHP - Listar labels
+<?php
+$ch = curl_init('https://zapclass.com.br/api/labels');
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Total de labels: " . count($data['labels']) . "\n\n";
+
+    foreach ($data['labels'] as $label) {
+        echo "[{$label['id']}] {$label['name']}\n";
+        echo "   Cor: {$label['color']} ({$label['colorHex']})\n";
+        echo "   Predefinida: " . ($label['predefined'] ? 'Sim' : 'Não') . "\n";
+        echo "---\n";
+    }
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Exportar para CSV
+<?php
+$ch = curl_init('https://zapclass.com.br/api/labels');
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    // Criar arquivo CSV
+    $fp = fopen('labels_export.csv', 'w');
+
+    // Cabeçalho
+    fputcsv($fp, ['ID', 'Label ID', 'Nome', 'Cor', 'Cor Hex', 'Predefinida']);
+
+    // Dados
+    foreach ($data['labels'] as $label) {
+        fputcsv($fp, [
+            $label['id'],
+            $label['labelid'] ?? $label['id'],
+            $label['name'],
+            $label['color'],
+            $label['colorHex'] ?? '',
+            $label['predefined'] ? 'Sim' : 'Não'
+        ]);
+    }
+
+    fclose($fp);
+    echo "Labels exportadas para labels_export.csv\n";
+    echo "Total de labels: " . count($data['labels']);
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Criar mapa de IDs
+<?php
+$ch = curl_init('https://zapclass.com.br/api/labels');
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    // Cria mapa de nome => ID para fácil acesso
+    $labelMap = [];
+    foreach ($data['labels'] as $label) {
+        $labelMap[$label['name']] = $label['id'];
+    }
+
+    // Uso prático
+    echo "Buscar ID da label 'VIP':\n";
+    if (isset($labelMap['VIP'])) {
+        echo "ID: " . $labelMap['VIP'];
+    } else {
+        echo "Label 'VIP' não encontrada";
+    }
+
+    // Salvar mapa em arquivo para reutilização
+    file_put_contents('label_map.json', json_encode($labelMap, JSON_PRETTY_PRINT));
+    echo "\n\nMapa salvo em label_map.json";
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Separar predefinidas e customizadas
+<?php
+$ch = curl_init('https://zapclass.com.br/api/labels');
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    $predefined = [];
+    $custom = [];
+
+    foreach ($data['labels'] as $label) {
+        if ($label['predefined']) {
+            $predefined[] = $label;
+        } else {
+            $custom[] = $label;
+        }
+    }
+
+    echo "=== LABELS PREDEFINIDAS ===\n";
+    foreach ($predefined as $label) {
+        echo "- {$label['name']}\n";
+    }
+
+    echo "\n=== LABELS CUSTOMIZADAS ===\n";
+    foreach ($custom as $label) {
+        echo "- {$label['name']}\n";
+    }
+
+    echo "\nTotal: " . count($predefined) . " predefinidas, " . count($custom) . " customizadas";
+}
+
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Lista de labels
+{
+  "success": true,
+  "labels": [
+    {
+      "id": "10",
+      "labelid": "10",
+      "name": "Novo cliente",
+      "color": 0,
+      "colorHex": "#1FA855",
+      "predefined": true
+    },
+    {
+      "id": "11",
+      "labelid": "11",
+      "name": "Nova venda",
+      "color": 1,
+      "colorHex": "#26A0DA",
+      "predefined": true
+    },
+    {
+      "id": "20",
+      "labelid": "20",
+      "name": "VIP",
+      "color": 5,
+      "colorHex": "#F7B928",
+      "predefined": false
+    },
+    {
+      "id": "25",
+      "labelid": "25",
+      "name": "Prioridade Alta",
+      "color": 10,
+      "colorHex": "#E8696D",
+      "predefined": false
+    }
+  ],
+  "total": 4
+}
+```
+
+```json 200 - Lista vazia
+{
+  "success": true,
+  "labels": [],
+  "total": 0
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao buscar labels"
+}
+```
+
+</ResponseExample>

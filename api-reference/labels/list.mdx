@@ -1,0 +1,184 @@
+---
+title: "Listar Labels"
+api: "GET /labels"
+description: "Retornar lista completa de labels da instância"
+---
+
+Recupera todas as labels (etiquetas) criadas na instância, permitindo visualizar e gerenciar as categorias disponíveis para organização de conversas.
+
+## Informações das Labels
+
+<AccordionGroup>
+  <Accordion title="Dados Retornados" icon="list">
+    Cada label inclui informações completas para identificação e uso.
+
+    **Campos disponíveis:**
+    - `id`: Identificador único da label
+    - `labelid`: ID alternativo para compatibilidade
+    - `name`: Nome de exibição da label
+    - `color`: Código numérico da cor (0-19)
+    - `colorHex`: Cor em formato hexadecimal
+    - `predefined`: Se é uma label padrão do sistema
+
+    Informações completas para gerenciamento e integração.
+  </Accordion>
+
+  <Accordion title="Labels Predefinidas" icon="bookmark">
+    O WhatsApp Business inclui labels padrão do sistema.
+
+    **Labels comuns:**
+    - Novo cliente
+    - Nova venda
+    - Pagamento pendente
+    - Pago
+    - Concluído
+
+    **Características:**
+    - Marcadas com `predefined: true`
+    - Podem ser editadas normalmente
+    - Cores e nomes customizáveis
+  </Accordion>
+
+  <Accordion title="Códigos de Cores" icon="palette">
+    As labels suportam 20 cores diferentes (0-19).
+
+    **Paleta de cores:**
+    - 0-3: Tons de azul
+    - 4-6: Tons de verde
+    - 7-9: Tons de amarelo
+    - 10-12: Tons de laranja
+    - 13-15: Tons de vermelho
+    - 16-19: Rosa, roxo e outros
+
+    Use cores consistentes para categorias relacionadas.
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações comuns para consultar a lista de labels.
+
+    **Aplicações:**
+    - Listar opções em interface de usuário
+    - Validar IDs antes de aplicar labels
+    - Sincronização com sistema CRM
+    - Exportação de configurações
+    - Auditoria de categorias
+    - Documentação de processos
+    - Migração de dados
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+<Info>
+  **Nota:** Este é um endpoint GET que não requer parâmetros no body. Apenas inclua o token no header de autenticação.
+</Info>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET https://zapclass.com.br/api/labels \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/labels", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+});
+
+const data = await response.json();
+console.log(`Total de labels: ${data.labels.length}`);
+data.labels.forEach(label => {
+  console.log(`[${label.id}] ${label.name} - Cor: ${label.color}`);
+});
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/labels');
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Total de labels: " . count($data['labels']) . "
+
+";
+
+    foreach ($data['labels'] as $label) {
+        echo "[{$label['id']}] {$label['name']}
+";
+        echo "   Cor: {$label['color']} ({$label['colorHex']})
+";
+        echo "   Predefinida: " . ($label['predefined'] ? 'Sim' : 'Não') . "
+";
+        echo "---
+";
+    }
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "labels": [
+    {
+      "id": "10",
+      "labelid": "10",
+      "name": "Novo cliente",
+      "color": 0,
+      "colorHex": "#1FA855",
+      "predefined": true
+    },
+    {
+      "id": "20",
+      "labelid": "20",
+      "name": "VIP",
+      "color": 5,
+      "colorHex": "#F7B928",
+      "predefined": false
+    }
+  ],
+  "total": 2
+}
+```
+
+```json 401
+{
+  "success": false,
+  "message": "Token de autenticação inválido ou expirado"
+}
+```
+
+```json 500
+{
+  "success": false,
+  "message": "Erro ao buscar labels"
+}
+```
+
+</ResponseExample>

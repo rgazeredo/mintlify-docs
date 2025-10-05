@@ -11,35 +11,112 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "API",
+        "tab": "API Reference",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Iniciar",
+            "pages": ["api-reference/introduction"]
+          },
+          {
+            "group": "Mensagens",
             "pages": [
-              "api-reference/introduction"
+              "api-reference/messages/text",
+              "api-reference/messages/media",
+              "api-reference/messages/contact",
+              "api-reference/messages/location",
+              "api-reference/messages/status",
+              "api-reference/messages/menu",
+              "api-reference/messages/react",
+              "api-reference/messages/edit",
+              "api-reference/messages/delete",
+              "api-reference/messages/download",
+              "api-reference/messages/find",
+              "api-reference/messages/markread"
             ]
           },
           {
-            "group": "Endpointsxx",
-            "openapi": "api-reference/openapi.json"
+            "group": "Contatos",
+            "pages": [
+              "api-reference/contacts/add",
+              "api-reference/contacts/list",
+              "api-reference/contacts/details",
+              "api-reference/contacts/remove",
+              "api-reference/contacts/block",
+              "api-reference/contacts/blocklist"
+            ]
+          },
+          {
+            "group": "Etiquetas",
+            "pages": [
+              "api-reference/labels/manage",
+              "api-reference/labels/list",
+              "api-reference/labels/edit"
+            ]
+          },
+          {
+            "group": "Grupos",
+            "pages": [
+              "api-reference/groups/create",
+              "api-reference/groups/list",
+              "api-reference/groups/info",
+              "api-reference/groups/update-participants",
+              "api-reference/groups/update-name",
+              "api-reference/groups/update-description",
+              "api-reference/groups/update-image",
+              "api-reference/groups/update-locked",
+              "api-reference/groups/update-announce",
+              "api-reference/groups/invite-link",
+              "api-reference/groups/invite-info",
+              "api-reference/groups/reset-invite",
+              "api-reference/groups/join",
+              "api-reference/groups/leave"
+            ]
+          },
+          {
+            "group": "Comunidades",
+            "pages": [
+              "api-reference/communities/create",
+              "api-reference/communities/edit-groups"
+            ]
+          },
+          {
+            "group": "Respostas Rápidas",
+            "pages": [
+              "api-reference/quickreply/create",
+              "api-reference/quickreply/list",
+              "api-reference/quickreply/edit",
+              "api-reference/quickreply/delete"
+            ]
+          },
+          {
+            "group": "CRM / Leads",
+            "pages": [
+              "api-reference/crm/edit-lead",
+              "api-reference/crm/update-fields"
+            ]
+          },
+          {
+            "group": "Campanhas",
+            "pages": [
+              "api-reference/campaigns/create-simple",
+              "api-reference/campaigns/create-advanced",
+              "api-reference/campaigns/list",
+              "api-reference/campaigns/list-messages",
+              "api-reference/campaigns/control",
+              "api-reference/campaigns/cleanup",
+              "api-reference/campaigns/clear-all"
+            ]
+          },
+          {
+            "group": "Perfil",
+            "pages": [
+              "api-reference/profile/update-name",
+              "api-reference/profile/update-image"
+            ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",

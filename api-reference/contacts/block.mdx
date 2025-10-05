@@ -1,0 +1,193 @@
+---
+title: "Bloquear/Desbloquear Contato"
+api: "POST /chat/block"
+description: "Bloquear ou desbloquear contato no WhatsApp"
+---
+
+Gerencia o bloqueio de contatos no WhatsApp, impedindo ou permitindo o recebimento e envio de mensagens de forma bidirecional.
+
+## Funcionalidades de Bloqueio
+
+<AccordionGroup>
+  <Accordion title="Como Funciona o Bloqueio" icon="ban">
+    O bloqueio impede completamente a comunicação com o contato.
+
+    **Efeitos do bloqueio:**
+    - Contato não pode enviar mensagens para você
+    - Você não pode enviar mensagens para o contato
+    - Contato não vê suas atualizações de status
+    - Você não recebe notificações de mensagens dele
+    - Bloqueio sincroniza com todos os dispositivos
+
+    **Importante:** O bloqueio é bidirecional e afeta ambos os lados da comunicação.
+  </Accordion>
+
+  <Accordion title="Bloqueio vs Outras Ações" icon="scale-balanced">
+    Entenda a diferença entre bloquear e outras ações disponíveis.
+
+    **Bloqueio:**
+    - Impede completamente o envio/recebimento de mensagens
+    - Contato não é notificado do bloqueio
+    - Conversas anteriores são preservadas
+
+    **Silenciar:**
+    - Apenas desativa notificações
+    - Mensagens continuam chegando normalmente
+
+    **Arquivar:**
+    - Apenas organiza conversas
+    - Não afeta funcionalidade
+  </Accordion>
+
+  <Accordion title="Desbloquear Contatos" icon="unlock">
+    O processo de desbloqueio restaura a comunicação normal.
+
+    **Ao desbloquear:**
+    - Comunicação é restaurada imediatamente
+    - Contato pode voltar a enviar mensagens
+    - Você pode voltar a enviar mensagens
+    - Histórico de conversas permanece intacto
+    - Não há notificação sobre o desbloqueio
+
+    Use `"block": false` para desbloquear um contato previamente bloqueado.
+  </Accordion>
+
+  <Accordion title="Casos de Uso Comuns" icon="lightbulb">
+    Situações típicas para usar bloqueio/desbloqueio.
+
+    **Bloqueio:**
+    - Spam e mensagens indesejadas
+    - Contatos problemáticos ou abusivos
+    - Automação anti-spam
+    - Gerenciamento de lista negra
+    - Proteção contra assédio
+
+    **Desbloqueio:**
+    - Resolução de problemas com cliente
+    - Remoção de bloqueio acidental
+    - Mudança de política de bloqueio
+    - Reativação de relacionamento comercial
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="number" type="string" required>
+  Número do WhatsApp no formato internacional. <br />
+  Deve incluir código do país sem espaços ou símbolos. <br />
+  Exemplo: `5511999999999`
+</ParamField>
+
+<ParamField path="block" type="boolean" required>
+  Define a ação a ser executada. <br />
+  - `true`: Bloqueia o contato <br />
+  - `false`: Desbloqueia o contato <br />
+  Exemplo: `true`
+</ParamField>
+
+<Warning>
+  **Atenção:** Quando um contato está bloqueado, nenhuma mensagem pode ser trocada em nenhuma direção. Use com cuidado para evitar perder comunicações importantes.
+</Warning>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://zapclass.com.br/api/chat/block \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "number": "5511999999999",
+    "block": true
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/chat/block", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    number: "5511999999999",
+    block: true
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Contato bloqueado com sucesso");
+} else {
+  console.error("Erro ao bloquear:", data.message);
+}
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/chat/block');
+
+$payload = [
+    "number" => "5511999999999",
+    "block" => true
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Contato bloqueado: {$data['blockedContact']['number']}\n";
+    echo "Status: " . ($data['blockedContact']['isBlocked'] ? "Bloqueado" : "Desbloqueado");
+} else {
+    echo "Erro: " . $data['message'];
+}
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "message": "Contact blocked successfully",
+  "blockedContact": {
+    "number": "5511999999999",
+    "jid": "5511999999999@s.whatsapp.net",
+    "isBlocked": true,
+    "timestamp": 1672531200000
+  }
+}
+```
+
+```json 404
+{
+  "success": false,
+  "message": "Contato não encontrado"
+}
+```
+
+```json 500
+{
+  "success": false,
+  "message": "Erro ao processar bloqueio do contato"
+}
+```
+
+</ResponseExample>

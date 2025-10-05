@@ -1,0 +1,148 @@
+---
+title: "Marcar como Lidas"
+api: "POST /message/markread"
+description: "Marcar uma ou mais mensagens como lidas"
+---
+
+Marca mensagens recebidas como lidas, atualizando o status de visualização no WhatsApp e sincronizando entre dispositivos conectados.
+
+## Funcionalidades
+
+<AccordionGroup>
+  <Accordion title="Marcação em Lote" icon="check-double">
+    Processe múltiplas mensagens simultaneamente enviando um array de IDs.
+
+    **Benefícios:**
+    - Otimiza requisições à API
+    - Atualiza status de várias conversas de uma vez
+    - Reduz tempo de processamento
+  </Accordion>
+
+  <Accordion title="Sincronização Automática" icon="arrows-rotate">
+    O status de leitura é sincronizado automaticamente com todos os dispositivos vinculados.
+
+    **Comportamento:**
+    - WhatsApp Web atualiza em tempo real
+    - Aplicativo mobile recebe notificação
+    - Status visível para o remetente
+  </Accordion>
+
+  <Accordion title="Confirmação de Leitura" icon="eye">
+    Cada mensagem marcada retorna informação de timestamp confirmando a ação.
+
+    **Resposta inclui:**
+    - ID da mensagem processada
+    - Timestamp de quando foi marcada como lida
+    - Status de sucesso individual
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="id" type="array" required>
+  Lista de IDs das mensagens a serem marcadas como lidas. <br />
+  Aceita um ou múltiplos IDs de mensagens. <br />
+  Exemplo: `["62AD1AD844E518180227BF68DA7ED710","ECB9DE48EB41F77BFA8491BFA8D6EF9B"]`
+</ParamField>
+
+<Tip>
+  **Dica:** Você pode marcar até 50 mensagens por requisição para otimizar o desempenho.
+</Tip>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://zapclass.com.br/api/message/markread \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "id": [
+      "62AD1AD844E518180227BF68DA7ED710",
+      "ECB9DE48EB41F77BFA8491BFA8D6EF9B",
+      "7F3A2B1C8D9E4F5A6B7C8D9E0F1A2B3C"
+    ]
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/message/markread", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    id: [
+      "62AD1AD844E518180227BF68DA7ED710",
+      "ECB9DE48EB41F77BFA8491BFA8D6EF9B"
+    ]
+  }),
+});
+
+const data = await response.json();
+console.log(`${data.markedMessages.length} mensagens marcadas como lidas`);
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/message/markread');
+
+$payload = [
+    "id" => [
+        "62AD1AD844E518180227BF68DA7ED710",
+        "ECB9DE48EB41F77BFA8491BFA8D6EF9B"
+    ]
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+echo "Total de mensagens marcadas: " . count($data['markedMessages']);
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "message": "Messages marked as read",
+  "markedMessages": [
+    {
+      "id": "62AD1AD844E518180227BF68DA7ED710",
+      "timestamp": 1672531200000
+    },
+    {
+      "id": "ECB9DE48EB41F77BFA8491BFA8D6EF9B",
+      "timestamp": 1672531300000
+    }
+  ]
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "Lista de IDs vazia ou inválida"
+}
+```
+
+</ResponseExample>

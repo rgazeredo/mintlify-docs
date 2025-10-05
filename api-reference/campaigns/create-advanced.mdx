@@ -1,0 +1,324 @@
+---
+title: "Criar Campanha Avançada"
+api: "POST /sender/advanced"
+description: "Criar campanha de envio em massa com mensagens personalizadas"
+---
+
+Cria uma nova campanha de envio em massa com configurações avançadas, permitindo definir múltiplas mensagens personalizadas por destinatário com delays e agendamento customizados.
+
+## Sobre Campanhas Avançadas
+
+<AccordionGroup>
+  <Accordion title="Diferença entre Simple e Advanced" icon="code-compare">
+    Quando usar cada tipo de campanha.
+
+    **Campanha Simple:**
+    - Mesma mensagem para todos
+    - Configuração rápida e fácil
+    - Ideal para comunicados gerais
+    - Menor flexibilidade
+    - Exemplo: Newsletter, avisos
+
+    **Campanha Advanced:**
+    - Mensagens personalizadas por destinatário
+    - Controle granular por mensagem
+    - Ideal para automações complexas
+    - Máxima flexibilidade
+    - Exemplo: Mensagens com nome, dados específicos
+
+    **Use Advanced quando:**
+    - Precisar personalizar conteúdo por destinatário
+    - Enviar diferentes tipos de mensagem na mesma campanha
+    - Ter controle individual sobre cada envio
+    - Integrar com CRM/planilhas com dados únicos
+  </Accordion>
+
+  <Accordion title="Estrutura de Mensagens" icon="brackets-curly">
+    Como montar o array de mensagens.
+
+    **Formato do Array:**
+    ```json
+    {
+      "messages": [
+        {
+          "to": "5511999999999@s.whatsapp.net",
+          "type": "text",
+          "text": "Olá João! Sua mensagem personalizada"
+        },
+        {
+          "to": "5511888888888@s.whatsapp.net",
+          "type": "image",
+          "file": "https://exemplo.com/banner.jpg",
+          "text": "Olá Maria! Confira isso"
+        }
+      ]
+    }
+    ```
+
+    **Campos por Mensagem:**
+    - `to`: Destinatário (obrigatório)
+    - `type`: Tipo da mensagem (obrigatório)
+    - Demais campos conforme tipo escolhido
+    - Mesmos parâmetros da campanha simple
+
+    **Personalização:**
+    - Cada mensagem pode ter tipo diferente
+    - Textos únicos com nome, dados, variáveis
+    - Mídias diferentes por destinatário
+    - Botões e listas customizados
+  </Accordion>
+
+  <Accordion title="Delay e Agendamento" icon="timer">
+    Controle de tempo para envios avançados.
+
+    **Delay Randomizado:**
+    - `delayMin` e `delayMax` aplicados globalmente
+    - Cada mensagem aguarda intervalo aleatório
+    - Evita padrões detectáveis
+    - Simula comportamento natural
+
+    **Agendamento Global:**
+    - `scheduled_for`: Aplica a toda campanha
+    - Timestamp em ms ou minutos
+    - Todas mensagens iniciam no horário agendado
+    - Delays aplicados após início
+
+    **Exemplo de Execução:**
+    ```
+    scheduled_for: 10:00 AM
+    delayMin: 10s, delayMax: 30s
+
+    Msg 1 → 10:00:15 (delay 15s)
+    Msg 2 → 10:00:42 (delay 27s)
+    Msg 3 → 10:01:04 (delay 22s)
+    ```
+
+    **Dica:**
+    - Para envio imediato: `scheduled_for: 0`
+    - Para horário específico: timestamp em ms
+    - Para agendar X minutos: valor numérico
+  </Accordion>
+
+  <Accordion title="Casos de Uso Avançados" icon="lightbulb">
+    Aplicações práticas para campanhas avançadas.
+
+    **Personalização em Massa:**
+    - Mensagens com nome do destinatário
+    - Dados específicos do cliente (saldo, pedido, etc)
+    - Conteúdo baseado em segmentação
+    - Ofertas personalizadas por perfil
+
+    **Multi-formato:**
+    - Enviar texto para alguns, imagem para outros
+    - Documentos apenas para clientes específicos
+    - Enquetes para grupo segmentado
+    - Mix de tipos na mesma campanha
+
+    **Integração com Sistemas:**
+    - Importar dados de CRM/planilha
+    - Gerar mensagens dinamicamente
+    - Aplicar regras de negócio
+    - Disparar baseado em eventos
+
+    **Automação Complexa:**
+    - Sequências de mensagens personalizadas
+    - Follow-up baseado em dados
+    - Campanhas de nutrição de leads
+    - Comunicação one-to-one em escala
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="messages" type="array" required>
+  Lista de mensagens a serem enviadas. <br />
+  Cada item contém `to`, `type` e campos do tipo. <br />
+  Exemplo: `[{ "to": "5511999999999@s.whatsapp.net", "type": "text", "text": "Olá!" }]`
+</ParamField>
+
+<ParamField path="delayMin" type="integer">
+  Delay mínimo entre mensagens em segundos. <br />
+  Padrão: `3` <br />
+  Exemplo: `10`
+</ParamField>
+
+<ParamField path="delayMax" type="integer">
+  Delay máximo entre mensagens em segundos. <br />
+  Deve ser maior ou igual a delayMin. <br />
+  Padrão: `6` <br />
+  Exemplo: `30`
+</ParamField>
+
+<ParamField path="info" type="string">
+  Descrição ou informação sobre o envio. <br />
+  Útil para identificação e relatórios. <br />
+  Exemplo: `"Campanha de lançamento"`
+</ParamField>
+
+<ParamField path="scheduled_for" type="integer">
+  Agendamento do envio. <br />
+  **Formatos:** <br />
+  - Timestamp em ms: `1706198400000` <br />
+  - Minutos a partir de agora: `30` <br />
+  - Imediato: `0` ou omitir
+</ParamField>
+
+<Info>
+  **Estrutura de cada mensagem no array:** Cada objeto em `messages` deve conter `to`, `type` e os campos específicos do tipo escolhido (text, file, etc). Consulte a documentação de tipos de mensagem.
+</Info>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://zapclass.com.br/api/sender/advanced \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "delayMin": 10,
+    "delayMax": 30,
+    "scheduled_for": 0,
+    "info": "Campanha Personalizada",
+    "messages": [
+      {
+        "to": "5511999999999@s.whatsapp.net",
+        "type": "text",
+        "text": "Olá João! Temos uma oferta especial para você."
+      },
+      {
+        "to": "5511888888888@s.whatsapp.net",
+        "type": "text",
+        "text": "Olá Maria! Confira nossos novos produtos."
+      }
+    ]
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/sender/advanced", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    delayMin: 10,
+    delayMax: 30,
+    scheduled_for: 0,
+    info: "Campanha Personalizada",
+    messages: [
+      {
+        to: "5511999999999@s.whatsapp.net",
+        type: "text",
+        text: "Olá João! Temos uma oferta especial para você."
+      },
+      {
+        to: "5511888888888@s.whatsapp.net",
+        type: "text",
+        text: "Olá Maria! Confira nossos novos produtos."
+      }
+    ]
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Campanha criada:", data.campaign.id);
+  console.log("Total de mensagens:", data.campaign.totalMessages);
+}
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/sender/advanced');
+
+$payload = [
+    "delayMin" => 10,
+    "delayMax" => 30,
+    "scheduled_for" => 0,
+    "info" => "Campanha Personalizada",
+    "messages" => [
+        [
+            "to" => "5511999999999@s.whatsapp.net",
+            "type" => "text",
+            "text" => "Olá João! Temos uma oferta especial para você."
+        ],
+        [
+            "to" => "5511888888888@s.whatsapp.net",
+            "type" => "text",
+            "text" => "Olá Maria! Confira nossos novos produtos."
+        ]
+    ]
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Campanha criada: {$data['campaign']['id']}\n";
+    echo "Total de mensagens: {$data['campaign']['totalMessages']}\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "success": true,
+  "message": "Messages added to queue successfully",
+  "campaign": {
+    "id": "cmp_adv_9a8b7c6d",
+    "status": "scheduled",
+    "totalMessages": 3,
+    "delayMin": 10,
+    "delayMax": 30,
+    "scheduled_for": 1706198400000,
+    "info": "Campanha Personalizada",
+    "createdAt": 1672531200000
+  }
+}
+```
+
+```json 200
+{
+  "success": true,
+  "message": "Messages added to queue successfully",
+  "campaign": {
+    "id": "cmp_adv_1f2e3d4c",
+    "status": "processing",
+    "totalMessages": 5,
+    "delayMin": 15,
+    "delayMax": 45,
+    "scheduled_for": 0,
+    "info": "Mix de Formatos",
+    "createdAt": 1672531200000
+  }
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "Campo 'messages' é obrigatório e deve ser um array"
+}
+```
+
+</ResponseExample>

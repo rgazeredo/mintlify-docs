@@ -1,0 +1,209 @@
+---
+title: "Alterar Nome do Perfil"
+api: "POST /profile/name"
+description: "Atualizar nome de exibição do perfil WhatsApp"
+---
+
+Altera o nome de exibição do perfil da instância do WhatsApp. O nome será visível para todos os seus contatos.
+
+## Sobre Alteração de Nome
+
+<AccordionGroup>
+  <Accordion title="Como Funciona" icon="user-pen">
+    Processo de atualização do nome do perfil.
+
+    **Funcionamento:**
+    - Atualiza o nome usando WhatsApp AppState
+    - Sincroniza com servidores do WhatsApp
+    - Mudança refletida imediatamente
+    - Visível para todos os contatos
+    - Confirmação retornada pela API
+
+    **Requisitos:**
+    - Instância conectada ao WhatsApp
+    - Token válido e ativo
+    - Nome não vazio
+    - Conexão estável com internet
+
+    **Importante:**
+    - Nome fica público para seus contatos
+    - Pode haver limite de alterações por período
+    - Alterações frequentes podem ser bloqueadas
+    - Respeite políticas do WhatsApp
+  </Accordion>
+
+  <Accordion title="Boas Práticas de Nomes" icon="sparkles">
+    Recomendações para nomes profissionais.
+
+    **Para Empresas:**
+    - Use nome claro e identificável
+    - Inclua departamento se necessário
+    - Exemplo: "Empresa X - Vendas"
+    - Exemplo: "Loja Y - Atendimento"
+    - Evite apenas emoji ou símbolos
+
+    **Sugestões de Formato:**
+    - `[Nome Empresa] - [Departamento]`
+    - `[Marca] - [Função]`
+    - `[Negócio] | [Setor]`
+    - `[Nome] - [Cargo]`
+
+    **O que evitar:**
+    - Nomes genéricos ("Atendimento", "Vendas")
+    - Apenas números ou símbolos
+    - Caracteres especiais excessivos
+    - Informações sensíveis
+    - Termos ofensivos ou spam
+
+    **Dicas:**
+    - Máximo 25 caracteres (limite WhatsApp)
+    - Use capitalização adequada
+    - Seja consistente entre canais
+    - Teste visualização em diferentes dispositivos
+  </Accordion>
+
+  <Accordion title="Limitações do WhatsApp" icon="triangle-exclamation">
+    Restrições e limites da plataforma.
+
+    **Limites Conhecidos:**
+    - Tamanho máximo: ~25 caracteres
+    - Frequência: Limite não documentado oficialmente
+    - Muitas alterações podem gerar bloqueio temporário
+    - Bloqueio pode durar 24-48 horas
+
+    **Caracteres Permitidos:**
+    - Letras (A-Z, a-z)
+    - Números (0-9)
+    - Espaços
+    - Hífen, underscore
+    - Acentuação (á, é, ñ, etc)
+    - Alguns emojis (com moderação)
+
+    **Recomendações:**
+    - Altere apenas quando necessário
+    - Não altere mais de 1-2 vezes por dia
+    - Evite alterações automáticas frequentes
+    - Mantenha histórico de mudanças
+    - Aguarde confirmação antes de nova alteração
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações práticas para alteração.
+
+    **Atualização de Marca:**
+    - Rebranding da empresa
+    - Mudança de nome comercial
+    - Novo posicionamento
+    - Fusões e aquisições
+
+    **Segmentação de Atendimento:**
+    - Identificar departamentos
+    - Separar por produto/serviço
+    - Horários de atendimento
+    - Eventos temporários
+
+    **Sazonalidade:**
+    - Promoções especiais
+    - Datas comemorativas
+    - Campanhas específicas
+    - Ex: "Loja X - Black Friday"
+
+    **Organização Interna:**
+    - Múltiplas instâncias
+    - Times diferentes
+    - Filiais ou unidades
+    - Identificação de bot/humano
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="name" type="string" required>
+  Novo nome do perfil do WhatsApp. <br />
+  Máximo ~25 caracteres. <br />
+  Exemplo: `"Minha Empresa - Atendimento"`
+</ParamField>
+
+<Warning>
+  Alterações frequentes podem resultar em bloqueio temporário pelo WhatsApp. Altere apenas quando necessário.
+</Warning>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://zapclass.com.br/api/profile/name \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "name": "Minha Empresa - Atendimento"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/profile/name", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    name: "Minha Empresa - Atendimento"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Nome alterado para:", data.name);
+}
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/profile/name');
+
+$payload = [
+    "name" => "Minha Empresa - Atendimento"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Nome alterado para: {$data['name']}\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "success": true,
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "Token de autenticação inválido"
+}
+```
+</ResponseExample>

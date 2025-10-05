@@ -1,0 +1,447 @@
+---
+title: "Gerar Link de Convite"
+api: "GET /group/invitelink/:groupJID"
+description: "Gerar ou recuperar link de convite de um grupo"
+---
+
+Retorna o link de convite do grupo especificado, permitindo compartilhar acesso ao grupo de forma controlada. Requer permissões de administrador.
+
+## Funcionalidades do Link
+
+<AccordionGroup>
+  <Accordion title="Geração de Link" icon="link">
+    Cria ou recupera o link de convite ativo do grupo.
+
+    **Comportamento:**
+    - Se o grupo já tem um link, retorna o existente
+    - Se não tem link, gera um novo automaticamente
+    - Link permanece ativo até ser revogado
+    - Mesmo link funciona em múltiplos dispositivos
+
+    **Importante:** Apenas administradores podem gerar links de convite.
+  </Accordion>
+
+  <Accordion title="Permissões Necessárias" icon="shield-check">
+    Restrições de acesso para gerar o link.
+
+    **Requisitos:**
+    - Você deve ser membro do grupo
+    - Você deve ser administrador do grupo
+    - Grupo deve estar ativo
+    - Sessão deve estar conectada
+
+    **Sem permissão:** Retorna erro 403 (Forbidden)
+  </Accordion>
+
+  <Accordion title="Formato do Link" icon="square-up-right">
+    Estrutura do link de convite retornado.
+
+    **Componentes:**
+    - URL base: `https://chat.whatsapp.com/`
+    - Código: String alfanumérica única
+    - Exemplo completo: `https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt`
+
+    O código é único e permanente até ser revogado.
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações comuns para gerar links de convite.
+
+    **Aplicações:**
+    - Compartilhar grupo em campanhas de marketing
+    - Distribuir acesso em eventos
+    - Incluir em materiais promocionais
+    - Automatizar convites em sistemas
+    - Integrar com plataformas de terceiros
+    - Criar QR codes de acesso
+    - Enviar por e-mail ou SMS
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Path Parameters
+
+<ParamField path="groupJID" type="string" required>
+  Identificador único do grupo (JID). <br />
+  Formato: `número@g.us` <br />
+  Exemplo: `120363153742561022@g.us`
+</ParamField>
+
+<Warning>
+  **Atenção:** Compartilhe links de convite com cuidado. Qualquer pessoa com o link pode entrar no grupo (a menos que aprovação de admin esteja ativada).
+</Warning>
+
+<RequestExample>
+
+```bash cURL - Gerar link
+curl -X GET https://zapclass.com.br/api/group/invitelink/120363153742561022@g.us \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+```
+
+```bash cURL - Gerar e salvar em variável
+INVITE_LINK=$(curl -s -X GET https://zapclass.com.br/api/group/invitelink/120363153742561022@g.us \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  | jq -r '.inviteLink')
+
+echo "Link de convite: $INVITE_LINK"
+```
+
+```javascript JavaScript - Gerar link
+const groupJID = "120363153742561022@g.us";
+
+const response = await fetch(
+  `https://zapclass.com.br/api/group/invitelink/${groupJID}`,
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+  }
+);
+
+const data = await response.json();
+if (data.success) {
+  console.log("Link de convite:", data.inviteLink);
+  console.log("Código:", data.inviteCode);
+}
+```
+
+```javascript JavaScript - Gerar e copiar para clipboard
+async function getAndCopyInviteLink(groupJID) {
+  const response = await fetch(
+    `https://zapclass.com.br/api/group/invitelink/${groupJID}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message);
+  }
+
+  // Copiar para clipboard (navegador)
+  if (navigator.clipboard) {
+    await navigator.clipboard.writeText(data.inviteLink);
+    console.log("✓ Link copiado para a área de transferência");
+  }
+
+  return data.inviteLink;
+}
+
+// Uso
+try {
+  const link = await getAndCopyInviteLink("120363153742561022@g.us");
+  console.log("Link:", link);
+} catch (error) {
+  console.error("Erro:", error.message);
+}
+```
+
+```javascript JavaScript - Gerar QR Code
+async function generateInviteQRCode(groupJID) {
+  const response = await fetch(
+    `https://zapclass.com.br/api/group/invitelink/${groupJID}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message);
+  }
+
+  // Gera URL de QR Code usando API externa
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(data.inviteLink)}`;
+
+  return {
+    inviteLink: data.inviteLink,
+    qrCodeUrl: qrCodeUrl
+  };
+}
+
+// Uso
+const result = await generateInviteQRCode("120363153742561022@g.us");
+console.log("Link:", result.inviteLink);
+console.log("QR Code:", result.qrCodeUrl);
+```
+
+```javascript JavaScript - Gerar para múltiplos grupos
+async function getInviteLinks(groupJIDs) {
+  const results = await Promise.all(
+    groupJIDs.map(async (groupJID) => {
+      try {
+        const response = await fetch(
+          `https://zapclass.com.br/api/group/invitelink/${groupJID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        return {
+          groupJID,
+          success: data.success,
+          inviteLink: data.inviteLink || null,
+          error: data.message || null
+        };
+      } catch (error) {
+        return {
+          groupJID,
+          success: false,
+          inviteLink: null,
+          error: error.message
+        };
+      }
+    })
+  );
+
+  return results;
+}
+
+// Uso
+const groups = [
+  "120363153742561022@g.us",
+  "120363153742561023@g.us",
+  "120363153742561024@g.us"
+];
+
+const links = await getInviteLinks(groups);
+links.forEach(result => {
+  if (result.success) {
+    console.log(`✓ ${result.groupJID}: ${result.inviteLink}`);
+  } else {
+    console.log(`✗ ${result.groupJID}: ${result.error}`);
+  }
+});
+```
+
+```php PHP - Gerar link
+<?php
+$groupJID = "120363153742561022@g.us";
+$url = "https://zapclass.com.br/api/group/invitelink/" . urlencode($groupJID);
+
+$ch = curl_init($url);
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Link de convite: {$data['inviteLink']}\n";
+    echo "Código: {$data['inviteCode']}";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Gerar e enviar por email
+<?php
+function sendGroupInviteByEmail($groupJID, $recipientEmail, $groupName) {
+    $url = "https://zapclass.com.br/api/group/invitelink/" . urlencode($groupJID);
+    $ch = curl_init($url);
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $data = json_decode($response, true);
+    curl_close($ch);
+
+    if (!$data['success']) {
+        throw new Exception($data['message']);
+    }
+
+    // Envia email (exemplo com mail())
+    $to = $recipientEmail;
+    $subject = "Convite para o grupo: $groupName";
+    $message = "Você foi convidado para participar do grupo '$groupName'.\n\n";
+    $message .= "Clique no link abaixo para entrar:\n";
+    $message .= $data['inviteLink'];
+
+    $headers = "From: noreply@seudominio.com";
+
+    if (mail($to, $subject, $message, $headers)) {
+        return [
+            'sent' => true,
+            'inviteLink' => $data['inviteLink']
+        ];
+    } else {
+        throw new Exception("Falha ao enviar email");
+    }
+}
+
+// Uso
+try {
+    $result = sendGroupInviteByEmail(
+        "120363153742561022@g.us",
+        "usuario@example.com",
+        "Equipe de Vendas"
+    );
+    echo "Convite enviado com sucesso!\n";
+    echo "Link: {$result['inviteLink']}";
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+```php PHP - Classe gerenciadora
+<?php
+class GroupInviteManager {
+    private $token;
+    private $baseUrl = 'https://zapclass.com.br/api';
+
+    public function __construct($token) {
+        $this->token = $token;
+    }
+
+    public function getInviteLink($groupJID) {
+        $url = $this->baseUrl . '/group/invitelink/' . urlencode($groupJID);
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        if (!$data['success']) {
+            throw new Exception($data['message']);
+        }
+
+        return [
+            'link' => $data['inviteLink'],
+            'code' => $data['inviteCode']
+        ];
+    }
+
+    public function generateQRCode($groupJID, $size = 300) {
+        $invite = $this->getInviteLink($groupJID);
+
+        return [
+            'inviteLink' => $invite['link'],
+            'qrCodeUrl' => "https://api.qrserver.com/v1/create-qr-code/?size={$size}x{$size}&data=" . urlencode($invite['link'])
+        ];
+    }
+
+    public function getInviteHTML($groupJID, $groupName) {
+        $invite = $this->getInviteLink($groupJID);
+
+        return "
+        <div style='text-align: center; padding: 20px;'>
+            <h2>Convite para {$groupName}</h2>
+            <p>Clique no link abaixo para entrar no grupo:</p>
+            <a href='{$invite['link']}' style='display: inline-block; padding: 10px 20px; background: #25D366; color: white; text-decoration: none; border-radius: 5px;'>
+                Entrar no Grupo
+            </a>
+        </div>
+        ";
+    }
+}
+
+// Uso
+$manager = new GroupInviteManager('zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk');
+
+try {
+    // Gerar link
+    $invite = $manager->getInviteLink("120363153742561022@g.us");
+    echo "Link: {$invite['link']}\n\n";
+
+    // Gerar QR Code
+    $qr = $manager->generateQRCode("120363153742561022@g.us");
+    echo "QR Code: {$qr['qrCodeUrl']}\n\n";
+
+    // Gerar HTML
+    $html = $manager->getInviteHTML("120363153742561022@g.us", "Meu Grupo");
+    file_put_contents('invite.html', $html);
+    echo "HTML gerado em invite.html";
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Link gerado com sucesso
+{
+  "success": true,
+  "inviteLink": "https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt",
+  "inviteCode": "AbCdEfGhIjKlMnOpQrSt",
+  "groupJID": "120363153742561022@g.us"
+}
+```
+
+```json 400 - JID inválido
+{
+  "success": false,
+  "message": "Group JID inválido ou mal formatado"
+}
+```
+
+```json 403 - Sem permissão
+{
+  "success": false,
+  "message": "Você precisa ser administrador do grupo para gerar o link de convite"
+}
+```
+
+```json 404 - Grupo não encontrado
+{
+  "success": false,
+  "message": "Grupo não encontrado ou você não é membro"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao gerar link de convite"
+}
+```
+
+</ResponseExample>

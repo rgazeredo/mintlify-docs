@@ -1,0 +1,170 @@
+---
+title: "Lista de Bloqueados"
+api: "GET /chat/blocklist"
+description: "Retornar lista completa de contatos bloqueados"
+---
+
+Recupera todos os contatos que foram bloqueados pela instância, com atualização em tempo real conforme bloqueios e desbloqueios são realizados.
+
+## Informações da Lista de Bloqueio
+
+<AccordionGroup>
+  <Accordion title="Atualização em Tempo Real" icon="clock-rotate-left">
+    A lista reflete o estado atual de bloqueios na instância.
+
+    **Comportamento:**
+    - Sincronizada com WhatsApp em tempo real
+    - Atualiza automaticamente após bloqueio/desbloqueio
+    - Inclui bloqueios feitos pelo app móvel
+    - Inclui bloqueios feitos pelo WhatsApp Web
+    - Reflete estado mais recente da instância
+
+    Sempre retorna a lista mais atualizada disponível.
+  </Accordion>
+
+  <Accordion title="Dados Retornados" icon="list">
+    Cada contato bloqueado inclui informações detalhadas.
+
+    **Campos incluídos:**
+    - `jid`: Identificador único do WhatsApp
+    - `number`: Número formatado internacionalmente
+    - `name`: Nome do contato (se salvo)
+    - `blockedAt`: Timestamp do bloqueio
+    - `reason`: Motivo do bloqueio (se registrado)
+
+    Informações completas para gerenciamento da lista.
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações comuns para consultar a lista de bloqueio.
+
+    **Aplicações:**
+    - Auditoria de contatos bloqueados
+    - Verificação antes de enviar mensagens
+    - Sincronização com sistema CRM
+    - Relatórios de segurança
+    - Interface de gerenciamento de bloqueios
+    - Exportação de lista negra
+    - Validação de status de contato
+  </Accordion>
+
+  <Accordion title="Performance e Otimização" icon="gauge-high">
+    Lista otimizada para consultas frequentes.
+
+    **Otimizações:**
+    - Cache de resultados para respostas rápidas
+    - Atualização incremental em background
+    - Compressão de dados para listas grandes
+    - Resposta paginada automaticamente se necessário
+
+    Ideal para consultas frequentes sem impacto de performance.
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+<Info>
+  **Nota:** Este é um endpoint GET que não requer parâmetros no body. Apenas inclua o token no header de autenticação.
+</Info>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET https://zapclass.com.br/api/chat/blocklist \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/chat/blocklist", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+});
+
+const data = await response.json();
+console.log(`Total de bloqueados: ${data.blockedContacts.length}`);
+data.blockedContacts.forEach(contact => {
+  console.log(`${contact.name || contact.number} - Bloqueado em ${new Date(contact.blockedAt)}`);
+});
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/chat/blocklist');
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Total de bloqueados: " . count($data['blockedContacts']) . "\n\n";
+
+    foreach ($data['blockedContacts'] as $contact) {
+        echo "Número: {$contact['number']}\n";
+        echo "Nome: " . ($contact['name'] ?? 'Sem nome') . "\n";
+        echo "Bloqueado em: " . date('d/m/Y H:i', $contact['blockedAt'] / 1000) . "\n";
+        echo "---\n";
+    }
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "blockedContacts": [
+    {
+      "jid": "5511999999999@s.whatsapp.net",
+      "number": "5511999999999",
+      "name": "Spam Bot",
+      "blockedAt": 1672531200000,
+      "reason": "Mensagens indesejadas"
+    },
+    {
+      "jid": "5511888888888@s.whatsapp.net",
+      "number": "5511888888888",
+      "name": null,
+      "blockedAt": 1672617600000,
+      "reason": null
+    }
+  ],
+  "total": 2
+}
+```
+
+```json 401
+{
+  "success": false,
+  "message": "Token de autenticação inválido ou expirado"
+}
+```
+
+```json 500
+{
+  "success": false,
+  "message": "Instância não conectada. Conecte sua instância primeiro"
+}
+```
+
+</ResponseExample>

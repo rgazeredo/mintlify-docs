@@ -1,0 +1,374 @@
+---
+title: "Configurar Campos Personalizados"
+api: "POST /instance/updateFieldsMap"
+description: "Definir mapeamento de campos personalizados para leads"
+---
+
+Configura o mapeamento de campos personalizados (custom fields) da instância. Permite definir até 20 campos adicionais para armazenar informações específicas sobre leads no CRM integrado.
+
+## Sobre Campos Personalizados
+
+<AccordionGroup>
+  <Accordion title="O que são Campos Personalizados" icon="table-columns">
+    Sistema flexível para armazenar dados adicionais de leads.
+
+    **Características:**
+    - Até 20 campos personalizáveis (lead_field01 a lead_field20)
+    - Cada campo aceita até 255 caracteres
+    - Armazena qualquer tipo de dado em formato string
+    - Totalmente configurável por instância
+    - Útil para integração com CRM e sistemas externos
+
+    **Funcionamento:**
+    - Configure o mapeamento uma vez
+    - Use os campos ao criar/atualizar leads
+    - Acesse os dados em qualquer consulta de lead
+    - Campos não configurados permanecem vazios
+    - Atualização parcial preserva campos não enviados
+  </Accordion>
+
+  <Accordion title="Casos de Uso Comuns" icon="lightbulb">
+    Aplicações práticas para campos personalizados.
+
+    **Informações de Contato Estendidas:**
+    - Nome completo, apelido, cargo
+    - Email secundário, telefone comercial
+    - Endereço completo, CEP, bairro
+    - Redes sociais, website
+
+    **Dados de Qualificação:**
+    - Score de lead, temperatura (quente/frio)
+    - Fonte de captação, campanha de origem
+    - Produto de interesse, ticket médio
+    - Fase do funil, probabilidade de conversão
+
+    **Gestão Comercial:**
+    - Vendedor responsável, equipe
+    - Última interação, próximo follow-up
+    - Histórico de compras, valor LTV
+    - Observações, anotações importantes
+
+    **Segmentação:**
+    - Tags, categorias, grupos
+    - Setor, porte da empresa
+    - Região, território de vendas
+    - Perfil comportamental
+  </Accordion>
+
+  <Accordion title="Configuração e Mapeamento" icon="gear">
+    Como estruturar seus campos personalizados.
+
+    **Planejamento:**
+    - Liste todas as informações necessárias
+    - Agrupe dados relacionados
+    - Defina nomes descritivos e padronizados
+    - Reserve campos para expansão futura
+
+    **Boas Práticas:**
+    - Use nomes em português e descritivos
+    - Mantenha consistência na nomenclatura
+    - Documente o propósito de cada campo
+    - Evite abreviações confusas
+    - Planeje antes de implementar
+
+    **Exemplos de Mapeamento:**
+    - lead_field01: "nome_completo"
+    - lead_field02: "email"
+    - lead_field03: "telefone"
+    - lead_field04: "cidade"
+    - lead_field05: "estado"
+    - lead_field06: "cargo"
+  </Accordion>
+
+  <Accordion title="Integração com CRM" icon="diagram-project">
+    Como usar campos personalizados em sistemas integrados.
+
+    **Sincronização:**
+    - Mapear campos do CRM para lead_fieldXX
+    - Importar dados de sistemas externos
+    - Exportar informações completas de leads
+    - Manter sincronia bidirecional
+
+    **Automação:**
+    - Disparar ações baseadas em valores de campos
+    - Segmentar audiência por critérios personalizados
+    - Personalizar mensagens com dados dos campos
+    - Criar relatórios e dashboards customizados
+
+    **Exemplos de Integração:**
+    - Pipedrive, RD Station, HubSpot
+    - Planilhas Google Sheets, Excel
+    - Sistemas ERP internos
+    - Plataformas de e-commerce
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="lead_field01" type="string">
+  Nome/descrição para o campo 01. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"nome_completo"`
+</ParamField>
+
+<ParamField path="lead_field02" type="string">
+  Nome/descrição para o campo 02. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"email"`
+</ParamField>
+
+<ParamField path="lead_field03" type="string">
+  Nome/descrição para o campo 03. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"telefone"`
+</ParamField>
+
+<ParamField path="lead_field04" type="string">
+  Nome/descrição para o campo 04. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"cidade"`
+</ParamField>
+
+<ParamField path="lead_field05" type="string">
+  Nome/descrição para o campo 05. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"estado"`
+</ParamField>
+
+<ParamField path="lead_field06" type="string">
+  Nome/descrição para o campo 06. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"cargo"`
+</ParamField>
+
+<ParamField path="lead_field07" type="string">
+  Nome/descrição para o campo 07. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"empresa"`
+</ParamField>
+
+<ParamField path="lead_field08" type="string">
+  Nome/descrição para o campo 08. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"fonte_captacao"`
+</ParamField>
+
+<ParamField path="lead_field09" type="string">
+  Nome/descrição para o campo 09. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"status"`
+</ParamField>
+
+<ParamField path="lead_field10" type="string">
+  Nome/descrição para o campo 10. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"score"`
+</ParamField>
+
+<ParamField path="lead_field11" type="string">
+  Nome/descrição para o campo 11. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"observacoes"`
+</ParamField>
+
+<ParamField path="lead_field12" type="string">
+  Nome/descrição para o campo 12. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"ultima_interacao"`
+</ParamField>
+
+<ParamField path="lead_field13" type="string">
+  Nome/descrição para o campo 13. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"proximo_contato"`
+</ParamField>
+
+<ParamField path="lead_field14" type="string">
+  Nome/descrição para o campo 14. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"vendedor"`
+</ParamField>
+
+<ParamField path="lead_field15" type="string">
+  Nome/descrição para o campo 15. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"produto_interesse"`
+</ParamField>
+
+<ParamField path="lead_field16" type="string">
+  Nome/descrição para o campo 16. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"valor_estimado"`
+</ParamField>
+
+<ParamField path="lead_field17" type="string">
+  Nome/descrição para o campo 17. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"tags"`
+</ParamField>
+
+<ParamField path="lead_field18" type="string">
+  Nome/descrição para o campo 18. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"fase_funil"`
+</ParamField>
+
+<ParamField path="lead_field19" type="string">
+  Nome/descrição para o campo 19. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"data_conversao"`
+</ParamField>
+
+<ParamField path="lead_field20" type="string">
+  Nome/descrição para o campo 20. <br />
+  Máximo 255 caracteres. <br />
+  Exemplo: `"id_externo"`
+</ParamField>
+
+<Info>
+  **Importante:** Envie apenas os campos que deseja atualizar. Campos não enviados manterão seus valores atuais.
+</Info>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://zapclass.com.br/api/instance/updateFieldsMap \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "lead_field01": "nome_completo",
+    "lead_field02": "email",
+    "lead_field03": "telefone",
+    "lead_field04": "cidade",
+    "lead_field05": "estado"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/instance/updateFieldsMap", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    lead_field01: "nome_completo",
+    lead_field02: "email",
+    lead_field03: "telefone",
+    lead_field04: "cidade",
+    lead_field05: "estado"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Campos configurados:", data.instance.fieldsMap);
+}
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/instance/updateFieldsMap');
+
+$payload = [
+    "lead_field01" => "nome_completo",
+    "lead_field02" => "email",
+    "lead_field03" => "telefone",
+    "lead_field04" => "cidade",
+    "lead_field05" => "estado"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Campos configurados:\n";
+    print_r($data['instance']['fieldsMap']);
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "success": true,
+  "message": "Custom fields updated successfully",
+  "instance": {
+    "id": "r183e2ef9597845",
+    "name": "minha-instancia",
+    "fieldsMap": {
+      "lead_field01": "nome_completo",
+      "lead_field02": "email",
+      "lead_field03": "telefone",
+      "lead_field04": "cidade",
+      "lead_field05": "estado",
+      "lead_field06": "cargo",
+      "lead_field07": "empresa",
+      "lead_field08": "fonte_captacao",
+      "lead_field09": "status",
+      "lead_field10": "score"
+    }
+  }
+}
+```
+
+```json 200
+{
+  "success": true,
+  "message": "Custom fields updated successfully",
+  "instance": {
+    "id": "r183e2ef9597845",
+    "name": "minha-instancia",
+    "fieldsMap": {
+      "lead_field01": "nome_completo",
+      "lead_field02": "email",
+      "lead_field03": "telefone",
+      "lead_field04": "cidade",
+      "lead_field05": "estado",
+      "lead_field06": "cargo",
+      "lead_field07": "empresa",
+      "lead_field08": "fonte_captacao",
+      "lead_field09": "status",
+      "lead_field10": "score",
+      "lead_field11": "observacoes",
+      "lead_field12": "ultima_interacao",
+      "lead_field13": "proximo_contato",
+      "lead_field14": "vendedor",
+      "lead_field15": "produto_interesse",
+      "lead_field16": "valor_estimado",
+      "lead_field17": "tags",
+      "lead_field18": "fase_funil",
+      "lead_field19": "data_conversao",
+      "lead_field20": "id_externo"
+    }
+  }
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "Payload mal formatado ou campos inválidos"
+}
+```
+
+</ResponseExample>

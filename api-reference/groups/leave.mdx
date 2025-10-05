@@ -1,0 +1,561 @@
+---
+title: "Sair do Grupo"
+api: "POST /group/leave"
+description: "Remover o usuário atual de um grupo do WhatsApp"
+---
+
+Remove o usuário conectado de um grupo específico, com comportamentos diferentes dependendo da função do usuário no grupo.
+
+## Comportamento da Saída
+
+<AccordionGroup>
+  <Accordion title="Processo de Remoção" icon="right-from-bracket">
+    Como funciona a saída de um grupo do WhatsApp.
+
+    **Fluxo de saída:**
+    - Sistema valida se você é membro do grupo
+    - Verifica sua função (administrador ou membro)
+    - Remove você da lista de participantes
+    - Notifica os membros restantes
+    - Retorna confirmação da operação
+
+    A saída é permanente e você precisará de um novo convite para retornar.
+  </Accordion>
+
+  <Accordion title="Último Administrador" icon="crown">
+    Comportamento especial quando você é o único admin.
+
+    **Cenários importantes:**
+    - Se você for o único administrador do grupo, o grupo será dissolvido
+    - Se houver outros administradores, você apenas sai normalmente
+    - Recomendado: promover outro membro a admin antes de sair
+    - Grupos sem administrador são automaticamente encerrados
+
+    **Atenção:** Sempre verifique se há outros admins antes de sair.
+  </Accordion>
+
+  <Accordion title="Membro Comum" icon="user">
+    Comportamento para membros sem privilégios administrativos.
+
+    **Processo simples:**
+    - Você é removido imediatamente da lista de participantes
+    - Perde acesso às mensagens do grupo
+    - Não pode mais visualizar informações do grupo
+    - Pode retornar se receber um novo convite
+
+    Saída é instantânea e não requer aprovação.
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações comuns para sair de grupos programaticamente.
+
+    **Aplicações:**
+    - Automação de limpeza de grupos inativos
+    - Remoção de bots após conclusão de tarefas
+    - Gestão de participação em múltiplos grupos
+    - Implementação de política de privacidade
+    - Sistemas de rotação de atendimento
+    - Desvinculação automática após período determinado
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="groupjid" type="string" required>
+  Identificador único do grupo (JID). <br />
+  Formato: `número@g.us` <br />
+  Exemplo: `120363324255083289@g.us`
+</ParamField>
+
+<Warning>
+  **Atenção:** Se você for o último administrador do grupo, o grupo será dissolvido ao sair. Promova outro membro a administrador antes de sair se desejar manter o grupo ativo.
+</Warning>
+
+<RequestExample>
+
+```bash cURL - Sair do grupo
+curl -X POST https://zapclass.com.br/api/group/leave \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363324255083289@g.us"
+  }'
+```
+
+```bash cURL - Sair com confirmação
+GROUP_JID="120363324255083289@g.us"
+
+# Verifica se é administrador antes de sair
+GROUP_INFO=$(curl -s -X POST https://zapclass.com.br/api/group/info \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d "{\"groupjid\": \"$GROUP_JID\"}")
+
+echo "Informações do grupo: $GROUP_INFO"
+
+# Sai do grupo
+curl -X POST https://zapclass.com.br/api/group/leave \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d "{\"groupjid\": \"$GROUP_JID\"}"
+```
+
+```javascript JavaScript - Sair do grupo
+const response = await fetch("https://zapclass.com.br/api/group/leave", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    groupjid: "120363324255083289@g.us"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Você saiu do grupo com sucesso");
+}
+```
+
+```javascript JavaScript - Sair com verificação de admin
+async function leaveGroupSafely(groupJid) {
+  // Primeiro, busca informações do grupo
+  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid }),
+  });
+
+  const groupInfo = await infoResponse.json();
+
+  if (!groupInfo.success) {
+    throw new Error(groupInfo.message);
+  }
+
+  // Conta quantos administradores existem
+  const admins = groupInfo.group.participants.filter(p => p.admin);
+
+  console.log(`Grupo: ${groupInfo.group.name}`);
+  console.log(`Total de administradores: ${admins.length}`);
+
+  if (admins.length === 1) {
+    console.warn("⚠️  AVISO: Você é o único administrador!");
+    console.warn("⚠️  O grupo será dissolvido ao sair.");
+
+    const confirm = true; // Em ambiente real, pedir confirmação do usuário
+    if (!confirm) {
+      console.log("Operação cancelada");
+      return { cancelled: true };
+    }
+  }
+
+  // Sai do grupo
+  const leaveResponse = await fetch("https://zapclass.com.br/api/group/leave", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid }),
+  });
+
+  const result = await leaveResponse.json();
+
+  if (result.success) {
+    console.log("✓ Você saiu do grupo com sucesso");
+    if (admins.length === 1) {
+      console.log("  Grupo foi dissolvido");
+    }
+  }
+
+  return result;
+}
+
+// Uso
+try {
+  await leaveGroupSafely("120363324255083289@g.us");
+} catch (error) {
+  console.error("Erro:", error.message);
+}
+```
+
+```javascript JavaScript - Sair de múltiplos grupos
+async function leaveMultipleGroups(groupJids) {
+  const results = [];
+
+  for (const groupJid of groupJids) {
+    try {
+      const response = await fetch("https://zapclass.com.br/api/group/leave", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        },
+        body: JSON.stringify({ groupjid: groupJid }),
+      });
+
+      const data = await response.json();
+
+      results.push({
+        groupJid,
+        success: data.success,
+        message: data.message
+      });
+
+      // Aguarda 1 segundo entre cada operação
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      results.push({
+        groupJid,
+        success: false,
+        message: error.message
+      });
+    }
+  }
+
+  return results;
+}
+
+// Uso
+const groupsToLeave = [
+  "120363324255083289@g.us",
+  "120363324255083290@g.us",
+  "120363324255083291@g.us"
+];
+
+const results = await leaveMultipleGroups(groupsToLeave);
+
+console.log("=== RESULTADOS ===");
+results.forEach(result => {
+  const status = result.success ? "✓" : "✗";
+  console.log(`${status} ${result.groupJid}: ${result.message}`);
+});
+```
+
+```javascript JavaScript - Sair após tempo determinado
+async function scheduleGroupExit(groupJid, delayMinutes) {
+  console.log(`Agendado para sair do grupo em ${delayMinutes} minutos`);
+
+  // Aguarda o tempo especificado
+  await new Promise(resolve =>
+    setTimeout(resolve, delayMinutes * 60 * 1000)
+  );
+
+  console.log("Saindo do grupo agora...");
+
+  const response = await fetch("https://zapclass.com.br/api/group/leave", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid }),
+  });
+
+  const data = await response.json();
+
+  if (data.success) {
+    console.log("✓ Saída do grupo concluída");
+  } else {
+    console.log("✗ Falha ao sair:", data.message);
+  }
+
+  return data;
+}
+
+// Uso - sair após 30 minutos
+scheduleGroupExit("120363324255083289@g.us", 30);
+```
+
+```php PHP - Sair do grupo
+<?php
+$ch = curl_init('https://zapclass.com.br/api/group/leave');
+
+$payload = [
+    "groupjid" => "120363324255083289@g.us"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Você saiu do grupo com sucesso\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Sair com verificação de admin
+<?php
+function leaveGroupWithCheck($groupJid) {
+    // Busca informações do grupo
+    $ch = curl_init('https://zapclass.com.br/api/group/info');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $groupInfo = json_decode($response, true);
+    curl_close($ch);
+
+    if (!$groupInfo['success']) {
+        throw new Exception($groupInfo['message']);
+    }
+
+    // Verifica quantos admins existem
+    $admins = array_filter($groupInfo['group']['participants'],
+        fn($p) => $p['admin'] ?? false
+    );
+
+    echo "Grupo: {$groupInfo['group']['name']}\n";
+    echo "Administradores: " . count($admins) . "\n";
+
+    if (count($admins) === 1) {
+        echo "\n⚠️  AVISO: Você é o único administrador!\n";
+        echo "⚠️  O grupo será dissolvido ao sair.\n\n";
+    }
+
+    // Sai do grupo
+    $ch = curl_init('https://zapclass.com.br/api/group/leave');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $result = json_decode($response, true);
+    curl_close($ch);
+
+    if ($result['success']) {
+        echo "✓ Você saiu do grupo com sucesso\n";
+        if (count($admins) === 1) {
+            echo "  O grupo foi dissolvido\n";
+        }
+    } else {
+        echo "✗ Erro ao sair: {$result['message']}\n";
+    }
+
+    return $result;
+}
+
+// Uso
+try {
+    leaveGroupWithCheck("120363324255083289@g.us");
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+```php PHP - Classe gerenciadora
+<?php
+class GroupManager {
+    private $token;
+    private $baseUrl = 'https://zapclass.com.br/api';
+
+    public function __construct($token) {
+        $this->token = $token;
+    }
+
+    private function makeRequest($endpoint, $payload) {
+        $ch = curl_init($this->baseUrl . $endpoint);
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+    public function getGroupInfo($groupJid) {
+        return $this->makeRequest('/group/info', [
+            'groupjid' => $groupJid
+        ]);
+    }
+
+    public function leaveGroup($groupJid, $checkAdmin = true) {
+        if ($checkAdmin) {
+            $info = $this->getGroupInfo($groupJid);
+
+            if (!$info['success']) {
+                throw new Exception($info['message']);
+            }
+
+            $admins = array_filter($info['group']['participants'],
+                fn($p) => $p['admin'] ?? false
+            );
+
+            if (count($admins) === 1) {
+                return [
+                    'success' => false,
+                    'message' => 'Você é o único administrador. O grupo será dissolvido.',
+                    'warning' => true,
+                    'adminCount' => count($admins)
+                ];
+            }
+        }
+
+        return $this->makeRequest('/group/leave', [
+            'groupjid' => $groupJid
+        ]);
+    }
+
+    public function leaveMultipleGroups($groupJids, $delay = 1) {
+        $results = [];
+
+        foreach ($groupJids as $groupJid) {
+            $results[] = [
+                'groupJid' => $groupJid,
+                'result' => $this->leaveGroup($groupJid)
+            ];
+
+            if ($delay > 0 && $groupJid !== end($groupJids)) {
+                sleep($delay);
+            }
+        }
+
+        return $results;
+    }
+
+    public function forceLeave($groupJid) {
+        return $this->makeRequest('/group/leave', [
+            'groupjid' => $groupJid
+        ]);
+    }
+}
+
+// Uso
+$manager = new GroupManager('zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk');
+
+try {
+    // Sair com verificação
+    $result = $manager->leaveGroup("120363324255083289@g.us");
+
+    if (isset($result['warning']) && $result['warning']) {
+        echo "AVISO: {$result['message']}\n";
+        echo "Deseja continuar? Chamando forceLeave()...\n";
+        $result = $manager->forceLeave("120363324255083289@g.us");
+    }
+
+    if ($result['success']) {
+        echo "✓ Operação concluída com sucesso\n";
+    }
+
+    // Sair de múltiplos grupos
+    $groups = [
+        "120363324255083289@g.us",
+        "120363324255083290@g.us"
+    ];
+
+    $results = $manager->leaveMultipleGroups($groups, 2);
+
+    echo "\n=== RESULTADOS ===\n";
+    foreach ($results as $item) {
+        $status = $item['result']['success'] ? '✓' : '✗';
+        echo "{$status} {$item['groupJid']}\n";
+    }
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Saída realizada com sucesso
+{
+  "success": true,
+  "message": "Successfully left the group",
+  "groupJid": "120363324255083289@g.us"
+}
+```
+
+```json 200 - Último admin - grupo dissolvido
+{
+  "success": true,
+  "message": "Successfully left the group. Group has been dissolved as you were the last admin",
+  "groupJid": "120363324255083289@g.us",
+  "dissolved": true
+}
+```
+
+```json 400 - JID inválido
+{
+  "success": false,
+  "message": "Group JID inválido ou mal formatado"
+}
+```
+
+```json 404 - Grupo não encontrado
+{
+  "success": false,
+  "message": "Grupo não encontrado ou você não é membro"
+}
+```
+
+```json 403 - Não é membro
+{
+  "success": false,
+  "message": "Você não é membro deste grupo"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao sair do grupo. Tente novamente"
+}
+```
+
+```json 500 - Falha na conexão
+{
+  "success": false,
+  "message": "Falha na conexão com o WhatsApp. Verifique sua instância"
+}
+```
+
+</ResponseExample>

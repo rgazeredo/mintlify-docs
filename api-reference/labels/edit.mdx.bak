@@ -1,0 +1,448 @@
+---
+title: "Editar Label"
+api: "POST /label/edit"
+description: "Editar ou excluir uma label existente"
+---
+
+Modifica as propriedades de uma label (etiqueta) existente ou a remove completamente da instância, mantendo a organização e categorização de conversas atualizada.
+
+## Operações Disponíveis
+
+<AccordionGroup>
+  <Accordion title="Editar Nome" icon="pen">
+    Altera o nome de exibição da label sem afetar seus vínculos.
+
+    **Comportamento:**
+    - Label mantém o mesmo ID
+    - Todos os chats associados permanecem vinculados
+    - Atualização refletida em todos os dispositivos
+    - Histórico de categorização é preservado
+
+    **Uso:** Útil para renomear categorias conforme evolução do negócio.
+  </Accordion>
+
+  <Accordion title="Alterar Cor" icon="palette">
+    Modifica a cor visual da label para melhor organização.
+
+    **Códigos de cores disponíveis:** 0-19
+
+    **Cores incluem:**
+    - Tons de azul, verde, vermelho
+    - Rosa, roxo, laranja, amarelo
+    - Cinza e outras variações
+
+    **Dica:** Use cores consistentes para categorias relacionadas.
+  </Accordion>
+
+  <Accordion title="Excluir Label" icon="trash">
+    Remove permanentemente a label da instância.
+
+    **Parâmetro:** `delete: true`
+
+    **Efeitos da exclusão:**
+    - Label é removida de todos os chats
+    - Não aparece mais na lista de labels
+    - Ação é irreversível
+    - Sincroniza com todos os dispositivos
+
+    **Importante:** Exclusão não afeta o histórico de mensagens, apenas remove a categorização.
+  </Accordion>
+
+  <Accordion title="Validações e Regras" icon="circle-check">
+    Regras aplicadas durante a edição.
+
+    **Validações:**
+    - Label ID deve existir na instância
+    - Nome não pode estar vazio (se fornecido)
+    - Cor deve estar entre 0-19 (se fornecida)
+    - Ao usar `delete: true`, outros parâmetros são ignorados
+
+    **Flexibilidade:** Você pode editar apenas nome, apenas cor, ou ambos na mesma requisição.
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="labelid" type="string" required>
+  ID da label a ser editada. <br />
+  Deve ser uma label existente na instância. <br />
+  Exemplo: `"25"`
+</ParamField>
+
+<ParamField path="name" type="string">
+  Novo nome da label. <br />
+  Use para renomear a categoria. <br />
+  Exemplo: `"Cliente VIP"`
+</ParamField>
+
+<ParamField path="color" type="integer">
+  Código numérico da nova cor. <br />
+  Valores aceitos: 0 a 19. <br />
+  Exemplo: `2`
+</ParamField>
+
+<ParamField path="delete" type="boolean">
+  Define se a label deve ser excluída. <br />
+  Quando `true`, remove permanentemente a label. <br />
+  Exemplo: `true`
+</ParamField>
+
+<Warning>
+  **Atenção:** A exclusão de uma label é permanente e não pode ser desfeita. A label será removida de todos os chats que a utilizam.
+</Warning>
+
+<RequestExample>
+
+```bash cURL - Editar nome
+curl -X POST https://zapclass.com.br/api/label/edit \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "labelid": "25",
+    "name": "Cliente VIP"
+  }'
+```
+
+```bash cURL - Editar cor
+curl -X POST https://zapclass.com.br/api/label/edit \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "labelid": "25",
+    "color": 5
+  }'
+```
+
+```bash cURL - Editar nome e cor
+curl -X POST https://zapclass.com.br/api/label/edit \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "labelid": "25",
+    "name": "Prioridade Alta",
+    "color": 10
+  }'
+```
+
+```bash cURL - Excluir label
+curl -X POST https://zapclass.com.br/api/label/edit \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "labelid": "25",
+    "delete": true
+  }'
+```
+
+```javascript JavaScript - Editar nome
+const response = await fetch("https://zapclass.com.br/api/label/edit", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    labelid: "25",
+    name: "Cliente VIP"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Label renomeada:", data.label.name);
+}
+```
+
+```javascript JavaScript - Excluir com confirmação
+async function deleteLabel(labelId, labelName) {
+  const confirm = window.confirm(
+    `Deseja realmente excluir a label "${labelName}"? Esta ação não pode ser desfeita.`
+  );
+
+  if (!confirm) return;
+
+  const response = await fetch("https://zapclass.com.br/api/label/edit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      labelid: labelId,
+      delete: true
+    }),
+  });
+
+  const data = await response.json();
+  if (data.success) {
+    console.log(`Label "${labelName}" excluída com sucesso`);
+  } else {
+    console.error("Erro ao excluir:", data.message);
+  }
+}
+
+// Uso
+await deleteLabel("25", "Antiga Label");
+```
+
+```javascript JavaScript - Classe gerenciadora
+class LabelEditor {
+  constructor(token) {
+    this.token = token;
+    this.baseUrl = "https://zapclass.com.br/api";
+  }
+
+  async rename(labelId, newName) {
+    return this._edit({ labelid: labelId, name: newName });
+  }
+
+  async changeColor(labelId, colorCode) {
+    if (colorCode < 0 || colorCode > 19) {
+      throw new Error("Cor deve estar entre 0 e 19");
+    }
+    return this._edit({ labelid: labelId, color: colorCode });
+  }
+
+  async update(labelId, name, color) {
+    return this._edit({ labelid: labelId, name, color });
+  }
+
+  async delete(labelId) {
+    return this._edit({ labelid: labelId, delete: true });
+  }
+
+  async _edit(body) {
+    const response = await fetch(`${this.baseUrl}/label/edit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: this.token,
+      },
+      body: JSON.stringify(body),
+    });
+    return response.json();
+  }
+}
+
+// Uso
+const editor = new LabelEditor("zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk");
+
+await editor.rename("25", "Cliente Premium");
+await editor.changeColor("25", 5);
+await editor.update("25", "VIP", 10);
+await editor.delete("25");
+```
+
+```php PHP - Editar nome
+<?php
+$ch = curl_init('https://zapclass.com.br/api/label/edit');
+
+$payload = [
+    "labelid" => "25",
+    "name" => "Cliente VIP"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Label atualizada: {$data['label']['name']}\n";
+    echo "Cor: {$data['label']['color']}";
+} else {
+    echo "Erro: " . $data['message'];
+}
+curl_close($ch);
+?>
+```
+
+```php PHP - Excluir label
+<?php
+$ch = curl_init('https://zapclass.com.br/api/label/edit');
+
+$payload = [
+    "labelid" => "25",
+    "delete" => true
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Label excluída com sucesso";
+} else {
+    echo "Erro: " . $data['message'];
+}
+curl_close($ch);
+?>
+```
+
+```php PHP - Classe gerenciadora
+<?php
+class LabelEditor {
+    private $token;
+    private $baseUrl = 'https://zapclass.com.br/api';
+
+    public function __construct($token) {
+        $this->token = $token;
+    }
+
+    public function rename($labelId, $newName) {
+        return $this->edit([
+            'labelid' => $labelId,
+            'name' => $newName
+        ]);
+    }
+
+    public function changeColor($labelId, $colorCode) {
+        if ($colorCode < 0 || $colorCode > 19) {
+            throw new Exception('Cor deve estar entre 0 e 19');
+        }
+        return $this->edit([
+            'labelid' => $labelId,
+            'color' => $colorCode
+        ]);
+    }
+
+    public function update($labelId, $name, $color) {
+        return $this->edit([
+            'labelid' => $labelId,
+            'name' => $name,
+            'color' => $color
+        ]);
+    }
+
+    public function delete($labelId) {
+        return $this->edit([
+            'labelid' => $labelId,
+            'delete' => true
+        ]);
+    }
+
+    private function edit($payload) {
+        $ch = curl_init($this->baseUrl . '/label/edit');
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+}
+
+// Uso
+$editor = new LabelEditor('zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk');
+
+$editor->rename('25', 'Cliente Premium');
+$editor->changeColor('25', 5);
+$editor->update('25', 'VIP', 10);
+$editor->delete('25');
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Label editada (nome)
+{
+  "success": true,
+  "message": "Label updated successfully",
+  "label": {
+    "id": "25",
+    "name": "Cliente VIP",
+    "color": 3
+  }
+}
+```
+
+```json 200 - Label editada (cor)
+{
+  "success": true,
+  "message": "Label updated successfully",
+  "label": {
+    "id": "25",
+    "name": "Responder",
+    "color": 5
+  }
+}
+```
+
+```json 200 - Label editada (nome e cor)
+{
+  "success": true,
+  "message": "Label updated successfully",
+  "label": {
+    "id": "25",
+    "name": "Prioridade Alta",
+    "color": 10
+  }
+}
+```
+
+```json 200 - Label excluída
+{
+  "success": true,
+  "message": "Label deleted successfully",
+  "deletedLabelId": "25"
+}
+```
+
+```json 400 - Payload inválido
+{
+  "success": false,
+  "message": "Label ID é obrigatório"
+}
+```
+
+```json 400 - Cor inválida
+{
+  "success": false,
+  "message": "Cor deve estar entre 0 e 19"
+}
+```
+
+```json 404 - Label não encontrada
+{
+  "success": false,
+  "message": "Label ID '25' não encontrada"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao editar label"
+}
+```
+
+</ResponseExample>

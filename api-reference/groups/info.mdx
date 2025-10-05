@@ -1,0 +1,438 @@
+---
+title: "Informações do Grupo"
+api: "POST /group/info"
+description: "Obter informações detalhadas de um grupo do WhatsApp"
+---
+
+Recupera informações completas de um grupo, incluindo detalhes, participantes, configurações e opcionalmente o link de convite e solicitações pendentes.
+
+## Informações Disponíveis
+
+<AccordionGroup>
+  <Accordion title="Detalhes do Grupo" icon="circle-info">
+    Informações básicas e identificação do grupo.
+
+    **Dados incluídos:**
+    - ID do grupo (JID)
+    - Nome do grupo
+    - Descrição
+    - Foto de perfil (URL)
+    - Criador do grupo
+    - Data de criação
+    - Timestamp da última atualização
+
+    Informações essenciais para identificação e gestão.
+  </Accordion>
+
+  <Accordion title="Lista de Participantes" icon="users">
+    Informações completas sobre todos os membros do grupo.
+
+    **Para cada participante:**
+    - JID (identificador único)
+    - Número de telefone
+    - Nome
+    - Se é administrador
+    - Se é super administrador
+    - Data de entrada no grupo
+
+    Permite gerenciar permissões e visualizar hierarquia.
+  </Accordion>
+
+  <Accordion title="Configurações do Grupo" icon="gear">
+    Preferências e restrições configuradas no grupo.
+
+    **Configurações disponíveis:**
+    - `announce`: Apenas admins podem enviar mensagens
+    - `restrict`: Apenas admins podem editar info do grupo
+    - `memberAddMode`: Modo de aprovação para novos membros
+    - `ephemeralDuration`: Duração das mensagens temporárias
+    - `isCommunity`: Se faz parte de uma comunidade
+
+    Útil para entender permissões e comportamento do grupo.
+  </Accordion>
+
+  <Accordion title="Recursos Opcionais" icon="sliders">
+    Informações adicionais mediante solicitação.
+
+    **Link de convite** (`getInviteLink: true`):
+    - URL completa do link de convite
+    - Código do convite
+    - Permite compartilhar acesso ao grupo
+
+    **Solicitações pendentes** (`getRequestsParticipants: true`):
+    - Lista de números aguardando aprovação
+    - Útil para grupos com aprovação de entrada
+
+    **Atualização forçada** (`force: true`):
+    - Ignora cache e busca dados atualizados
+    - Use quando precisar de informações em tempo real
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="groupjid" type="string" required>
+  Identificador único do grupo (JID). <br />
+  Formato: `número@g.us` <br />
+  Exemplo: `120363153742561022@g.us`
+</ParamField>
+
+<ParamField path="getInviteLink" type="boolean">
+  Recuperar link de convite do grupo. <br />
+  Requer permissão de administrador. <br />
+  Padrão: `false` <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="getRequestsParticipants" type="boolean">
+  Recuperar lista de solicitações pendentes. <br />
+  Útil para grupos com aprovação de entrada. <br />
+  Padrão: `false` <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="force" type="boolean">
+  Forçar atualização ignorando cache. <br />
+  Use para obter dados mais recentes. <br />
+  Padrão: `false` <br />
+  Exemplo: `true`
+</ParamField>
+
+<Info>
+  **Nota:** Para obter o link de convite, você precisa ser administrador do grupo.
+</Info>
+
+<RequestExample>
+
+```bash cURL - Informações básicas
+curl -X POST https://zapclass.com.br/api/group/info \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363153742561022@g.us"
+  }'
+```
+
+```bash cURL - Com link de convite
+curl -X POST https://zapclass.com.br/api/group/info \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363153742561022@g.us",
+    "getInviteLink": true
+  }'
+```
+
+```bash cURL - Informações completas
+curl -X POST https://zapclass.com.br/api/group/info \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363153742561022@g.us",
+    "getInviteLink": true,
+    "getRequestsParticipants": true,
+    "force": true
+  }'
+```
+
+```javascript JavaScript - Buscar informações
+const response = await fetch("https://zapclass.com.br/api/group/info", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    groupjid: "120363153742561022@g.us"
+  }),
+});
+
+const data = await response.json();
+console.log("Nome do grupo:", data.group.name);
+console.log("Total de participantes:", data.group.participants.length);
+console.log("Descrição:", data.group.description);
+```
+
+```javascript JavaScript - Com análise detalhada
+const response = await fetch("https://zapclass.com.br/api/group/info", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    groupjid: "120363153742561022@g.us",
+    getInviteLink: true,
+    getRequestsParticipants: true
+  }),
+});
+
+const data = await response.json();
+
+if (data.success) {
+  const group = data.group;
+
+  console.log("=== INFORMAÇÕES DO GRUPO ===");
+  console.log(`Nome: ${group.name}`);
+  console.log(`Descrição: ${group.description || 'Sem descrição'}`);
+  console.log(`Criador: ${group.creator}`);
+
+  console.log("\n=== PARTICIPANTES ===");
+  const admins = group.participants.filter(p => p.admin);
+  const members = group.participants.filter(p => !p.admin);
+  console.log(`Total: ${group.participants.length}`);
+  console.log(`Administradores: ${admins.length}`);
+  console.log(`Membros: ${members.length}`);
+
+  console.log("\n=== CONFIGURAÇÕES ===");
+  console.log(`Apenas admins enviam: ${group.announce ? 'Sim' : 'Não'}`);
+  console.log(`Apenas admins editam: ${group.restrict ? 'Sim' : 'Não'}`);
+
+  if (group.inviteLink) {
+    console.log("\n=== LINK DE CONVITE ===");
+    console.log(group.inviteLink);
+  }
+
+  if (group.pendingRequests && group.pendingRequests.length > 0) {
+    console.log("\n=== SOLICITAÇÕES PENDENTES ===");
+    console.log(`Total: ${group.pendingRequests.length}`);
+  }
+}
+```
+
+```javascript JavaScript - Listar administradores
+async function getGroupAdmins(groupJid) {
+  const response = await fetch("https://zapclass.com.br/api/group/info", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message);
+  }
+
+  const admins = data.group.participants.filter(p => p.admin);
+
+  return admins.map(admin => ({
+    jid: admin.jid,
+    number: admin.number,
+    isSuperAdmin: admin.superAdmin || false
+  }));
+}
+
+// Uso
+const admins = await getGroupAdmins("120363153742561022@g.us");
+console.log("Administradores:", admins);
+```
+
+```php PHP - Buscar informações
+<?php
+$ch = curl_init('https://zapclass.com.br/api/group/info');
+
+$payload = [
+    "groupjid" => "120363153742561022@g.us",
+    "getInviteLink" => true
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    $group = $data['group'];
+
+    echo "Nome: {$group['name']}\n";
+    echo "Participantes: " . count($group['participants']) . "\n";
+    echo "Criado em: " . date('d/m/Y', $group['createdAt'] / 1000) . "\n";
+
+    if (isset($group['inviteLink'])) {
+        echo "Link: {$group['inviteLink']}\n";
+    }
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Relatório completo
+<?php
+$ch = curl_init('https://zapclass.com.br/api/group/info');
+
+$payload = [
+    "groupjid" => "120363153742561022@g.us",
+    "getInviteLink" => true,
+    "getRequestsParticipants" => true,
+    "force" => true
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    $group = $data['group'];
+
+    echo "=== RELATÓRIO DO GRUPO ===\n\n";
+    echo "INFORMAÇÕES BÁSICAS:\n";
+    echo "- Nome: {$group['name']}\n";
+    echo "- ID: {$group['id']}\n";
+    echo "- Descrição: " . ($group['description'] ?? 'Sem descrição') . "\n";
+    echo "- Criado em: " . date('d/m/Y H:i', $group['createdAt'] / 1000) . "\n\n";
+
+    $admins = array_filter($group['participants'], fn($p) => $p['admin'] ?? false);
+    $members = array_filter($group['participants'], fn($p) => !($p['admin'] ?? false));
+
+    echo "PARTICIPANTES:\n";
+    echo "- Total: " . count($group['participants']) . "\n";
+    echo "- Administradores: " . count($admins) . "\n";
+    echo "- Membros: " . count($members) . "\n\n";
+
+    echo "CONFIGURAÇÕES:\n";
+    echo "- Apenas admins enviam: " . ($group['announce'] ? 'Sim' : 'Não') . "\n";
+    echo "- Apenas admins editam: " . ($group['restrict'] ? 'Sim' : 'Não') . "\n\n";
+
+    if (isset($group['inviteLink'])) {
+        echo "LINK DE CONVITE:\n{$group['inviteLink']}\n\n";
+    }
+
+    if (isset($group['pendingRequests']) && count($group['pendingRequests']) > 0) {
+        echo "SOLICITAÇÕES PENDENTES: " . count($group['pendingRequests']) . "\n";
+    }
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Informações básicas
+{
+  "success": true,
+  "group": {
+    "id": "120363153742561022@g.us",
+    "name": "Equipe de Vendas 2024",
+    "description": "Grupo oficial da equipe de vendas",
+    "creator": "5511999999999@s.whatsapp.net",
+    "createdAt": 1672531200000,
+    "announce": false,
+    "restrict": false,
+    "isCommunity": false,
+    "profilePicUrl": "https://example.com/group-pic.jpg",
+    "participants": [
+      {
+        "jid": "5511999999999@s.whatsapp.net",
+        "number": "5511999999999",
+        "admin": true,
+        "superAdmin": true
+      },
+      {
+        "jid": "5511888888888@s.whatsapp.net",
+        "number": "5511888888888",
+        "admin": false
+      }
+    ]
+  }
+}
+```
+
+```json 200 - Com link de convite
+{
+  "success": true,
+  "group": {
+    "id": "120363153742561022@g.us",
+    "name": "Equipe de Vendas 2024",
+    "description": "Grupo oficial da equipe de vendas",
+    "inviteLink": "https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt",
+    "inviteCode": "AbCdEfGhIjKlMnOpQrSt",
+    "participants": [
+      {
+        "jid": "5511999999999@s.whatsapp.net",
+        "admin": true
+      }
+    ]
+  }
+}
+```
+
+```json 200 - Com solicitações pendentes
+{
+  "success": true,
+  "group": {
+    "id": "120363153742561022@g.us",
+    "name": "Grupo Privado",
+    "memberAddMode": "admin_approval",
+    "pendingRequests": [
+      {
+        "jid": "5511777777777@s.whatsapp.net",
+        "number": "5511777777777",
+        "requestedAt": 1672617600000
+      }
+    ],
+    "participants": []
+  }
+}
+```
+
+```json 400 - JID inválido
+{
+  "success": false,
+  "message": "Group JID inválido ou mal formatado"
+}
+```
+
+```json 404 - Grupo não encontrado
+{
+  "success": false,
+  "message": "Grupo não encontrado ou você não é membro"
+}
+```
+
+```json 403 - Sem permissão para link
+{
+  "success": false,
+  "message": "Você precisa ser administrador para obter o link de convite"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao buscar informações do grupo"
+}
+```
+
+</ResponseExample>

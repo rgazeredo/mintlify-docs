@@ -1,0 +1,262 @@
+---
+title: "Listar Campanhas"
+api: "GET /sender/listfolders"
+description: "Obter todas as campanhas de envio em massa"
+---
+
+Retorna todas as campanhas de mensagens em massa com possibilidade de filtro por status. Útil para monitoramento, relatórios e gestão de campanhas.
+
+## Sobre Listagem de Campanhas
+
+<AccordionGroup>
+  <Accordion title="O que são Folders de Campanha" icon="folder">
+    Estrutura organizacional de campanhas.
+
+    **Folders (Pastas):**
+    - Representam campanhas de envio
+    - Agrupam mensagens relacionadas
+    - Têm ID único (folder_id)
+    - Contêm metadados e configurações
+    - Rastreiam status e progresso
+
+    **Informações Retornadas:**
+    - ID da campanha (folder_id)
+    - Status atual (scheduled, sending, paused, done)
+    - Informações descritivas (info)
+    - Data de criação e agendamento
+    - Quantidade de mensagens
+    - Configurações de delay
+    - Estatísticas de envio
+
+    **Uso Prático:**
+    - Listar todas campanhas ativas
+    - Filtrar por status específico
+    - Monitorar progresso de envios
+    - Gerar relatórios gerenciais
+    - Auditar campanhas executadas
+  </Accordion>
+
+  <Accordion title="Status de Campanhas" icon="flag">
+    Entenda os diferentes estados possíveis.
+
+    **Status Disponíveis:**
+    - **scheduled**: Agendada, aguardando execução
+    - **sending**: Em processo de envio
+    - **paused**: Pausada manualmente
+    - **done**: Concluída com sucesso
+    - **deleting**: Sendo deletada (assíncrono)
+    - **error**: Erro durante execução
+
+    **Filtragem por Status:**
+    - Sem filtro: Retorna todas as campanhas
+    - Com filtro: Retorna apenas campanhas do status especificado
+    - Case-insensitive: "done", "Done", "DONE" funcionam igual
+    - Valores inválidos: Retorna array vazio
+
+    **Exemplos de Filtro:**
+    - `?status=scheduled` → Campanhas agendadas
+    - `?status=sending` → Campanhas em envio
+    - `?status=done` → Campanhas concluídas
+    - `?status=paused` → Campanhas pausadas
+  </Accordion>
+
+  <Accordion title="Ordenação e Paginação" icon="arrow-down-1-9">
+    Como os resultados são organizados.
+
+    **Ordenação:**
+    - Por padrão: Data de criação (mais recentes primeiro)
+    - Campanhas ativas aparecem antes de concluídas
+    - Status "sending" têm prioridade
+    - Campanhas agendadas ordenadas por scheduled_for
+
+    **Paginação:**
+    - Endpoint retorna todas campanhas
+    - Sem limite de resultados
+    - Implementar paginação client-side se necessário
+    - Considerar cache para listas grandes
+
+    **Performance:**
+    - Filtrar por status reduz payload
+    - Listar apenas campos necessários
+    - Implementar cache de curta duração
+    - Atualizar lista periodicamente
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Aplicações práticas da listagem.
+
+    **Dashboard de Campanhas:**
+    - Exibir todas campanhas ativas
+    - Mostrar estatísticas em tempo real
+    - Gráficos de progresso de envio
+    - Alertas de campanhas com erro
+
+    **Monitoramento:**
+    - Verificar status de campanhas agendadas
+    - Acompanhar progresso de envios
+    - Detectar campanhas travadas
+    - Notificar conclusão de campanhas
+
+    **Gestão Operacional:**
+    - Pausar/retomar campanhas em massa
+    - Limpar campanhas antigas
+    - Exportar relatórios
+    - Auditar histórico de envios
+
+    **Integração:**
+    - Sincronizar com CRM
+    - Alimentar BI/Analytics
+    - Webhook de conclusão
+    - Notificações automáticas
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Query Parameters
+
+<ParamField query="status" type="string">
+  Filtrar campanhas por status. <br />
+  **Valores:** `scheduled`, `sending`, `paused`, `done`, `deleting`, `error` <br />
+  Omitir para retornar todas. <br />
+  Exemplo: `?status=done`
+</ParamField>
+
+<Info>
+  Sem filtro de status, o endpoint retorna todas as campanhas independente do estado atual.
+</Info>
+
+<RequestExample>
+```bash cURL
+curl -X GET https://zapclass.com.br/api/sender/listfolders \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/sender/listfolders", {
+  headers: {
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log(`Total de campanhas: ${data.folders.length}`);
+  data.folders.forEach(folder => {
+    console.log(`- ${folder.info}: ${folder.status}`);
+  });
+}
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/sender/listfolders');
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Total de campanhas: " . count($data['folders']) . "\n";
+    foreach ($data['folders'] as $folder) {
+        echo "- {$folder['info']}: {$folder['status']}\n";
+    }
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "success": true,
+  "folders": [
+    {
+      "folder_id": "folder_123",
+      "info": "Campanha Promoção Janeiro",
+      "status": "sending",
+      "totalMessages": 150,
+      "sentMessages": 45,
+      "pendingMessages": 105,
+      "delayMin": 10,
+      "delayMax": 30,
+      "scheduled_for": 1706198400000,
+      "createdAt": 1672531200000
+    },
+    {
+      "folder_id": "folder_124",
+      "info": "Newsletter Semanal",
+      "status": "done",
+      "totalMessages": 500,
+      "sentMessages": 500,
+      "pendingMessages": 0,
+      "delayMin": 15,
+      "delayMax": 45,
+      "scheduled_for": 1706194800000,
+      "createdAt": 1672444800000,
+      "completedAt": 1672531800000
+    },
+    {
+      "folder_id": "folder_125",
+      "info": "Lançamento Produto",
+      "status": "paused",
+      "totalMessages": 300,
+      "sentMessages": 100,
+      "pendingMessages": 200,
+      "delayMin": 20,
+      "delayMax": 60,
+      "scheduled_for": 1706202000000,
+      "createdAt": 1672358400000,
+      "pausedAt": 1672445200000
+    }
+  ]
+}
+```
+
+```json 200
+{
+  "success": true,
+  "folders": [
+    {
+      "folder_id": "folder_124",
+      "info": "Newsletter Semanal",
+      "status": "done",
+      "totalMessages": 500,
+      "sentMessages": 500,
+      "pendingMessages": 0,
+      "completedAt": 1672531800000
+    },
+    {
+      "folder_id": "folder_126",
+      "info": "Pesquisa Satisfação",
+      "status": "done",
+      "totalMessages": 200,
+      "sentMessages": 200,
+      "pendingMessages": 0,
+      "completedAt": 1672445200000
+    }
+  ]
+}
+```
+
+```json 200
+{
+  "success": true,
+  "folders": []
+}
+```
+
+</ResponseExample>

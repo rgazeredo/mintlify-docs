@@ -1,0 +1,178 @@
+---
+title: "Adicionar Contato"
+api: "POST /contact/add"
+description: "Adicionar um novo contato à agenda do WhatsApp"
+---
+
+Salva um novo contato na agenda do WhatsApp conectado, permitindo organizar e identificar conversas com maior facilidade.
+
+## Funcionalidades de Contato
+
+<AccordionGroup>
+  <Accordion title="Salvamento na Agenda" icon="address-book">
+    O contato é adicionado diretamente à agenda do WhatsApp.
+
+    **Comportamento:**
+    - Salva na agenda do dispositivo vinculado
+    - Sincroniza com WhatsApp Web e aplicativo
+    - Fica disponível para todas as conversas
+    - Aparece com nome ao invés de apenas número
+
+    **Importante:** O nome fornecido é usado tanto para nome completo quanto primeiro nome.
+  </Accordion>
+
+  <Accordion title="Formatos de Telefone Aceitos" icon="phone">
+    O endpoint aceita diversos formatos de número de telefone.
+
+    **Formatos suportados:**
+    - Com código do país: `5511999999999`
+    - Com símbolo +: `+5511999999999`
+    - Com parênteses: `+55 (11) 99999-9999`
+    - Com hífen: `55-11-99999-9999`
+    - Com espaços: `55 11 99999 9999`
+    - Formato JID: `5511999999999@s.whatsapp.net`
+
+    **Obrigatório:** Código do país (Brasil = 55)
+  </Accordion>
+
+  <Accordion title="Restrições de Tipo" icon="ban">
+    Alguns tipos de identificadores não são aceitos.
+
+    **Não aceita:**
+    - Contatos comerciais (`@lid`)
+    - Grupos (`@g.us`)
+    - Comunidades (`@newsletter`)
+    - Canais e listas de transmissão
+
+    Apenas números de telefone pessoais são válidos.
+  </Accordion>
+
+  <Accordion title="Informações Retornadas" icon="circle-info">
+    A resposta confirma os dados do contato adicionado.
+
+    **Retorno inclui:**
+    - Nome salvo
+    - Número no formato internacional
+    - JID do WhatsApp
+    - Status de sucesso
+    - Timestamp da operação
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="phone" type="string" required>
+  Número de telefone no formato internacional. <br />
+  Deve incluir código do país (Brasil = 55). <br />
+  Aceita diversos formatos com/sem símbolos, parênteses, hífen ou espaços. <br />
+  Também aceita formato JID (@s.whatsapp.net). <br />
+  Exemplo: `5511999999999` ou `+55 (11) 99999-9999`
+</ParamField>
+
+<ParamField path="name" type="string" required>
+  Nome completo do contato. <br />
+  Será usado como primeiro nome e nome completo na agenda. <br />
+  Exemplo: `João Silva`
+</ParamField>
+
+<Tip>
+  **Dica:** Use o nome completo no formato "Nome Sobrenome" para facilitar a busca e identificação do contato na agenda.
+</Tip>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://zapclass.com.br/api/contact/add \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "phone": "5511999999999",
+    "name": "João Silva"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/contact/add", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    phone: "5511999999999",
+    name: "João Silva"
+  }),
+});
+
+const data = await response.json();
+console.log("Contato adicionado:", data.contact.name);
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/contact/add');
+
+$payload = [
+    "phone" => "5511999999999",
+    "name" => "João Silva"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Contato {$data['contact']['name']} adicionado com sucesso";
+} else {
+    echo "Erro: " . $data['message'];
+}
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "message": "Contact added successfully",
+  "contact": {
+    "name": "João Silva",
+    "phone": "5511999999999",
+    "jid": "5511999999999@s.whatsapp.net",
+    "timestamp": 1672531200000
+  }
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "Número de telefone ou nome inválido"
+}
+```
+
+```json 401
+{
+  "success": false,
+  "message": "Sem sessão ativa. Conecte sua instância primeiro"
+}
+```
+
+</ResponseExample>

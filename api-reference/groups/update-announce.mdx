@@ -1,0 +1,694 @@
+---
+title: "Configurar Modo Anúncio"
+api: "POST /group/updateAnnounce"
+description: "Controlar permissões de envio de mensagens no grupo"
+---
+
+Define quem pode enviar mensagens no grupo, permitindo restringir a comunicação apenas para administradores ou liberar para todos os participantes.
+
+## Controle de Mensagens
+
+<AccordionGroup>
+  <Accordion title="Modo Anúncio Ativado" icon="megaphone">
+    Quando apenas administradores podem enviar mensagens.
+
+    **Configuração `announce: true`:**
+    - Apenas administradores enviam mensagens
+    - Membros comuns podem apenas ler
+    - Ideal para canais de notificação
+    - Reduz spam e conversas paralelas
+    - Mantém foco em anúncios oficiais
+    - Membros continuam vendo todas as mensagens
+
+    Perfeito para comunicados importantes e unilaterais.
+  </Accordion>
+
+  <Accordion title="Modo Anúncio Desativado" icon="comments">
+    Quando todos os participantes podem enviar mensagens.
+
+    **Configuração `announce: false`:**
+    - Todos os membros podem enviar mensagens
+    - Grupo funciona como conversa normal
+    - Permite discussões e interação livre
+    - Configuração padrão de grupos
+    - Estimula participação e engajamento
+    - Adequado para trabalho em equipe
+
+    Ideal para grupos colaborativos e discussões.
+  </Accordion>
+
+  <Accordion title="Permissões Necessárias" icon="user-shield">
+    Requisitos para alterar configurações do grupo.
+
+    **Você precisa ser:**
+    - Membro ativo do grupo
+    - Administrador do grupo
+    - Conectado a uma instância válida
+
+    **Sem permissão:**
+    - Membros comuns não podem alterar
+    - Retorna erro 403 (Forbidden)
+    - Apenas admins gerenciam configurações
+
+    Proteção de configurações críticas do grupo.
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações para usar cada modo de comunicação.
+
+    **Modo Anúncio (`true`):**
+    - Canais de notícias da empresa
+    - Comunicados oficiais e avisos
+    - Grupos de suporte (apenas respostas de equipe)
+    - Transmissões de eventos ao vivo
+    - Boletins informativos
+    - Grupos de regulamentação
+
+    **Modo Livre (`false`):**
+    - Equipes de trabalho e projetos
+    - Grupos de discussão e brainstorm
+    - Comunidades e networking
+    - Grupos de estudo colaborativo
+    - Times de atendimento
+    - Grupos sociais e familiares
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="groupjid" type="string" required>
+  Identificador único do grupo (JID). <br />
+  Formato: `número@g.us` <br />
+  Exemplo: `120363339858396166@g.us`
+</ParamField>
+
+<ParamField path="announce" type="boolean" required>
+  Controla quem pode enviar mensagens. <br />
+  `true`: Apenas administradores podem enviar <br />
+  `false`: Todos os participantes podem enviar <br />
+  Exemplo: `true`
+</ParamField>
+
+<Info>
+  **Dica:** Use o modo anúncio para manter grupos organizados e focados, evitando conversas paralelas em canais de comunicação oficial.
+</Info>
+
+<RequestExample>
+
+```bash cURL - Ativar modo anúncio
+curl -X POST https://zapclass.com.br/api/group/updateAnnounce \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363339858396166@g.us",
+    "announce": true
+  }'
+```
+
+```bash cURL - Desativar modo anúncio
+curl -X POST https://zapclass.com.br/api/group/updateAnnounce \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363339858396166@g.us",
+    "announce": false
+  }'
+```
+
+```javascript JavaScript - Ativar modo anúncio
+const response = await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    groupjid: "120363339858396166@g.us",
+    announce: true
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Modo anúncio ativado - apenas admins podem enviar mensagens");
+}
+```
+
+```javascript JavaScript - Alternar modo
+async function toggleAnnounceMode(groupJid) {
+  // Busca estado atual
+  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid }),
+  });
+
+  const groupInfo = await infoResponse.json();
+
+  if (!groupInfo.success) {
+    throw new Error(groupInfo.message);
+  }
+
+  const currentAnnounce = groupInfo.group.announce;
+  const newAnnounce = !currentAnnounce;
+
+  console.log(`Estado atual: ${currentAnnounce ? 'Apenas admins' : 'Todos podem enviar'}`);
+  console.log(`Alterando para: ${newAnnounce ? 'Apenas admins' : 'Todos podem enviar'}`);
+
+  // Alterna o modo
+  const updateResponse = await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      groupjid: groupJid,
+      announce: newAnnounce
+    }),
+  });
+
+  const result = await updateResponse.json();
+
+  if (result.success) {
+    console.log("✓ Modo alterado com sucesso");
+  }
+
+  return result;
+}
+
+// Uso
+await toggleAnnounceMode("120363339858396166@g.us");
+```
+
+```javascript JavaScript - Configurar com notificação
+async function setAnnounceWithNotification(groupJid, announce, notifyMembers = false) {
+  const response = await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid, announce }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message);
+  }
+
+  console.log("✓ Configuração atualizada");
+
+  if (notifyMembers) {
+    // Envia mensagem no grupo informando a mudança
+    const message = announce
+      ? "🔒 *Configuração Atualizada*\n\nApenas administradores podem enviar mensagens neste grupo a partir de agora."
+      : "🔓 *Configuração Atualizada*\n\nTodos os participantes podem enviar mensagens livremente.";
+
+    await fetch("https://zapclass.com.br/api/send/text", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({
+        number: groupJid.replace('@g.us', ''),
+        message: message
+      }),
+    });
+
+    console.log("✓ Notificação enviada ao grupo");
+  }
+
+  return data;
+}
+
+// Uso - ativar modo anúncio e notificar
+await setAnnounceWithNotification("120363339858396166@g.us", true, true);
+```
+
+```javascript JavaScript - Agendar alteração temporária
+async function temporaryAnnounceMode(groupJid, durationMinutes) {
+  console.log(`Ativando modo anúncio por ${durationMinutes} minutos...`);
+
+  // Ativa modo anúncio
+  await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      groupjid: groupJid,
+      announce: true
+    }),
+  });
+
+  console.log("✓ Modo anúncio ativado");
+
+  // Agenda desativação
+  setTimeout(async () => {
+    console.log("Desativando modo anúncio...");
+
+    await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({
+        groupjid: groupJid,
+        announce: false
+      }),
+    });
+
+    console.log("✓ Modo anúncio desativado - todos podem enviar novamente");
+  }, durationMinutes * 60 * 1000);
+}
+
+// Uso - modo anúncio por 30 minutos (útil durante apresentações)
+temporaryAnnounceMode("120363339858396166@g.us", 30);
+```
+
+```javascript JavaScript - Configurar múltiplos grupos
+async function updateMultipleGroupsAnnounce(groupJids, announce) {
+  const results = [];
+
+  for (const groupJid of groupJids) {
+    try {
+      const response = await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        },
+        body: JSON.stringify({ groupjid: groupJid, announce }),
+      });
+
+      const data = await response.json();
+
+      results.push({
+        groupJid,
+        success: data.success,
+        message: data.message
+      });
+
+      // Aguarda 1 segundo entre operações
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      results.push({
+        groupJid,
+        success: false,
+        message: error.message
+      });
+    }
+  }
+
+  return results;
+}
+
+// Uso - ativar modo anúncio em todos os grupos de comunicação
+const groups = [
+  "120363339858396166@g.us",
+  "120363339858396167@g.us",
+  "120363339858396168@g.us"
+];
+
+const results = await updateMultipleGroupsAnnounce(groups, true);
+
+console.log("=== RESULTADOS ===");
+results.forEach(result => {
+  const status = result.success ? "✓" : "✗";
+  console.log(`${status} ${result.groupJid}`);
+});
+```
+
+```php PHP - Ativar modo anúncio
+<?php
+$ch = curl_init('https://zapclass.com.br/api/group/updateAnnounce');
+
+$payload = [
+    "groupjid" => "120363339858396166@g.us",
+    "announce" => true
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Modo anúncio ativado - apenas admins podem enviar mensagens\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Alternar modo
+<?php
+function toggleAnnounceMode($groupJid) {
+    // Busca estado atual
+    $ch = curl_init('https://zapclass.com.br/api/group/info');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $groupInfo = json_decode($response, true);
+    curl_close($ch);
+
+    if (!$groupInfo['success']) {
+        throw new Exception($groupInfo['message']);
+    }
+
+    $currentAnnounce = $groupInfo['group']['announce'];
+    $newAnnounce = !$currentAnnounce;
+
+    echo "Estado atual: " . ($currentAnnounce ? 'Apenas admins' : 'Todos podem enviar') . "\n";
+    echo "Alterando para: " . ($newAnnounce ? 'Apenas admins' : 'Todos podem enviar') . "\n";
+
+    // Alterna o modo
+    $ch = curl_init('https://zapclass.com.br/api/group/updateAnnounce');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid,
+        'announce' => $newAnnounce
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $result = json_decode($response, true);
+    curl_close($ch);
+
+    if ($result['success']) {
+        echo "✓ Modo alterado com sucesso\n";
+    } else {
+        echo "✗ Erro: {$result['message']}\n";
+    }
+
+    return $result;
+}
+
+// Uso
+try {
+    toggleAnnounceMode("120363339858396166@g.us");
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+```php PHP - Configurar múltiplos grupos
+<?php
+function updateMultipleGroupsAnnounce($groupJids, $announce) {
+    $results = [];
+
+    foreach ($groupJids as $groupJid) {
+        $ch = curl_init('https://zapclass.com.br/api/group/updateAnnounce');
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            'groupjid' => $groupJid,
+            'announce' => $announce
+        ]));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $data = json_decode($response, true);
+        curl_close($ch);
+
+        $results[] = [
+            'groupJid' => $groupJid,
+            'success' => $data['success'],
+            'message' => $data['message'] ?? null
+        ];
+
+        // Aguarda 1 segundo entre operações
+        sleep(1);
+    }
+
+    return $results;
+}
+
+// Uso - ativar modo anúncio em todos os grupos
+$groups = [
+    "120363339858396166@g.us",
+    "120363339858396167@g.us",
+    "120363339858396168@g.us"
+];
+
+$results = updateMultipleGroupsAnnounce($groups, true);
+
+echo "=== RESULTADOS ===\n\n";
+foreach ($results as $result) {
+    $status = $result['success'] ? '✓' : '✗';
+    echo "{$status} {$result['groupJid']}\n";
+    if (!$result['success']) {
+        echo "  Erro: {$result['message']}\n";
+    }
+}
+?>
+```
+
+```php PHP - Classe gerenciadora completa
+<?php
+class GroupAnnounceManager {
+    private $token;
+    private $baseUrl = 'https://zapclass.com.br/api';
+
+    public function __construct($token) {
+        $this->token = $token;
+    }
+
+    private function makeRequest($endpoint, $payload) {
+        $ch = curl_init($this->baseUrl . $endpoint);
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+    public function getGroupInfo($groupJid) {
+        return $this->makeRequest('/group/info', [
+            'groupjid' => $groupJid
+        ]);
+    }
+
+    public function setAnnounce($groupJid, $announce) {
+        $data = $this->makeRequest('/group/updateAnnounce', [
+            'groupjid' => $groupJid,
+            'announce' => $announce
+        ]);
+
+        if (!$data['success']) {
+            throw new Exception($data['message']);
+        }
+
+        return $data;
+    }
+
+    public function enableAnnounce($groupJid) {
+        return $this->setAnnounce($groupJid, true);
+    }
+
+    public function disableAnnounce($groupJid) {
+        return $this->setAnnounce($groupJid, false);
+    }
+
+    public function toggleAnnounce($groupJid) {
+        $info = $this->getGroupInfo($groupJid);
+
+        if (!$info['success']) {
+            throw new Exception($info['message']);
+        }
+
+        $currentAnnounce = $info['group']['announce'];
+        $newAnnounce = !$currentAnnounce;
+
+        return $this->setAnnounce($groupJid, $newAnnounce);
+    }
+
+    public function updateMultiple($groupJids, $announce, $delay = 1) {
+        $results = [];
+
+        foreach ($groupJids as $groupJid) {
+            try {
+                $this->setAnnounce($groupJid, $announce);
+                $results[$groupJid] = [
+                    'success' => true,
+                    'announce' => $announce
+                ];
+            } catch (Exception $e) {
+                $results[$groupJid] = [
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ];
+            }
+
+            if ($delay > 0) {
+                sleep($delay);
+            }
+        }
+
+        return $results;
+    }
+
+    public function getCurrentState($groupJid) {
+        $info = $this->getGroupInfo($groupJid);
+
+        if (!$info['success']) {
+            throw new Exception($info['message']);
+        }
+
+        return [
+            'groupName' => $info['group']['name'],
+            'announce' => $info['group']['announce'],
+            'description' => $info['group']['announce']
+                ? 'Apenas administradores podem enviar mensagens'
+                : 'Todos os participantes podem enviar mensagens'
+        ];
+    }
+}
+
+// Uso
+$manager = new GroupAnnounceManager('zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk');
+
+try {
+    // Verificar estado atual
+    $state = $manager->getCurrentState("120363339858396166@g.us");
+    echo "Grupo: {$state['groupName']}\n";
+    echo "Estado: {$state['description']}\n\n";
+
+    // Ativar modo anúncio
+    $manager->enableAnnounce("120363339858396166@g.us");
+    echo "✓ Modo anúncio ativado\n\n";
+
+    // Alternar modo
+    $manager->toggleAnnounce("120363339858396166@g.us");
+    echo "✓ Modo alternado\n\n";
+
+    // Configurar múltiplos grupos
+    $groups = [
+        "120363339858396166@g.us",
+        "120363339858396167@g.us"
+    ];
+
+    $results = $manager->updateMultiple($groups, true);
+
+    echo "=== RESULTADOS ===\n";
+    foreach ($results as $groupJid => $result) {
+        if ($result['success']) {
+            echo "✓ {$groupJid} - Modo anúncio ativado\n";
+        } else {
+            echo "✗ {$groupJid} - {$result['error']}\n";
+        }
+    }
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Modo anúncio ativado
+{
+  "success": true,
+  "message": "Announce mode enabled successfully",
+  "groupJid": "120363339858396166@g.us",
+  "announce": true
+}
+```
+
+```json 200 - Modo anúncio desativado
+{
+  "success": true,
+  "message": "Announce mode disabled successfully",
+  "groupJid": "120363339858396166@g.us",
+  "announce": false
+}
+```
+
+```json 400 - Parâmetro inválido
+{
+  "success": false,
+  "message": "O parâmetro 'announce' deve ser um booleano (true ou false)"
+}
+```
+
+```json 401 - Token inválido
+{
+  "success": false,
+  "message": "Token de autenticação inválido ou expirado"
+}
+```
+
+```json 403 - Sem permissão de admin
+{
+  "success": false,
+  "message": "Você precisa ser administrador do grupo para alterar configurações"
+}
+```
+
+```json 404 - Grupo não encontrado
+{
+  "success": false,
+  "message": "Grupo não encontrado ou você não é membro"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao atualizar configuração do grupo. Tente novamente"
+}
+```
+
+</ResponseExample>

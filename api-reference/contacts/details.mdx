@@ -1,0 +1,220 @@
+---
+title: "Detalhes do Chat"
+api: "POST /chat/details"
+description: "Obter informações completas sobre um contato ou grupo"
+---
+
+Retorna informações detalhadas e completas sobre um chat, incluindo mais de 60 campos do modelo Chat com dados de WhatsApp, CRM, chatbot e configurações.
+
+## Informações Disponíveis
+
+<AccordionGroup>
+  <Accordion title="Dados Básicos" icon="address-card">
+    Informações essenciais de identificação do chat.
+
+    **Campos incluídos:**
+    - `id`: Identificador único interno
+    - `wa_fastid`: ID rápido do WhatsApp
+    - `wa_chatid`: ID do chat no formato JID
+    - `owner`: Proprietário da instância
+    - `name`: Nome do contato/grupo
+    - `phone`: Número de telefone formatado
+
+    Esses campos formam a base de identificação para todas as operações.
+  </Accordion>
+
+  <Accordion title="Informações do WhatsApp" icon="whatsapp">
+    Dados nativos sincronizados com o WhatsApp.
+
+    **Campos disponíveis:**
+    - `wa_name`: Nome verificado do WhatsApp
+    - `wa_contactName`: Nome salvo nos contatos
+    - `wa_archived`: Status de arquivamento
+    - `wa_isBlocked`: Se o contato está bloqueado
+    - `wa_muteEndTime`: Até quando está silenciado
+    - `wa_isPinned`: Se está fixado no topo
+    - `wa_unreadCount`: Contador de não lidas
+    - `profilePicUrl`: URL da foto de perfil
+
+    Para grupos: `wa_isGroup`, `wa_isGroup_admin`, `wa_isGroup_announce`
+  </Accordion>
+
+  <Accordion title="Dados de Lead/CRM" icon="user-tag">
+    Informações customizadas de gerenciamento de leads.
+
+    **Campos CRM:**
+    - `lead_name`: Nome do lead
+    - `lead_email`: E-mail do lead
+    - `lead_status`: Status atual do lead
+    - `lead_field01` até `lead_field20`: Campos personalizados
+    - `lead_tags`: Tags de categorização
+    - `lead_notes`: Anotações sobre o lead
+
+    Permite integração completa com sistemas CRM.
+  </Accordion>
+
+  <Accordion title="Chatbot e Automação" icon="robot">
+    Configurações de automação e chatbot.
+
+    **Campos de chatbot:**
+    - `chatbot_summary`: Resumo das interações
+    - `chatbot_lastTrigger_id`: Último gatilho ativado
+    - `chatbot_disableUntil`: Chatbot desabilitado até quando
+    - `chatbot_activeFlow`: Fluxo ativo atual
+    - `chatbot_variables`: Variáveis do contexto
+
+    Útil para rastrear automações em andamento.
+  </Accordion>
+
+  <Accordion title="Configurações Especiais" icon="gear">
+    Opções adicionais de personalização.
+
+    **Recursos:**
+    - Tamanho de imagem configurável (`preview` ou `full`)
+    - Atualização automática de dados desatualizados
+    - Cálculo de grupos em comum (contatos individuais)
+    - Verificação de status de comunidade (grupos)
+    - Combinação de múltiplas fontes de dados
+
+    O sistema mantém dados sempre sincronizados.
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="number" type="string" required>
+  Número do telefone ou ID do grupo. <br />
+  Aceita formato internacional ou JID do WhatsApp. <br />
+  Exemplo: `5511999999999` ou `120363123456789012@g.us`
+</ParamField>
+
+<ParamField path="preview" type="boolean">
+  Controla o tamanho da imagem de perfil retornada. <br />
+  - `true`: Retorna imagem preview (menor, otimizada para listagens) <br />
+  - `false`: Retorna imagem full (resolução original, maior qualidade) <br />
+  Padrão: `false` <br />
+  Exemplo: `true`
+</ParamField>
+
+<Tip>
+  **Dica:** Use `preview: true` para listagens e `preview: false` para visualização de perfil completo, economizando banda quando necessário.
+</Tip>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://zapclass.com.br/api/chat/details \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "number": "5511999999999",
+    "preview": true
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/chat/details", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    number: "5511999999999",
+    preview: true
+  }),
+});
+
+const data = await response.json();
+console.log("Nome:", data.chat.name);
+console.log("Telefone:", data.chat.phone);
+console.log("WhatsApp Name:", data.chat.wa_name);
+console.log("Não lidas:", data.chat.wa_unreadCount);
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/chat/details');
+
+$payload = [
+    "number" => "5511999999999",
+    "preview" => true
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    $chat = $data['chat'];
+    echo "Nome: {$chat['name']}\n";
+    echo "Telefone: {$chat['phone']}\n";
+    echo "Não lidas: {$chat['wa_unreadCount']}\n";
+}
+
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "chat": {
+    "id": 12345,
+    "wa_fastid": "5511999999999",
+    "wa_chatid": "5511999999999@s.whatsapp.net",
+    "owner": "5511888888888",
+    "name": "João Silva",
+    "phone": "5511999999999",
+    "wa_name": "João Silva",
+    "wa_contactName": "João - Cliente",
+    "wa_archived": false,
+    "wa_isBlocked": false,
+    "wa_muteEndTime": null,
+    "wa_isPinned": false,
+    "wa_unreadCount": 3,
+    "wa_isGroup": false,
+    "profilePicUrl": "https://example.com/profile.jpg",
+    "lead_name": "João Silva Santos",
+    "lead_email": "joao@example.com",
+    "lead_status": "qualified",
+    "commonGroups": 2,
+    "createdAt": "2024-01-01T10:00:00Z",
+    "updatedAt": "2024-01-15T15:30:00Z"
+  }
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "Número de telefone inválido"
+}
+```
+
+```json 500
+{
+  "success": false,
+  "message": "Sessão não iniciada. Conecte sua instância primeiro"
+}
+```
+
+</ResponseExample>

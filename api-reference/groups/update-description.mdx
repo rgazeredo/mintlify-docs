@@ -1,0 +1,735 @@
+---
+title: "Atualizar Descrição"
+api: "POST /group/updateDescription"
+description: "Modificar a descrição do grupo"
+---
+
+Altera a descrição (tópico) de um grupo do WhatsApp, permitindo atualizar as informações visíveis a todos os participantes.
+
+## Gerenciamento de Descrição
+
+<AccordionGroup>
+  <Accordion title="Função da Descrição" icon="align-left">
+    Como a descrição do grupo é utilizada.
+
+    **Características:**
+    - Visível na tela de informações do grupo
+    - Todos os participantes podem visualizar
+    - Aparece abaixo do nome do grupo
+    - Pode conter regras, avisos ou propósito
+    - Suporta texto formatado e emojis
+    - Mantém histórico de alterações no WhatsApp
+
+    Essencial para comunicar regras e contexto do grupo.
+  </Accordion>
+
+  <Accordion title="Boas Práticas" icon="circle-check">
+    Recomendações para criar descrições eficazes.
+
+    **Conteúdo sugerido:**
+    - Propósito e objetivo do grupo
+    - Regras de convivência e uso
+    - Horários de atendimento (se aplicável)
+    - Links importantes e recursos
+    - Avisos e observações relevantes
+    - Contatos de administradores
+    - Data de última atualização
+
+    **Formatação:**
+    - Use quebras de linha para organização
+    - Emojis para destacar seções importantes
+    - Seja claro e objetivo
+    - Mantenha atualizado regularmente
+  </Accordion>
+
+  <Accordion title="Permissões e Restrições" icon="shield-check">
+    Quem pode alterar a descrição do grupo.
+
+    **Permissões necessárias:**
+    - Você deve ser administrador do grupo
+    - Conexão ativa com a instância
+    - Membro ativo do grupo
+
+    **Configuração "restrict":**
+    - Se `restrict: true`, apenas admins editam
+    - Se `restrict: false`, qualquer membro pode editar
+    - Esta API sempre requer permissão de admin
+
+    **Limites do WhatsApp:**
+    - Descrição tem limite de caracteres
+    - Texto muito longo retorna erro 413
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações para atualizar a descrição do grupo.
+
+    **Aplicações práticas:**
+    - Atualizar regras e políticas do grupo
+    - Adicionar avisos temporários ou permanentes
+    - Incluir links de recursos e documentos
+    - Informar horários de funcionamento
+    - Comunicar mudanças importantes
+    - Adicionar informações de contato
+    - Automatizar atualizações periódicas
+    - Sincronizar com sistemas externos
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="groupjid" type="string" required>
+  Identificador único do grupo (JID). <br />
+  Formato: `número@g.us` <br />
+  Exemplo: `120363339858396166@g.us`
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Nova descrição do grupo. <br />
+  Pode conter texto, emojis e quebras de linha. <br />
+  Respeite o limite de caracteres do WhatsApp. <br />
+  Exemplo: `"Grupo oficial de suporte - Atendimento 24h"`
+</ParamField>
+
+<Tip>
+  **Dica:** Use quebras de linha (`\n`) para organizar a descrição em seções e facilitar a leitura pelos participantes.
+</Tip>
+
+<RequestExample>
+
+```bash cURL - Atualizar descrição
+curl -X POST https://zapclass.com.br/api/group/updateDescription \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363339858396166@g.us",
+    "description": "Grupo oficial de suporte - Atendimento 24h"
+  }'
+```
+
+```bash cURL - Descrição com formatação
+curl -X POST https://zapclass.com.br/api/group/updateDescription \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363339858396166@g.us",
+    "description": "📋 REGRAS DO GRUPO\n\n✅ Respeite todos os membros\n✅ Proibido spam\n✅ Apenas conteúdo relevante\n\n🕐 Atendimento: Seg-Sex 9h às 18h"
+  }'
+```
+
+```javascript JavaScript - Atualizar descrição
+const response = await fetch("https://zapclass.com.br/api/group/updateDescription", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    groupjid: "120363339858396166@g.us",
+    description: "Grupo oficial de suporte - Atendimento 24h"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Descrição atualizada com sucesso");
+}
+```
+
+```javascript JavaScript - Descrição formatada
+async function updateGroupDescription(groupJid, sections) {
+  // Constrói descrição com seções
+  let description = "";
+
+  sections.forEach((section, index) => {
+    if (index > 0) description += "\n\n";
+
+    if (section.title) {
+      description += `${section.emoji || "📌"} ${section.title.toUpperCase()}\n`;
+    }
+
+    if (section.items) {
+      description += section.items.map(item => `${section.bullet || "•"} ${item}`).join('\n');
+    } else if (section.text) {
+      description += section.text;
+    }
+  });
+
+  const response = await fetch("https://zapclass.com.br/api/group/updateDescription", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid, description }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message);
+  }
+
+  return data;
+}
+
+// Uso
+await updateGroupDescription("120363339858396166@g.us", [
+  {
+    title: "Regras do Grupo",
+    emoji: "📋",
+    bullet: "✅",
+    items: [
+      "Respeite todos os membros",
+      "Proibido spam ou correntes",
+      "Apenas conteúdo relevante ao tema"
+    ]
+  },
+  {
+    title: "Horário de Atendimento",
+    emoji: "🕐",
+    text: "Segunda a Sexta: 9h às 18h\nSábado: 9h às 13h"
+  },
+  {
+    title: "Administradores",
+    emoji: "👥",
+    items: [
+      "João Silva - Coordenador",
+      "Maria Santos - Suporte"
+    ]
+  }
+]);
+```
+
+```javascript JavaScript - Adicionar timestamp
+async function updateDescriptionWithTimestamp(groupJid, newDescription) {
+  const now = new Date();
+  const timestamp = now.toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  const description = `${newDescription}\n\n📅 Atualizado em: ${timestamp}`;
+
+  const response = await fetch("https://zapclass.com.br/api/group/updateDescription", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid, description }),
+  });
+
+  const data = await response.json();
+
+  if (data.success) {
+    console.log(`✓ Descrição atualizada em ${timestamp}`);
+  }
+
+  return data;
+}
+
+// Uso
+await updateDescriptionWithTimestamp(
+  "120363339858396166@g.us",
+  "📋 AVISOS IMPORTANTES\n\n• Manutenção programada para 15/03\n• Nova política de uso em vigor"
+);
+```
+
+```javascript JavaScript - Backup antes de atualizar
+async function updateWithBackup(groupJid, newDescription) {
+  // Busca descrição atual primeiro
+  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid }),
+  });
+
+  const groupInfo = await infoResponse.json();
+
+  if (!groupInfo.success) {
+    throw new Error(groupInfo.message);
+  }
+
+  const oldDescription = groupInfo.group.description || "";
+
+  console.log("Descrição atual salva:");
+  console.log(oldDescription);
+  console.log("\n---\n");
+
+  // Atualiza com nova descrição
+  const updateResponse = await fetch("https://zapclass.com.br/api/group/updateDescription", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid, description: newDescription }),
+  });
+
+  const result = await updateResponse.json();
+
+  if (result.success) {
+    console.log("✓ Descrição atualizada com sucesso");
+  }
+
+  return {
+    success: result.success,
+    oldDescription,
+    newDescription
+  };
+}
+
+// Uso
+const backup = await updateWithBackup(
+  "120363339858396166@g.us",
+  "Nova descrição do grupo"
+);
+
+// Salvar backup em arquivo ou banco de dados se necessário
+console.log("Backup:", backup.oldDescription);
+```
+
+```javascript JavaScript - Atualizar múltiplos grupos
+async function updateMultipleDescriptions(updates) {
+  const results = [];
+
+  for (const update of updates) {
+    try {
+      const response = await fetch("https://zapclass.com.br/api/group/updateDescription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        },
+        body: JSON.stringify({
+          groupjid: update.groupJid,
+          description: update.description
+        }),
+      });
+
+      const data = await response.json();
+
+      results.push({
+        groupJid: update.groupJid,
+        success: data.success,
+        message: data.message
+      });
+
+      // Aguarda 1 segundo entre operações
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      results.push({
+        groupJid: update.groupJid,
+        success: false,
+        message: error.message
+      });
+    }
+  }
+
+  return results;
+}
+
+// Uso - atualizar descrição de vários grupos
+const updates = [
+  {
+    groupJid: "120363339858396166@g.us",
+    description: "Grupo de Vendas - Atendimento 24h"
+  },
+  {
+    groupJid: "120363339858396167@g.us",
+    description: "Grupo de Suporte - Seg-Sex 9h-18h"
+  }
+];
+
+const results = await updateMultipleDescriptions(updates);
+
+console.log("=== RESULTADOS ===");
+results.forEach(result => {
+  const status = result.success ? "✓" : "✗";
+  console.log(`${status} ${result.groupJid}`);
+});
+```
+
+```php PHP - Atualizar descrição
+<?php
+$ch = curl_init('https://zapclass.com.br/api/group/updateDescription');
+
+$payload = [
+    "groupjid" => "120363339858396166@g.us",
+    "description" => "Grupo oficial de suporte - Atendimento 24h"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Descrição atualizada com sucesso\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Descrição formatada
+<?php
+function buildDescription($sections) {
+    $description = "";
+
+    foreach ($sections as $index => $section) {
+        if ($index > 0) {
+            $description .= "\n\n";
+        }
+
+        if (isset($section['title'])) {
+            $emoji = $section['emoji'] ?? '📌';
+            $description .= "{$emoji} " . strtoupper($section['title']) . "\n";
+        }
+
+        if (isset($section['items'])) {
+            $bullet = $section['bullet'] ?? '•';
+            foreach ($section['items'] as $item) {
+                $description .= "{$bullet} {$item}\n";
+            }
+        } elseif (isset($section['text'])) {
+            $description .= $section['text'];
+        }
+    }
+
+    return trim($description);
+}
+
+$sections = [
+    [
+        'title' => 'Regras do Grupo',
+        'emoji' => '📋',
+        'bullet' => '✅',
+        'items' => [
+            'Respeite todos os membros',
+            'Proibido spam ou correntes',
+            'Apenas conteúdo relevante ao tema'
+        ]
+    ],
+    [
+        'title' => 'Horário de Atendimento',
+        'emoji' => '🕐',
+        'text' => "Segunda a Sexta: 9h às 18h\nSábado: 9h às 13h"
+    ]
+];
+
+$description = buildDescription($sections);
+
+$ch = curl_init('https://zapclass.com.br/api/group/updateDescription');
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+    'groupjid' => '120363339858396166@g.us',
+    'description' => $description
+]));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Descrição formatada atualizada:\n\n{$description}\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Com timestamp
+<?php
+function updateDescriptionWithTimestamp($groupJid, $newDescription) {
+    $timestamp = date('d/m/Y H:i');
+    $description = "{$newDescription}\n\n📅 Atualizado em: {$timestamp}";
+
+    $ch = curl_init('https://zapclass.com.br/api/group/updateDescription');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid,
+        'description' => $description
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $data = json_decode($response, true);
+    curl_close($ch);
+
+    if ($data['success']) {
+        echo "✓ Descrição atualizada em {$timestamp}\n";
+    } else {
+        echo "✗ Erro: {$data['message']}\n";
+    }
+
+    return $data;
+}
+
+// Uso
+updateDescriptionWithTimestamp(
+    "120363339858396166@g.us",
+    "📋 AVISOS IMPORTANTES\n\n• Manutenção programada para 15/03\n• Nova política de uso em vigor"
+);
+?>
+```
+
+```php PHP - Classe gerenciadora completa
+<?php
+class GroupDescriptionManager {
+    private $token;
+    private $baseUrl = 'https://zapclass.com.br/api';
+
+    public function __construct($token) {
+        $this->token = $token;
+    }
+
+    private function makeRequest($endpoint, $payload) {
+        $ch = curl_init($this->baseUrl . $endpoint);
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+    public function getGroupInfo($groupJid) {
+        return $this->makeRequest('/group/info', [
+            'groupjid' => $groupJid
+        ]);
+    }
+
+    public function updateDescription($groupJid, $description) {
+        $data = $this->makeRequest('/group/updateDescription', [
+            'groupjid' => $groupJid,
+            'description' => $description
+        ]);
+
+        if (!$data['success']) {
+            throw new Exception($data['message']);
+        }
+
+        return $data;
+    }
+
+    public function getCurrentDescription($groupJid) {
+        $info = $this->getGroupInfo($groupJid);
+
+        if (!$info['success']) {
+            throw new Exception($info['message']);
+        }
+
+        return $info['group']['description'] ?? '';
+    }
+
+    public function updateWithTimestamp($groupJid, $description) {
+        $timestamp = date('d/m/Y H:i');
+        $fullDescription = "{$description}\n\n📅 Atualizado em: {$timestamp}";
+
+        return $this->updateDescription($groupJid, $fullDescription);
+    }
+
+    public function updateWithBackup($groupJid, $newDescription) {
+        $oldDescription = $this->getCurrentDescription($groupJid);
+
+        $result = $this->updateDescription($groupJid, $newDescription);
+
+        return [
+            'success' => $result['success'],
+            'oldDescription' => $oldDescription,
+            'newDescription' => $newDescription,
+            'timestamp' => date('Y-m-d H:i:s')
+        ];
+    }
+
+    public function buildSections($sections) {
+        $description = "";
+
+        foreach ($sections as $index => $section) {
+            if ($index > 0) {
+                $description .= "\n\n";
+            }
+
+            if (isset($section['title'])) {
+                $emoji = $section['emoji'] ?? '📌';
+                $description .= "{$emoji} " . strtoupper($section['title']) . "\n";
+            }
+
+            if (isset($section['items'])) {
+                $bullet = $section['bullet'] ?? '•';
+                foreach ($section['items'] as $item) {
+                    $description .= "{$bullet} {$item}\n";
+                }
+            } elseif (isset($section['text'])) {
+                $description .= $section['text'];
+            }
+        }
+
+        return trim($description);
+    }
+
+    public function updateMultiple($updates, $delay = 1) {
+        $results = [];
+
+        foreach ($updates as $update) {
+            try {
+                $this->updateDescription($update['groupJid'], $update['description']);
+                $results[$update['groupJid']] = [
+                    'success' => true
+                ];
+            } catch (Exception $e) {
+                $results[$update['groupJid']] = [
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ];
+            }
+
+            if ($delay > 0) {
+                sleep($delay);
+            }
+        }
+
+        return $results;
+    }
+}
+
+// Uso
+$manager = new GroupDescriptionManager('zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk');
+
+try {
+    // Atualizar descrição simples
+    $manager->updateDescription(
+        "120363339858396166@g.us",
+        "Nova descrição do grupo"
+    );
+    echo "✓ Descrição atualizada\n\n";
+
+    // Atualizar com timestamp
+    $manager->updateWithTimestamp(
+        "120363339858396166@g.us",
+        "Descrição atualizada automaticamente"
+    );
+    echo "✓ Descrição com timestamp\n\n";
+
+    // Atualizar com backup
+    $backup = $manager->updateWithBackup(
+        "120363339858396166@g.us",
+        "Descrição nova"
+    );
+    echo "✓ Backup salvo: {$backup['oldDescription']}\n\n";
+
+    // Construir descrição formatada
+    $sections = [
+        [
+            'title' => 'Regras',
+            'emoji' => '📋',
+            'items' => ['Regra 1', 'Regra 2']
+        ]
+    ];
+
+    $description = $manager->buildSections($sections);
+    $manager->updateDescription("120363339858396166@g.us", $description);
+    echo "✓ Descrição formatada:\n{$description}\n";
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Descrição atualizada
+{
+  "success": true,
+  "message": "Group description updated successfully",
+  "groupJid": "120363339858396166@g.us",
+  "description": "Grupo oficial de suporte - Atendimento 24h"
+}
+```
+
+```json 400 - Descrição vazia
+{
+  "success": false,
+  "message": "A descrição não pode estar vazia"
+}
+```
+
+```json 401 - Token inválido
+{
+  "success": false,
+  "message": "Token de autenticação inválido ou expirado"
+}
+```
+
+```json 403 - Sem permissão de admin
+{
+  "success": false,
+  "message": "Você precisa ser administrador do grupo para alterar a descrição"
+}
+```
+
+```json 404 - Grupo não encontrado
+{
+  "success": false,
+  "message": "Grupo não encontrado ou você não é membro"
+}
+```
+
+```json 413 - Descrição muito longa
+{
+  "success": false,
+  "message": "Descrição excede o limite máximo de caracteres permitido"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao atualizar descrição do grupo. Tente novamente"
+}
+```
+
+</ResponseExample>

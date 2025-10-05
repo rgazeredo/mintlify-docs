@@ -1,0 +1,231 @@
+---
+title: "Controlar Campanha"
+api: "POST /sender/edit"
+description: "Pausar, retomar ou deletar campanha de envio em massa"
+---
+
+Permite controlar campanhas de envio em massa através de diferentes ações: pausar, retomar ou deletar. Ideal para gerenciar o ciclo de vida de campanhas ativas.
+
+## Sobre Controle de Campanhas
+
+<AccordionGroup>
+  <Accordion title="Ações Disponíveis" icon="sliders">
+    Operações que podem ser executadas em campanhas.
+
+    **🛑 STOP - Pausar Campanha:**
+    - Pausa uma campanha ativa ou agendada
+    - Altera status para "paused"
+    - Mensagens já enviadas não são afetadas
+    - Mensagens pendentes são suspensas
+    - Útil para interromper temporariamente
+
+    **▶️ CONTINUE - Retomar Campanha:**
+    - Retoma uma campanha pausada
+    - Altera status para "scheduled"
+    - Continua do ponto onde parou
+    - Não funciona em campanhas concluídas ("done")
+    - Delay entre mensagens é preservado
+
+    **🗑️ DELETE - Deletar Campanha:**
+    - Remove completamente a campanha
+    - Deleta apenas mensagens NÃO ENVIADAS
+    - Mensagens já enviadas são preservadas no histórico
+    - Operação executada de forma assíncrona
+    - Status muda para "deleting" durante processo
+  </Accordion>
+
+  <Accordion title="Status de Campanhas" icon="flag">
+    Entenda os diferentes estados de uma campanha.
+
+    **Ciclo de Vida:**
+    1. **scheduled**: Agendada, aguardando envio
+    2. **sending**: Enviando mensagens ativamente
+    3. **paused**: Pausada pelo usuário (pode retomar)
+    4. **done**: Concluída (não pode ser alterada)
+    5. **deleting**: Sendo deletada (processo assíncrono)
+
+    **Transições Permitidas:**
+    - scheduled → paused (stop)
+    - paused → scheduled (continue)
+    - sending → paused (stop)
+    - paused → deleting (delete)
+    - scheduled → deleting (delete)
+
+    **Transições Bloqueadas:**
+    - done → * (campanha finalizada é imutável)
+    - deleting → * (aguardar conclusão)
+  </Accordion>
+
+  <Accordion title="Comportamento de Delete" icon="trash">
+    Como funciona a exclusão de campanhas.
+
+    **O que é deletado:**
+    - Registro da campanha
+    - Mensagens com status "scheduled" (não enviadas)
+    - Configurações e metadados da campanha
+    - Vínculos e referências
+
+    **O que é preservado:**
+    - Mensagens já enviadas (histórico)
+    - Logs de entrega
+    - Estatísticas de envio
+    - Webhooks já disparados
+
+    **Processo Assíncrono:**
+    - Retorno imediato da API
+    - Deleção acontece em background
+    - Status "deleting" durante processo
+    - Campanha desaparece após conclusão
+
+    **Importante:**
+    - Operação irreversível
+    - Não cancela mensagens em envio
+    - Aguarde status "deleting" antes de recriar
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações práticas para controle de campanhas.
+
+    **Pausar (stop):**
+    - Erro detectado no conteúdo
+    - Necessidade de ajustar lista de destinatários
+    - Horário inadequado para envio
+    - Mudança de estratégia de comunicação
+    - Limite de envio atingido
+
+    **Retomar (continue):**
+    - Correção realizada
+    - Horário adequado chegou
+    - Aprovação recebida para prosseguir
+    - Sistema normalizado após instabilidade
+
+    **Deletar (delete):**
+    - Campanha criada por engano
+    - Dados incorretos detectados
+    - Campanha duplicada
+    - Mudança completa de estratégia
+    - Limpeza de campanhas antigas
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="folder_id" type="string" required>
+  Identificador único da campanha. <br />
+  Obtido ao criar a campanha. <br />
+  Exemplo: `"folder_123"`
+</ParamField>
+
+<ParamField path="action" type="string" required>
+  Ação a ser executada. <br />
+  **Valores aceitos:** <br />
+  - `stop`: Pausar campanha <br />
+  - `continue`: Retomar campanha <br />
+  - `delete`: Deletar campanha <br />
+  Exemplo: `"stop"`
+</ParamField>
+
+<Warning>
+  **Atenção:** A ação `delete` é irreversível e executada de forma assíncrona. Mensagens já enviadas não podem ser deletadas.
+</Warning>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://zapclass.com.br/api/sender/edit \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "folder_id": "folder_123",
+    "action": "stop"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/sender/edit", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    folder_id: "folder_123",
+    action: "stop"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Campanha pausada:", data.message);
+}
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/sender/edit');
+
+$payload = [
+    "folder_id" => "folder_123",
+    "action" => "stop"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Campanha pausada: {$data['message']}\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "message": "Campaign paused successfully",
+  "campaign": {
+    "folder_id": "folder_123",
+    "status": "paused",
+    "action": "stop",
+    "updatedAt": 1672531200000
+  }
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "Campo 'folder_id' é obrigatório"
+}
+```
+
+```json 404
+{
+  "success": false,
+  "message": "Campanha não encontrada"
+}
+```
+
+</ResponseExample>

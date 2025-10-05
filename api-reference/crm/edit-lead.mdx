@@ -1,0 +1,401 @@
+---
+title: "Atualizar Lead"
+api: "POST /chat/editLead"
+description: "Editar informações e status de lead do chat"
+---
+
+Atualiza as informações de lead associadas a um chat específico. Permite modificar status do ticket, atribuição de atendente, posição no kanban, tags e campos personalizados. As alterações são refletidas imediatamente e disparam eventos webhook/SSE.
+
+## Sobre Edição de Leads
+
+<AccordionGroup>
+  <Accordion title="Gestão de Leads via API" icon="user-pen">
+    Como gerenciar informações de leads programaticamente.
+
+    **Capacidades:**
+    - Atualizar dados cadastrais (nome, email, CPF)
+    - Modificar status de ticket (abrir/fechar)
+    - Atribuir ou remover atendentes
+    - Gerenciar tags e categorização
+    - Controlar posição no kanban
+    - Pausar/reativar chatbot por período
+    - Atualizar até 20 campos personalizados
+
+    **Sincronização:**
+    - Mudanças refletidas em tempo real
+    - Eventos disparados via webhook/SSE
+    - Integração com CRM e sistemas externos
+    - Auditoria completa de alterações
+  </Accordion>
+
+  <Accordion title="Identificação de Chats" icon="fingerprint">
+    Formatos aceitos para identificar o chat.
+
+    **wa_chatid (ID do WhatsApp):**
+    - Formato: `numero@s.whatsapp.net`
+    - Exemplo: `5511999999999@s.whatsapp.net`
+    - Uso: Conversas individuais
+    - Mais comum e direto
+
+    **wa_fastid (ID Rápido):**
+    - Formato: `instancia:numero`
+    - Exemplo: `5511888888888:5511999999999`
+    - Uso: Identificação rápida em multi-instância
+    - Útil para buscas otimizadas
+
+    **Quando usar cada um:**
+    - chatid: Integrações padrão, webhooks
+    - fastid: Buscas rápidas, sistemas multi-tenant
+  </Accordion>
+
+  <Accordion title="Gerenciamento de Tickets" icon="ticket">
+    Controle de abertura e fechamento de tickets.
+
+    **Status do Ticket (lead_isTicketOpen):**
+    - `true`: Ticket aberto/em atendimento
+    - `false`: Ticket fechado/resolvido
+    - Afeta fila de atendimento
+    - Impacta relatórios e métricas
+
+    **Atribuição de Atendente:**
+    - `lead_assignedAttendant_id`: ID do atendente
+    - String vazia `""`: Remove atribuição
+    - Distribui carga de trabalho
+    - Rastreabilidade de atendimentos
+
+    **Controle de Chatbot:**
+    - `chatbot_disableUntil`: Timestamp UTC
+    - `0`: Reativa imediatamente
+    - Útil durante atendimento humano
+    - Evita interferência do bot
+  </Accordion>
+
+  <Accordion title="Organização com Tags e Kanban" icon="tags">
+    Sistema de categorização e priorização.
+
+    **Tags (lead_tags):**
+    - Array de strings
+    - Tags inexistentes são criadas automaticamente
+    - Array vazio `[]` remove todas as tags
+    - Exemplos: `["vip", "suporte", "urgente"]`
+    - Uso: Segmentação, filtros, automações
+
+    **Posição no Kanban (lead_kanbanOrder):**
+    - Número inteiro
+    - Valores maiores aparecem primeiro
+    - Ordena cards no quadro
+    - Útil para priorização visual
+    - Exemplo: 1000, 2000, 3000
+
+    **Boas Práticas:**
+    - Use tags descritivas e padronizadas
+    - Mantenha hierarquia clara de prioridades
+    - Documente significado das tags
+    - Revise e limpe tags periodicamente
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="id" type="string" required>
+  Identificador do chat. <br />
+  **Formatos aceitos:** <br />
+  - wa_chatid: `5511999999999@s.whatsapp.net` <br />
+  - wa_fastid: `5511888888888:5511999999999`
+</ParamField>
+
+<ParamField path="chatbot_disableUntil" type="integer">
+  Timestamp UTC até quando desativar chatbot. <br />
+  Use `0` para reativar imediatamente. <br />
+  Exemplo: `1735686000`
+</ParamField>
+
+<ParamField path="lead_isTicketOpen" type="boolean">
+  Status do ticket associado ao lead. <br />
+  `true`: Aberto/em atendimento <br />
+  `false`: Fechado/resolvido <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="lead_assignedAttendant_id" type="string">
+  ID do atendente responsável. <br />
+  String vazia `""` remove a atribuição. <br />
+  Exemplo: `"att_123456"`
+</ParamField>
+
+<ParamField path="lead_kanbanOrder" type="integer">
+  Posição do card no kanban. <br />
+  Valores maiores aparecem primeiro. <br />
+  Exemplo: `1000`
+</ParamField>
+
+<ParamField path="lead_tags" type="array">
+  Lista de tags do lead. <br />
+  Tags novas são criadas automaticamente. <br />
+  Array vazio `[]` remove todas. <br />
+  Exemplo: `["vip", "suporte", "prioridade-alta"]`
+</ParamField>
+
+<ParamField path="lead_name" type="string">
+  Nome principal do lead. <br />
+  Exemplo: `"João Silva"`
+</ParamField>
+
+<ParamField path="lead_fullName" type="string">
+  Nome completo do lead. <br />
+  Exemplo: `"João Silva Pereira"`
+</ParamField>
+
+<ParamField path="lead_email" type="string">
+  Email do lead. <br />
+  Exemplo: `"joao@exemplo.com"`
+</ParamField>
+
+<ParamField path="lead_personalId" type="string">
+  CPF/CNPJ do lead. <br />
+  Aceita formatado ou apenas números. <br />
+  Exemplo: `"123.456.789-00"`
+</ParamField>
+
+<ParamField path="lead_status" type="string">
+  Status do lead no funil. <br />
+  Exemplo: `"qualificado"`
+</ParamField>
+
+<ParamField path="lead_notes" type="string">
+  Anotações sobre o lead. <br />
+  Exemplo: `"Cliente interessado em plano premium"`
+</ParamField>
+
+<ParamField path="lead_field01" type="string">
+  Campo personalizado 1. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field02" type="string">
+  Campo personalizado 2. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field03" type="string">
+  Campo personalizado 3. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field04" type="string">
+  Campo personalizado 4. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field05" type="string">
+  Campo personalizado 5. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field06" type="string">
+  Campo personalizado 6. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field07" type="string">
+  Campo personalizado 7. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field08" type="string">
+  Campo personalizado 8. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field09" type="string">
+  Campo personalizado 9. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field10" type="string">
+  Campo personalizado 10. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field11" type="string">
+  Campo personalizado 11. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field12" type="string">
+  Campo personalizado 12. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field13" type="string">
+  Campo personalizado 13. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field14" type="string">
+  Campo personalizado 14. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field15" type="string">
+  Campo personalizado 15. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field16" type="string">
+  Campo personalizado 16. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field17" type="string">
+  Campo personalizado 17. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field18" type="string">
+  Campo personalizado 18. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field19" type="string">
+  Campo personalizado 19. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<ParamField path="lead_field20" type="string">
+  Campo personalizado 20. <br />
+  Conforme configuração da instância.
+</ParamField>
+
+<Info>
+  Envie apenas os campos que deseja atualizar. Campos não enviados permanecerão com seus valores atuais.
+</Info>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://zapclass.com.br/api/chat/editLead \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "id": "5511999999999@s.whatsapp.net",
+    "lead_name": "João Silva",
+    "lead_email": "joao@exemplo.com",
+    "lead_personalId": "123.456.789-00"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/chat/editLead", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    id: "5511999999999@s.whatsapp.net",
+    lead_name: "João Silva",
+    lead_email: "joao@exemplo.com",
+    lead_personalId: "123.456.789-00"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Lead atualizado:", data.lead);
+}
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/chat/editLead');
+
+$payload = [
+    "id" => "5511999999999@s.whatsapp.net",
+    "lead_name" => "João Silva",
+    "lead_email" => "joao@exemplo.com",
+    "lead_personalId" => "123.456.789-00"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Lead atualizado:\n";
+    print_r($data['lead']);
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "success": true,
+  "message": "Lead updated successfully",
+  "lead": {
+    "id": "5511999999999@s.whatsapp.net",
+    "lead_name": "João Silva",
+    "lead_fullName": "João Silva Pereira",
+    "lead_email": "joao@exemplo.com",
+    "lead_personalId": "123.456.789-00",
+    "lead_isTicketOpen": true,
+    "lead_assignedAttendant_id": "att_123456",
+    "lead_kanbanOrder": 5000,
+    "lead_tags": ["vip", "urgente", "suporte"],
+    "lead_status": "em-atendimento",
+    "lead_notes": "Cliente VIP com problema urgente",
+    "chatbot_disableUntil": 1735686000,
+    "updatedAt": 1672531200000
+  }
+}
+```
+
+```json 200
+{
+  "success": true,
+  "message": "Lead updated successfully",
+  "lead": {
+    "id": "5511999999999@s.whatsapp.net",
+    "lead_isTicketOpen": false,
+    "lead_assignedAttendant_id": "att_123456",
+    "lead_status": "resolvido",
+    "lead_notes": "Problema resolvido com sucesso",
+    "chatbot_disableUntil": 0,
+    "updatedAt": 1672531800000
+  }
+}
+```
+
+```json 200
+{
+  "success": true,
+  "message": "Lead updated successfully",
+  "lead": {
+    "id": "5511999999999@s.whatsapp.net",
+    "lead_tags": ["vip", "urgente"],
+    "lead_kanbanOrder": 5000,
+    "updatedAt": 1672532000000
+  }
+}
+```
+
+</ResponseExample>

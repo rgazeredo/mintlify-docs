@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:doc.evolution-api.com)",
+      "Bash(mkdir:*)",
+      "WebFetch(domain:docs.uazapi.com)",
+      "WebSearch",
+      "WebFetch(domain:api.uzapi.com.br)",
+      "WebFetch(domain:www.postman.com)",
+      "WebFetch(domain:free.uazapi.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

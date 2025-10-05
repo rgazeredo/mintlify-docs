@@ -1,0 +1,153 @@
+---
+title: "Listar Contatos"
+api: "GET /contacts"
+description: "Retornar lista de contatos salvos no WhatsApp"
+---
+
+Recupera todos os contatos armazenados na agenda do WhatsApp conectado, incluindo informações detalhadas de identificação e nomenclatura.
+
+## Informações da Lista
+
+<AccordionGroup>
+  <Accordion title="Origem dos Contatos" icon="address-book">
+    A lista retorna contatos da agenda sincronizada com o WhatsApp.
+
+    **Fontes:**
+    - Contatos salvos no dispositivo
+    - Agenda sincronizada do Google/iCloud
+    - Contatos adicionados via API
+    - Agenda do WhatsApp Business
+
+    **Importante:** Apenas contatos que possuem WhatsApp ativo aparecem na lista.
+  </Accordion>
+
+  <Accordion title="Dados Retornados" icon="list">
+    Cada contato inclui informações estruturadas para identificação.
+
+    **Campos disponíveis:**
+    - `id`: Identificador único (JID)
+    - `name`: Nome salvo na agenda
+    - `pushName`: Nome de exibição no WhatsApp
+    - `number`: Número no formato internacional
+    - `isMyContact`: Se está salvo na sua agenda
+    - `profilePicUrl`: URL da foto de perfil (se disponível)
+  </Accordion>
+
+  <Accordion title="Formato JID" icon="hashtag">
+    Todos os contatos incluem o identificador único do WhatsApp.
+
+    **Formato JID:**
+    - Usuários: `número@s.whatsapp.net`
+    - Exemplo: `5511999999999@s.whatsapp.net`
+
+    Use o JID para enviar mensagens e identificar contatos de forma única.
+  </Accordion>
+
+  <Accordion title="Performance e Cache" icon="gauge-high">
+    A lista é otimizada para consultas rápidas.
+
+    **Otimizações:**
+    - Dados em cache atualizado automaticamente
+    - Resposta paginada para grandes quantidades
+    - Sincronização em segundo plano
+    - Índices para busca rápida
+
+    Para listas muito grandes (>1000 contatos), considere implementar paginação no cliente.
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+<Info>
+  **Nota:** Este é um endpoint GET que não requer parâmetros no body. Apenas inclua o token no header de autenticação.
+</Info>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET https://zapclass.com.br/api/contacts \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/contacts", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+});
+
+const data = await response.json();
+console.log(`Total de contatos: ${data.contacts.length}`);
+data.contacts.forEach(contact => {
+  console.log(`${contact.name} - ${contact.number}`);
+});
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/contacts');
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+echo "Total de contatos: " . count($data['contacts']) . "\n";
+
+foreach ($data['contacts'] as $contact) {
+    echo "{$contact['name']} - {$contact['number']}\n";
+}
+
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "contacts": [
+    {
+      "id": "5511999999999@s.whatsapp.net",
+      "name": "João Silva",
+      "pushName": "João",
+      "number": "5511999999999",
+      "isMyContact": true,
+      "profilePicUrl": "https://example.com/profile.jpg"
+    },
+    {
+      "id": "5511988888888@s.whatsapp.net",
+      "name": "Maria Santos",
+      "pushName": "Maria",
+      "number": "5511988888888",
+      "isMyContact": true,
+      "profilePicUrl": null
+    }
+  ],
+  "total": 2
+}
+```
+
+```json 401
+{
+  "success": false,
+  "message": "Sem sessão ativa. Conecte sua instância primeiro"
+}
+```
+
+</ResponseExample>

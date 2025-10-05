@@ -1,0 +1,793 @@
+---
+title: "Gerenciar Participantes"
+api: "POST /group/updateParticipants"
+description: "Adicionar, remover, promover ou gerenciar participantes do grupo"
+---
+
+Gerencia participantes de um grupo através de múltiplas ações: adicionar, remover, promover a admin, rebaixar, aprovar ou rejeitar solicitações.
+
+## Ações Disponíveis
+
+<AccordionGroup>
+  <Accordion title="Adicionar Participantes" icon="user-plus">
+    Inclui novos membros ao grupo.
+
+    **Ação: `add`**
+    - Adiciona números à lista de participantes
+    - Participantes recebem notificação de entrada
+    - Podem começar a interagir imediatamente
+    - Limite de participantes depende do WhatsApp (até 1024)
+    - Alguns números podem falhar se bloquearam você
+
+    **Comportamento:**
+    - Retorna lista de sucessos e falhas
+    - Não bloqueia operação se alguns falharem
+    - Participantes já no grupo são ignorados
+  </Accordion>
+
+  <Accordion title="Remover Participantes" icon="user-minus">
+    Remove membros do grupo.
+
+    **Ação: `remove`**
+    - Remove participantes da lista
+    - Membro perde acesso ao grupo
+    - Não pode mais ver mensagens novas
+    - Pode retornar se receber novo convite
+    - Requer permissão de administrador
+
+    **Atenção:**
+    - Não é possível remover o criador do grupo
+    - Outros admins podem ou não ser removíveis
+    - Remoção é permanente até novo convite
+  </Accordion>
+
+  <Accordion title="Promover Administradores" icon="arrow-up">
+    Concede privilégios administrativos a participantes.
+
+    **Ação: `promote`**
+    - Transforma membro em administrador
+    - Admin pode gerenciar participantes
+    - Pode alterar configurações do grupo
+    - Pode enviar mensagens mesmo com announce ativo
+    - Pode editar info mesmo com restrict ativo
+
+    **Poderes do Admin:**
+    - Adicionar/remover participantes
+    - Promover/rebaixar outros membros
+    - Alterar nome, descrição, imagem
+    - Configurar permissões do grupo
+  </Accordion>
+
+  <Accordion title="Rebaixar Administradores" icon="arrow-down">
+    Remove privilégios administrativos.
+
+    **Ação: `demote`**
+    - Remove status de administrador
+    - Membro volta a ser participante comum
+    - Perde permissões de gestão
+    - Mantém acesso ao grupo normalmente
+    - Apenas admins podem rebaixar
+
+    **Restrições:**
+    - Criador do grupo não pode ser rebaixado
+    - Você não pode rebaixar a si mesmo
+    - Mantenha pelo menos um administrador
+  </Accordion>
+
+  <Accordion title="Aprovar Solicitações" icon="check">
+    Aceita pedidos de entrada em grupos com aprovação.
+
+    **Ação: `approve`**
+    - Válido para grupos com `memberAddMode: admin_approval`
+    - Aprova participantes aguardando entrada
+    - Membro entra imediatamente no grupo
+    - Recebe notificação de aprovação
+    - Lista de pendentes visível em `/group/info`
+
+    Útil para grupos privados e seletivos.
+  </Accordion>
+
+  <Accordion title="Rejeitar Solicitações" icon="x">
+    Nega pedidos de entrada no grupo.
+
+    **Ação: `reject`**
+    - Rejeita solicitações pendentes
+    - Participante não entra no grupo
+    - Pode solicitar novamente depois
+    - Remove da lista de pendentes
+    - Não notifica sobre rejeição
+
+    Use para manter controle de acesso ao grupo.
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="groupjid" type="string" required>
+  Identificador único do grupo (JID). <br />
+  Formato: `número@g.us` <br />
+  Exemplo: `120363308883996631@g.us`
+</ParamField>
+
+<ParamField path="action" type="string" required>
+  Ação a executar nos participantes. <br />
+  **Valores:** `add`, `remove`, `promote`, `demote`, `approve`, `reject` <br />
+  Exemplo: `"promote"`
+</ParamField>
+
+<ParamField path="participants" type="array" required>
+  Lista de números ou JIDs dos participantes. <br />
+  Formato internacional sem `+` ou espaços. <br />
+  Exemplo: `["5511999999999", "5511888888888"]`
+</ParamField>
+
+<Info>
+  **Formato de números:** Use apenas dígitos no formato internacional (código do país + DDD + número). Exemplo: `5511999999999` para Brasil.
+</Info>
+
+<RequestExample>
+
+```bash cURL - Adicionar participantes
+curl -X POST https://zapclass.com.br/api/group/updateParticipants \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363308883996631@g.us",
+    "action": "add",
+    "participants": ["5511999999999", "5511888888888"]
+  }'
+```
+
+```bash cURL - Promover a admin
+curl -X POST https://zapclass.com.br/api/group/updateParticipants \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363308883996631@g.us",
+    "action": "promote",
+    "participants": ["5511999999999"]
+  }'
+```
+
+```bash cURL - Remover participantes
+curl -X POST https://zapclass.com.br/api/group/updateParticipants \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363308883996631@g.us",
+    "action": "remove",
+    "participants": ["5511777777777"]
+  }'
+```
+
+```javascript JavaScript - Adicionar participantes
+const response = await fetch("https://zapclass.com.br/api/group/updateParticipants", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    groupjid: "120363308883996631@g.us",
+    action: "add",
+    participants: ["5511999999999", "5511888888888"]
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Participantes adicionados:", data.results.success);
+  console.log("Falhas:", data.results.failed);
+}
+```
+
+```javascript JavaScript - Gerenciador de participantes
+class GroupParticipantManager {
+  constructor(token, baseUrl = "https://zapclass.com.br/api") {
+    this.token = token;
+    this.baseUrl = baseUrl;
+  }
+
+  async executeAction(groupJid, action, participants) {
+    const response = await fetch(`${this.baseUrl}/group/updateParticipants`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: this.token,
+      },
+      body: JSON.stringify({ groupjid: groupJid, action, participants }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message);
+    }
+
+    return data;
+  }
+
+  async add(groupJid, numbers) {
+    const result = await this.executeAction(groupJid, "add", numbers);
+    console.log(`✓ ${result.results?.success?.length || 0} participantes adicionados`);
+
+    if (result.results?.failed?.length > 0) {
+      console.log(`✗ ${result.results.failed.length} falharam`);
+      result.results.failed.forEach(f => {
+        console.log(`  - ${f.number}: ${f.reason}`);
+      });
+    }
+
+    return result;
+  }
+
+  async remove(groupJid, numbers) {
+    const result = await this.executeAction(groupJid, "remove", numbers);
+    console.log(`✓ ${numbers.length} participantes removidos`);
+    return result;
+  }
+
+  async promote(groupJid, numbers) {
+    const result = await this.executeAction(groupJid, "promote", numbers);
+    console.log(`✓ ${numbers.length} participantes promovidos a admin`);
+    return result;
+  }
+
+  async demote(groupJid, numbers) {
+    const result = await this.executeAction(groupJid, "demote", numbers);
+    console.log(`✓ ${numbers.length} admins rebaixados`);
+    return result;
+  }
+
+  async approve(groupJid, numbers) {
+    const result = await this.executeAction(groupJid, "approve", numbers);
+    console.log(`✓ ${numbers.length} solicitações aprovadas`);
+    return result;
+  }
+
+  async reject(groupJid, numbers) {
+    const result = await this.executeAction(groupJid, "reject", numbers);
+    console.log(`✓ ${numbers.length} solicitações rejeitadas`);
+    return result;
+  }
+}
+
+// Uso
+const manager = new GroupParticipantManager("zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk");
+
+await manager.add("120363308883996631@g.us", ["5511999999999"]);
+await manager.promote("120363308883996631@g.us", ["5511999999999"]);
+```
+
+```javascript JavaScript - Adicionar com validação
+async function addParticipantsValidated(groupJid, numbers) {
+  // Valida formato dos números
+  const validNumbers = numbers.filter(num => {
+    const isValid = /^\d{10,15}$/.test(num);
+    if (!isValid) {
+      console.warn(`Número inválido ignorado: ${num}`);
+    }
+    return isValid;
+  });
+
+  if (validNumbers.length === 0) {
+    throw new Error("Nenhum número válido fornecido");
+  }
+
+  console.log(`Adicionando ${validNumbers.length} participantes...`);
+
+  const response = await fetch("https://zapclass.com.br/api/group/updateParticipants", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      groupjid: groupJid,
+      action: "add",
+      participants: validNumbers
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message);
+  }
+
+  // Relatório detalhado
+  console.log("\n=== RELATÓRIO DE ADIÇÃO ===");
+  console.log(`Total tentados: ${validNumbers.length}`);
+  console.log(`Sucessos: ${data.results?.success?.length || 0}`);
+  console.log(`Falhas: ${data.results?.failed?.length || 0}`);
+
+  if (data.results?.failed?.length > 0) {
+    console.log("\nDetalhes das falhas:");
+    data.results.failed.forEach(f => {
+      console.log(`  ✗ ${f.number}: ${f.reason}`);
+    });
+  }
+
+  return data;
+}
+
+// Uso
+await addParticipantsValidated("120363308883996631@g.us", [
+  "5511999999999",
+  "5511888888888",
+  "invalido"  // Será ignorado
+]);
+```
+
+```javascript JavaScript - Aprovar solicitações pendentes
+async function approvePendingRequests(groupJid) {
+  // Busca solicitações pendentes
+  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      groupjid: groupJid,
+      getRequestsParticipants: true
+    }),
+  });
+
+  const groupInfo = await infoResponse.json();
+
+  if (!groupInfo.success) {
+    throw new Error(groupInfo.message);
+  }
+
+  const pending = groupInfo.group.pendingRequests || [];
+
+  if (pending.length === 0) {
+    console.log("Nenhuma solicitação pendente");
+    return { approved: 0 };
+  }
+
+  console.log(`${pending.length} solicitações pendentes encontradas`);
+
+  // Extrai números das solicitações
+  const numbers = pending.map(p => p.number || p.jid.replace('@s.whatsapp.net', ''));
+
+  // Aprova todas
+  const response = await fetch("https://zapclass.com.br/api/group/updateParticipants", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      groupjid: groupJid,
+      action: "approve",
+      participants: numbers
+    }),
+  });
+
+  const data = await response.json();
+
+  if (data.success) {
+    console.log(`✓ ${numbers.length} solicitações aprovadas`);
+  }
+
+  return { approved: numbers.length, data };
+}
+
+// Uso
+await approvePendingRequests("120363308883996631@g.us");
+```
+
+```javascript JavaScript - Sincronizar participantes
+async function syncGroupParticipants(groupJid, desiredParticipants) {
+  // Busca participantes atuais
+  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid }),
+  });
+
+  const groupInfo = await infoResponse.json();
+
+  if (!groupInfo.success) {
+    throw new Error(groupInfo.message);
+  }
+
+  const current = groupInfo.group.participants.map(p =>
+    p.number || p.jid.replace('@s.whatsapp.net', '')
+  );
+
+  // Identifica diferenças
+  const toAdd = desiredParticipants.filter(p => !current.includes(p));
+  const toRemove = current.filter(p => !desiredParticipants.includes(p));
+
+  console.log(`\n=== SINCRONIZAÇÃO ===`);
+  console.log(`Participantes atuais: ${current.length}`);
+  console.log(`Participantes desejados: ${desiredParticipants.length}`);
+  console.log(`A adicionar: ${toAdd.length}`);
+  console.log(`A remover: ${toRemove.length}`);
+
+  // Adiciona novos
+  if (toAdd.length > 0) {
+    await fetch("https://zapclass.com.br/api/group/updateParticipants", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({
+        groupjid: groupJid,
+        action: "add",
+        participants: toAdd
+      }),
+    });
+    console.log(`✓ ${toAdd.length} participantes adicionados`);
+  }
+
+  // Remove antigos
+  if (toRemove.length > 0) {
+    await fetch("https://zapclass.com.br/api/group/updateParticipants", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({
+        groupjid: groupJid,
+        action: "remove",
+        participants: toRemove
+      }),
+    });
+    console.log(`✓ ${toRemove.length} participantes removidos`);
+  }
+
+  console.log("✓ Sincronização concluída");
+
+  return { added: toAdd.length, removed: toRemove.length };
+}
+
+// Uso - sincronizar com lista desejada
+const desired = ["5511999999999", "5511888888888", "5511777777777"];
+await syncGroupParticipants("120363308883996631@g.us", desired);
+```
+
+```php PHP - Adicionar participantes
+<?php
+$ch = curl_init('https://zapclass.com.br/api/group/updateParticipants');
+
+$payload = [
+    "groupjid" => "120363308883996631@g.us",
+    "action" => "add",
+    "participants" => ["5511999999999", "5511888888888"]
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    $success = count($data['results']['success'] ?? []);
+    $failed = count($data['results']['failed'] ?? []);
+
+    echo "✓ {$success} participantes adicionados\n";
+    if ($failed > 0) {
+        echo "✗ {$failed} falharam\n";
+    }
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Promover a admin
+<?php
+function promoteToAdmin($groupJid, $participants) {
+    $ch = curl_init('https://zapclass.com.br/api/group/updateParticipants');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid,
+        'action' => 'promote',
+        'participants' => $participants
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $data = json_decode($response, true);
+    curl_close($ch);
+
+    if (!$data['success']) {
+        throw new Exception($data['message']);
+    }
+
+    echo "✓ " . count($participants) . " participantes promovidos a admin\n";
+
+    return $data;
+}
+
+// Uso
+promoteToAdmin("120363308883996631@g.us", ["5511999999999"]);
+?>
+```
+
+```php PHP - Classe gerenciadora completa
+<?php
+class GroupParticipantManager {
+    private $token;
+    private $baseUrl = 'https://zapclass.com.br/api';
+
+    public function __construct($token) {
+        $this->token = $token;
+    }
+
+    private function executeAction($groupJid, $action, $participants) {
+        $ch = curl_init($this->baseUrl . '/group/updateParticipants');
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            'groupjid' => $groupJid,
+            'action' => $action,
+            'participants' => $participants
+        ]));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        if (!$data['success']) {
+            throw new Exception($data['message']);
+        }
+
+        return $data;
+    }
+
+    public function add($groupJid, $numbers) {
+        $result = $this->executeAction($groupJid, 'add', $numbers);
+
+        $success = count($result['results']['success'] ?? []);
+        $failed = count($result['results']['failed'] ?? []);
+
+        echo "✓ {$success} participantes adicionados\n";
+        if ($failed > 0) {
+            echo "✗ {$failed} falharam\n";
+            foreach ($result['results']['failed'] as $f) {
+                echo "  - {$f['number']}: {$f['reason']}\n";
+            }
+        }
+
+        return $result;
+    }
+
+    public function remove($groupJid, $numbers) {
+        $result = $this->executeAction($groupJid, 'remove', $numbers);
+        echo "✓ " . count($numbers) . " participantes removidos\n";
+        return $result;
+    }
+
+    public function promote($groupJid, $numbers) {
+        $result = $this->executeAction($groupJid, 'promote', $numbers);
+        echo "✓ " . count($numbers) . " promovidos a admin\n";
+        return $result;
+    }
+
+    public function demote($groupJid, $numbers) {
+        $result = $this->executeAction($groupJid, 'demote', $numbers);
+        echo "✓ " . count($numbers) . " rebaixados\n";
+        return $result;
+    }
+
+    public function approve($groupJid, $numbers) {
+        $result = $this->executeAction($groupJid, 'approve', $numbers);
+        echo "✓ " . count($numbers) . " solicitações aprovadas\n";
+        return $result;
+    }
+
+    public function reject($groupJid, $numbers) {
+        $result = $this->executeAction($groupJid, 'reject', $numbers);
+        echo "✓ " . count($numbers) . " solicitações rejeitadas\n";
+        return $result;
+    }
+
+    public function getParticipants($groupJid) {
+        $ch = curl_init($this->baseUrl . '/group/info');
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            'groupjid' => $groupJid
+        ]));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        if (!$data['success']) {
+            throw new Exception($data['message']);
+        }
+
+        return $data['group']['participants'];
+    }
+
+    public function syncParticipants($groupJid, $desiredParticipants) {
+        $current = $this->getParticipants($groupJid);
+        $currentNumbers = array_map(function($p) {
+            return $p['number'] ?? str_replace('@s.whatsapp.net', '', $p['jid']);
+        }, $current);
+
+        $toAdd = array_diff($desiredParticipants, $currentNumbers);
+        $toRemove = array_diff($currentNumbers, $desiredParticipants);
+
+        echo "=== SINCRONIZAÇÃO ===\n";
+        echo "Atuais: " . count($currentNumbers) . "\n";
+        echo "Desejados: " . count($desiredParticipants) . "\n";
+        echo "A adicionar: " . count($toAdd) . "\n";
+        echo "A remover: " . count($toRemove) . "\n\n";
+
+        if (count($toAdd) > 0) {
+            $this->add($groupJid, array_values($toAdd));
+        }
+
+        if (count($toRemove) > 0) {
+            $this->remove($groupJid, array_values($toRemove));
+        }
+
+        echo "\n✓ Sincronização concluída\n";
+
+        return [
+            'added' => count($toAdd),
+            'removed' => count($toRemove)
+        ];
+    }
+}
+
+// Uso
+$manager = new GroupParticipantManager('zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk');
+
+try {
+    // Adicionar
+    $manager->add("120363308883996631@g.us", ["5511999999999", "5511888888888"]);
+
+    // Promover
+    $manager->promote("120363308883996631@g.us", ["5511999999999"]);
+
+    // Sincronizar
+    $desired = ["5511999999999", "5511888888888", "5511777777777"];
+    $manager->syncParticipants("120363308883996631@g.us", $desired);
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Participantes adicionados com sucesso
+{
+  "success": true,
+  "message": "Participants added successfully",
+  "action": "add",
+  "groupJid": "120363308883996631@g.us",
+  "results": {
+    "success": [
+      "5511999999999@s.whatsapp.net",
+      "5511888888888@s.whatsapp.net"
+    ],
+    "failed": []
+  }
+}
+```
+
+```json 200 - Adição com falhas parciais
+{
+  "success": true,
+  "message": "Some participants could not be added",
+  "action": "add",
+  "results": {
+    "success": [
+      "5511999999999@s.whatsapp.net"
+    ],
+    "failed": [
+      {
+        "number": "5511777777777",
+        "reason": "Número inválido ou bloqueou você"
+      }
+    ]
+  }
+}
+```
+
+```json 200 - Promovidos a admin
+{
+  "success": true,
+  "message": "Participants promoted successfully",
+  "action": "promote",
+  "groupJid": "120363308883996631@g.us",
+  "participants": [
+    "5511999999999@s.whatsapp.net"
+  ]
+}
+```
+
+```json 200 - Solicitações aprovadas
+{
+  "success": true,
+  "message": "Requests approved successfully",
+  "action": "approve",
+  "groupJid": "120363308883996631@g.us",
+  "approved": 2
+}
+```
+
+```json 400 - Ação inválida
+{
+  "success": false,
+  "message": "Ação inválida. Use: add, remove, promote, demote, approve ou reject"
+}
+```
+
+```json 400 - Participantes vazios
+{
+  "success": false,
+  "message": "Lista de participantes não pode estar vazia"
+}
+```
+
+```json 403 - Sem permissão
+{
+  "success": false,
+  "message": "Você precisa ser administrador do grupo para gerenciar participantes"
+}
+```
+
+```json 404 - Grupo não encontrado
+{
+  "success": false,
+  "message": "Grupo não encontrado ou você não é membro"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao atualizar participantes. Tente novamente"
+}
+```
+
+</ResponseExample>

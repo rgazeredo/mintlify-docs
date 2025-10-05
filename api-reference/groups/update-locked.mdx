@@ -1,0 +1,733 @@
+---
+title: "Bloquear Edição de Informações"
+api: "POST /group/updateLocked"
+description: "Controlar quem pode editar informações do grupo"
+---
+
+Define se apenas administradores podem modificar as informações do grupo (nome, descrição, imagem e outras configurações).
+
+## Controle de Edição
+
+<AccordionGroup>
+  <Accordion title="Modo Bloqueado" icon="lock">
+    Quando apenas administradores podem editar informações.
+
+    **Configuração `locked: true`:**
+    - Apenas administradores editam informações do grupo
+    - Membros comuns não podem alterar nome
+    - Descrição protegida contra alterações
+    - Imagem do grupo só alterada por admins
+    - Outras configurações restritas
+    - Mantém consistência e identidade do grupo
+
+    Recomendado para grupos corporativos e oficiais.
+  </Accordion>
+
+  <Accordion title="Modo Desbloqueado" icon="lock-open">
+    Quando qualquer participante pode editar informações.
+
+    **Configuração `locked: false`:**
+    - Todos os membros podem editar informações
+    - Permite personalização colaborativa
+    - Maior liberdade para participantes
+    - Útil para grupos informais
+    - Pode resultar em mudanças frequentes
+    - Requer confiança entre membros
+
+    Adequado para grupos familiares e informais.
+  </Accordion>
+
+  <Accordion title="Escopo de Restrição" icon="sliders">
+    O que é afetado pelo bloqueio de edição.
+
+    **Afeta:**
+    - Nome do grupo
+    - Descrição do grupo
+    - Imagem de perfil do grupo
+    - Outras configurações de informação
+
+    **Não afeta:**
+    - Adição ou remoção de participantes
+    - Envio de mensagens
+    - Outras permissões de participação
+    - Configurações de anúncio (announce)
+
+    Cada permissão é controlada separadamente.
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações para usar cada modo de bloqueio.
+
+    **Modo Bloqueado (`true`):**
+    - Grupos corporativos e empresariais
+    - Canais de comunicação oficial
+    - Grupos de suporte técnico
+    - Comunidades com identidade visual
+    - Organizações com políticas rígidas
+    - Grupos de notícias e anúncios
+
+    **Modo Desbloqueado (`false`):**
+    - Grupos familiares
+    - Amigos e grupos sociais
+    - Comunidades colaborativas
+    - Projetos de código aberto
+    - Grupos de estudo
+    - Times informais
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="groupjid" type="string" required>
+  Identificador único do grupo (JID). <br />
+  Formato: `número@g.us` <br />
+  Exemplo: `120363308883996631@g.us`
+</ParamField>
+
+<ParamField path="locked" type="boolean" required>
+  Controla quem pode editar informações. <br />
+  `true`: Apenas administradores podem editar <br />
+  `false`: Qualquer participante pode editar <br />
+  Exemplo: `true`
+</ParamField>
+
+<Info>
+  **Nota:** Esta configuração é também conhecida como "restrict" em algumas implementações do WhatsApp. Ela protege as informações básicas do grupo contra edições não autorizadas.
+</Info>
+
+<RequestExample>
+
+```bash cURL - Bloquear edição
+curl -X POST https://zapclass.com.br/api/group/updateLocked \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363308883996631@g.us",
+    "locked": true
+  }'
+```
+
+```bash cURL - Desbloquear edição
+curl -X POST https://zapclass.com.br/api/group/updateLocked \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363308883996631@g.us",
+    "locked": false
+  }'
+```
+
+```javascript JavaScript - Bloquear edição
+const response = await fetch("https://zapclass.com.br/api/group/updateLocked", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    groupjid: "120363308883996631@g.us",
+    locked: true
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Edição de informações bloqueada - apenas admins podem editar");
+}
+```
+
+```javascript JavaScript - Alternar bloqueio
+async function toggleGroupLock(groupJid) {
+  // Busca estado atual
+  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid }),
+  });
+
+  const groupInfo = await infoResponse.json();
+
+  if (!groupInfo.success) {
+    throw new Error(groupInfo.message);
+  }
+
+  const currentLocked = groupInfo.group.restrict || false;
+  const newLocked = !currentLocked;
+
+  console.log(`Estado atual: ${currentLocked ? 'Bloqueado (apenas admins)' : 'Desbloqueado (todos)'}`);
+  console.log(`Alterando para: ${newLocked ? 'Bloqueado (apenas admins)' : 'Desbloqueado (todos)'}`);
+
+  // Alterna o bloqueio
+  const updateResponse = await fetch("https://zapclass.com.br/api/group/updateLocked", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      groupjid: groupJid,
+      locked: newLocked
+    }),
+  });
+
+  const result = await updateResponse.json();
+
+  if (result.success) {
+    console.log("✓ Configuração alterada com sucesso");
+  }
+
+  return result;
+}
+
+// Uso
+await toggleGroupLock("120363308883996631@g.us");
+```
+
+```javascript JavaScript - Configurar com notificação
+async function setGroupLockWithNotification(groupJid, locked, notifyMembers = false) {
+  const response = await fetch("https://zapclass.com.br/api/group/updateLocked", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({ groupjid: groupJid, locked }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message);
+  }
+
+  console.log("✓ Configuração atualizada");
+
+  if (notifyMembers) {
+    // Envia mensagem no grupo informando a mudança
+    const message = locked
+      ? "🔒 *Configuração Atualizada*\n\nApenas administradores podem editar as informações do grupo (nome, descrição, imagem) a partir de agora."
+      : "🔓 *Configuração Atualizada*\n\nTodos os participantes podem editar livremente as informações do grupo.";
+
+    await fetch("https://zapclass.com.br/api/send/text", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({
+        number: groupJid.replace('@g.us', ''),
+        message: message
+      }),
+    });
+
+    console.log("✓ Notificação enviada ao grupo");
+  }
+
+  return data;
+}
+
+// Uso - bloquear edição e notificar
+await setGroupLockWithNotification("120363308883996631@g.us", true, true);
+```
+
+```javascript JavaScript - Aplicar política em múltiplos grupos
+async function applyLockPolicyToGroups(groupJids, locked) {
+  const results = [];
+
+  for (const groupJid of groupJids) {
+    try {
+      const response = await fetch("https://zapclass.com.br/api/group/updateLocked", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        },
+        body: JSON.stringify({ groupjid: groupJid, locked }),
+      });
+
+      const data = await response.json();
+
+      results.push({
+        groupJid,
+        success: data.success,
+        message: data.message
+      });
+
+      // Aguarda 1 segundo entre operações
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      results.push({
+        groupJid,
+        success: false,
+        message: error.message
+      });
+    }
+  }
+
+  return results;
+}
+
+// Uso - bloquear edição em todos os grupos corporativos
+const corporateGroups = [
+  "120363308883996631@g.us",
+  "120363308883996632@g.us",
+  "120363308883996633@g.us"
+];
+
+const results = await applyLockPolicyToGroups(corporateGroups, true);
+
+console.log("=== RESULTADOS DA POLÍTICA ===");
+results.forEach(result => {
+  const status = result.success ? "✓" : "✗";
+  console.log(`${status} ${result.groupJid}`);
+});
+```
+
+```javascript JavaScript - Configuração completa de grupo
+async function setupCorporateGroup(groupJid) {
+  console.log("Configurando grupo corporativo...\n");
+
+  try {
+    // 1. Bloquear edição de informações
+    await fetch("https://zapclass.com.br/api/group/updateLocked", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({ groupjid: groupJid, locked: true }),
+    });
+    console.log("✓ Edição bloqueada (apenas admins)");
+
+    // 2. Ativar modo anúncio
+    await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({ groupjid: groupJid, announce: true }),
+    });
+    console.log("✓ Modo anúncio ativado");
+
+    // 3. Atualizar descrição
+    const description = "📋 GRUPO CORPORATIVO\n\n" +
+                       "Este é um grupo oficial da empresa.\n" +
+                       "Apenas administradores podem editar informações e enviar mensagens.\n\n" +
+                       "Para dúvidas, entre em contato com os administradores.";
+
+    await fetch("https://zapclass.com.br/api/group/updateDescription", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({ groupjid: groupJid, description }),
+    });
+    console.log("✓ Descrição atualizada");
+
+    console.log("\n✓ Grupo configurado como corporativo com sucesso!");
+  } catch (error) {
+    console.error("✗ Erro na configuração:", error.message);
+  }
+}
+
+// Uso
+await setupCorporateGroup("120363308883996631@g.us");
+```
+
+```php PHP - Bloquear edição
+<?php
+$ch = curl_init('https://zapclass.com.br/api/group/updateLocked');
+
+$payload = [
+    "groupjid" => "120363308883996631@g.us",
+    "locked" => true
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Edição bloqueada - apenas admins podem editar informações\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Alternar bloqueio
+<?php
+function toggleGroupLock($groupJid) {
+    // Busca estado atual
+    $ch = curl_init('https://zapclass.com.br/api/group/info');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $groupInfo = json_decode($response, true);
+    curl_close($ch);
+
+    if (!$groupInfo['success']) {
+        throw new Exception($groupInfo['message']);
+    }
+
+    $currentLocked = $groupInfo['group']['restrict'] ?? false;
+    $newLocked = !$currentLocked;
+
+    echo "Estado atual: " . ($currentLocked ? 'Bloqueado' : 'Desbloqueado') . "\n";
+    echo "Alterando para: " . ($newLocked ? 'Bloqueado' : 'Desbloqueado') . "\n";
+
+    // Alterna o bloqueio
+    $ch = curl_init('https://zapclass.com.br/api/group/updateLocked');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid,
+        'locked' => $newLocked
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $result = json_decode($response, true);
+    curl_close($ch);
+
+    if ($result['success']) {
+        echo "✓ Configuração alterada com sucesso\n";
+    } else {
+        echo "✗ Erro: {$result['message']}\n";
+    }
+
+    return $result;
+}
+
+// Uso
+try {
+    toggleGroupLock("120363308883996631@g.us");
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+```php PHP - Aplicar política em múltiplos grupos
+<?php
+function applyLockPolicyToGroups($groupJids, $locked) {
+    $results = [];
+
+    foreach ($groupJids as $groupJid) {
+        $ch = curl_init('https://zapclass.com.br/api/group/updateLocked');
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            'groupjid' => $groupJid,
+            'locked' => $locked
+        ]));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $data = json_decode($response, true);
+        curl_close($ch);
+
+        $results[] = [
+            'groupJid' => $groupJid,
+            'success' => $data['success'],
+            'message' => $data['message'] ?? null
+        ];
+
+        // Aguarda 1 segundo entre operações
+        sleep(1);
+    }
+
+    return $results;
+}
+
+// Uso - bloquear edição em todos os grupos corporativos
+$corporateGroups = [
+    "120363308883996631@g.us",
+    "120363308883996632@g.us",
+    "120363308883996633@g.us"
+];
+
+$results = applyLockPolicyToGroups($corporateGroups, true);
+
+echo "=== RESULTADOS DA POLÍTICA ===\n\n";
+foreach ($results as $result) {
+    $status = $result['success'] ? '✓' : '✗';
+    echo "{$status} {$result['groupJid']}\n";
+    if (!$result['success']) {
+        echo "  Erro: {$result['message']}\n";
+    }
+}
+?>
+```
+
+```php PHP - Classe gerenciadora completa
+<?php
+class GroupLockManager {
+    private $token;
+    private $baseUrl = 'https://zapclass.com.br/api';
+
+    public function __construct($token) {
+        $this->token = $token;
+    }
+
+    private function makeRequest($endpoint, $payload) {
+        $ch = curl_init($this->baseUrl . $endpoint);
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+    public function getGroupInfo($groupJid) {
+        return $this->makeRequest('/group/info', [
+            'groupjid' => $groupJid
+        ]);
+    }
+
+    public function setLocked($groupJid, $locked) {
+        $data = $this->makeRequest('/group/updateLocked', [
+            'groupjid' => $groupJid,
+            'locked' => $locked
+        ]);
+
+        if (!$data['success']) {
+            throw new Exception($data['message']);
+        }
+
+        return $data;
+    }
+
+    public function lock($groupJid) {
+        return $this->setLocked($groupJid, true);
+    }
+
+    public function unlock($groupJid) {
+        return $this->setLocked($groupJid, false);
+    }
+
+    public function toggle($groupJid) {
+        $info = $this->getGroupInfo($groupJid);
+
+        if (!$info['success']) {
+            throw new Exception($info['message']);
+        }
+
+        $currentLocked = $info['group']['restrict'] ?? false;
+        $newLocked = !$currentLocked;
+
+        return $this->setLocked($groupJid, $newLocked);
+    }
+
+    public function applyToMultiple($groupJids, $locked, $delay = 1) {
+        $results = [];
+
+        foreach ($groupJids as $groupJid) {
+            try {
+                $this->setLocked($groupJid, $locked);
+                $results[$groupJid] = [
+                    'success' => true,
+                    'locked' => $locked
+                ];
+            } catch (Exception $e) {
+                $results[$groupJid] = [
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ];
+            }
+
+            if ($delay > 0) {
+                sleep($delay);
+            }
+        }
+
+        return $results;
+    }
+
+    public function getCurrentState($groupJid) {
+        $info = $this->getGroupInfo($groupJid);
+
+        if (!$info['success']) {
+            throw new Exception($info['message']);
+        }
+
+        $locked = $info['group']['restrict'] ?? false;
+
+        return [
+            'groupName' => $info['group']['name'],
+            'locked' => $locked,
+            'description' => $locked
+                ? 'Apenas administradores podem editar informações'
+                : 'Todos os participantes podem editar informações'
+        ];
+    }
+
+    public function setupCorporateGroup($groupJid) {
+        // Bloqueia edição
+        $this->lock($groupJid);
+
+        // Ativa modo anúncio
+        $this->makeRequest('/group/updateAnnounce', [
+            'groupjid' => $groupJid,
+            'announce' => true
+        ]);
+
+        // Atualiza descrição
+        $description = "📋 GRUPO CORPORATIVO\n\n" .
+                      "Este é um grupo oficial da empresa.\n" .
+                      "Apenas administradores podem editar informações e enviar mensagens.";
+
+        $this->makeRequest('/group/updateDescription', [
+            'groupjid' => $groupJid,
+            'description' => $description
+        ]);
+
+        return [
+            'locked' => true,
+            'announce' => true,
+            'configured' => true
+        ];
+    }
+}
+
+// Uso
+$manager = new GroupLockManager('zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk');
+
+try {
+    // Verificar estado atual
+    $state = $manager->getCurrentState("120363308883996631@g.us");
+    echo "Grupo: {$state['groupName']}\n";
+    echo "Estado: {$state['description']}\n\n";
+
+    // Bloquear edição
+    $manager->lock("120363308883996631@g.us");
+    echo "✓ Edição bloqueada\n\n";
+
+    // Alternar bloqueio
+    $manager->toggle("120363308883996631@g.us");
+    echo "✓ Bloqueio alternado\n\n";
+
+    // Aplicar política a múltiplos grupos
+    $groups = [
+        "120363308883996631@g.us",
+        "120363308883996632@g.us"
+    ];
+
+    $results = $manager->applyToMultiple($groups, true);
+
+    echo "=== RESULTADOS ===\n";
+    foreach ($results as $groupJid => $result) {
+        if ($result['success']) {
+            echo "✓ {$groupJid} - Bloqueado\n";
+        } else {
+            echo "✗ {$groupJid} - {$result['error']}\n";
+        }
+    }
+
+    // Configurar grupo corporativo completo
+    echo "\n";
+    $manager->setupCorporateGroup("120363308883996631@g.us");
+    echo "✓ Grupo configurado como corporativo\n";
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Edição bloqueada
+{
+  "success": true,
+  "message": "Group edit permissions locked successfully",
+  "groupJid": "120363308883996631@g.us",
+  "locked": true
+}
+```
+
+```json 200 - Edição desbloqueada
+{
+  "success": true,
+  "message": "Group edit permissions unlocked successfully",
+  "groupJid": "120363308883996631@g.us",
+  "locked": false
+}
+```
+
+```json 400 - Parâmetro inválido
+{
+  "success": false,
+  "message": "O parâmetro 'locked' deve ser um booleano (true ou false)"
+}
+```
+
+```json 403 - Sem permissão de admin
+{
+  "success": false,
+  "message": "Você precisa ser administrador do grupo para alterar permissões de edição"
+}
+```
+
+```json 404 - Grupo não encontrado
+{
+  "success": false,
+  "message": "Grupo não encontrado ou você não é membro"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao atualizar permissões do grupo. Tente novamente"
+}
+```
+
+</ResponseExample>

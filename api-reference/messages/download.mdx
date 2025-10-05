@@ -1,0 +1,193 @@
+---
+title: "Baixar Arquivo"
+api: "POST /message/download"
+description: "Baixar arquivo de uma mensagem de mídia"
+---
+
+Realiza o download de arquivos associados a mensagens de mídia (imagem, vídeo, áudio, documento ou sticker).
+
+## Casos de Uso
+
+<AccordionGroup>
+  <Accordion title="Download de Áudios" icon="waveform">
+    Permite baixar áudios em diferentes formatos:
+    - **MP3** (padrão) - usando `generate_mp3: true`
+    - **OGG** (formato original) - usando `generate_mp3: false`
+
+    Ideal para armazenamento ou processamento posterior.
+  </Accordion>
+
+  <Accordion title="Transcrição de Áudio" icon="microphone">
+    Converte mensagens de voz em texto automaticamente.
+
+    **Requisitos:**
+    - Chave da API OpenAI configurada
+    - Parâmetro `transcribe: true`
+
+    A chave pode ser salva na instância para reutilização automática.
+  </Accordion>
+
+  <Accordion title="Download de Mídia Citada" icon="quote-right">
+    Útil para baixar conteúdo original de status do WhatsApp.
+
+    **Exemplo de uso:**
+    Quando um cliente responde a uma promoção/status, você pode baixar a mídia original para entender sobre qual produto/oferta ele está perguntando.
+
+    Use `download_quoted: true` para este cenário.
+  </Accordion>
+
+  <Accordion title="Formatos de Retorno" icon="file-export">
+    Escolha como receber o arquivo:
+    - **URL pública** (padrão) - arquivo salvo e acessível via link
+    - **Base64** - conteúdo codificado em string
+    - **Ambos** - URL + Base64
+    - **Nenhum** - apenas processa (ex: transcrição)
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="id" type="string" required>
+  ID da mensagem contendo o arquivo. <br />
+  Exemplo: `7EB0F01D7244B421048F0706368376E0`
+</ParamField>
+
+<ParamField path="return_base64" type="boolean">
+  Se verdadeiro, retorna o conteúdo em base64. <br />
+  Padrão: `false` <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="generate_mp3" type="boolean">
+  Para áudios, define formato de retorno. <br />
+  - `true`: Retorna MP3 <br />
+  - `false`: Retorna OGG <br />
+  Padrão: `true` <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="return_link" type="boolean">
+  Salva e retorna URL pública do arquivo. <br />
+  Padrão: `true` <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="transcribe" type="boolean">
+  Se verdadeiro, transcreve áudios para texto. <br />
+  Requer chave OpenAI válida. <br />
+  Padrão: `false` <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="openai_apikey" type="string">
+  Chave da API OpenAI para transcrição (opcional). <br />
+  - Se não informada, usa a chave salva na instância <br />
+  - Se informada, atualiza e salva na instância para próximas chamadas <br />
+  Exemplo: `sk-proj-...`
+</ParamField>
+
+<ParamField path="download_quoted" type="boolean">
+  Baixa mídia da mensagem citada ao invés da mensagem principal. <br />
+  Útil para baixar conteúdo original de status do WhatsApp. <br />
+  Padrão: `false` <br />
+  Exemplo: `true`
+</ParamField>
+
+<Info>
+  **Comportamento padrão:**
+  - Áudios são retornados como MP3
+  - Downloads incluem URL pública do arquivo
+  - Transcrição requer chave OpenAI configurada
+</Info>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://zapclass.com.br/api/message/download \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "id": "7EB0F01D7244B421048F0706368376E0",
+    "generate_mp3": true,
+    "transcribe": true,
+    "return_base64": false,
+    "return_link": true
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/message/download", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    id: "7EB0F01D7244B421048F0706368376E0",
+    transcribe: true,
+    generate_mp3: true,
+    return_base64: false,
+    return_link: true
+  }),
+});
+
+const data = await response.json();
+console.log("Arquivo:", data.fileURL);
+console.log("Transcrição:", data.transcription);
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/message/download');
+
+$payload = [
+    "id" => "7EB0F01D7244B421048F0706368376E0",
+    "generate_mp3" => true,
+    "transcribe" => true,
+    "return_base64" => false,
+    "return_link" => true
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+echo "URL do arquivo: " . $data['fileURL'];
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "fileURL": "https://api.exemplo.com/files/arquivo.mp3",
+  "mimetype": "audio/mpeg",
+  "transcription": "Olá, gostaria de saber mais informações sobre o produto que você postou no status"
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "ID da mensagem é obrigatório"
+}
+```
+
+</ResponseExample>

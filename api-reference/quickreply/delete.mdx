@@ -1,0 +1,181 @@
+---
+title: "Excluir Resposta Rápida"
+api: "POST /quickreply/delete"
+description: "Remover template de resposta rápida"
+---
+
+Remove permanentemente um template de resposta rápida. Esta ação é irreversível e só pode ser aplicada em templates criados pela API.
+
+## Sobre Exclusão de Respostas Rápidas
+
+<AccordionGroup>
+  <Accordion title="Exclusão Permanente" icon="trash">
+    Entenda o processo de remoção de templates.
+
+    **Características:**
+    - Ação irreversível - template não pode ser recuperado
+    - Apenas templates criados pela API podem ser excluídos
+    - Templates do WhatsApp (onWhatsApp=true) não podem ser removidos
+    - Requer apenas o ID do template
+    - Confirmação imediata da exclusão
+
+    **Cuidados:**
+    - Não há confirmação adicional após o envio
+    - Dados do template são perdidos permanentemente
+    - Atalho fica disponível para reuso imediato
+    - Considere backup antes de exclusões em massa
+  </Accordion>
+
+  <Accordion title="Identificação de Templates" icon="fingerprint">
+    Como identificar o template a ser excluído.
+
+    **Identificador:**
+    - Use o campo `id` retornado na criação
+    - ID é único e imutável
+    - Formato: `rb9da9c03637452`
+    - Obtenha o ID listando templates existentes
+
+    **Validação:**
+    - Confirme ID antes de excluir
+    - Verifique se não é template do WhatsApp
+    - Liste templates para ver quais são deletáveis
+    - IDs inválidos retornam erro 404
+  </Accordion>
+
+  <Accordion title="Limitações" icon="shield-exclamation">
+    Restrições na exclusão de templates.
+
+    **Não podem ser excluídos:**
+    - Templates nativos do WhatsApp (onWhatsApp=true)
+    - Templates em uso em automações ativas
+    - IDs inexistentes ou inválidos
+
+    **Erro retornado:**
+    - 403: Template protegido (WhatsApp)
+    - 404: Template não encontrado
+    - 500: Erro no servidor
+
+    **Alternativa:**
+    - Templates do WhatsApp podem ser apenas desativados
+    - Considere desabilitar ao invés de excluir
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Quando excluir templates.
+
+    **Situações recomendadas:**
+    - Limpeza de templates obsoletos
+    - Remoção de testes e duplicatas
+    - Reorganização de biblioteca de templates
+    - Templates com erros ou conteúdo incorreto
+    - Campanhas ou promoções encerradas
+
+    **Manutenção:**
+    - Revise templates periodicamente
+    - Exclua duplicatas e versões antigas
+    - Mantenha apenas templates ativos
+    - Documente templates importantes antes de excluir
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="id" type="string" required>
+  ID do template a ser excluído. <br />
+  Obtido na criação ou listagem. <br />
+  Exemplo: `"rb9da9c03637452"`
+</ParamField>
+
+<Warning>
+  **Atenção:** Esta ação é irreversível. O template será permanentemente removido e não poderá ser recuperado.
+</Warning>
+
+<RequestExample>
+```bash cURL
+curl -X POST https://zapclass.com.br/api/quickreply/delete \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "id": "rb9da9c03637452"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/quickreply/delete", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    id: "rb9da9c03637452"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Template excluído:", data.message);
+}
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/quickreply/delete');
+
+$payload = [
+    "id" => "rb9da9c03637452"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Template excluído: {$data['message']}\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "success": true,
+  "message": "Quick reply deleted successfully",
+  "deletedId": "rb9da9c03637452"
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "Campo 'id' é obrigatório"
+}
+```
+
+```json 403
+{
+  "success": false,
+  "message": "Não é possível excluir templates criados pelo WhatsApp"
+}
+```
+
+</ResponseExample>

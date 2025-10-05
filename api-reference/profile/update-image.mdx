@@ -1,0 +1,177 @@
+---
+title: "Alterar imagem do perfil"
+api: "POST /profile/image"
+description: "Atualiza a foto de perfil da instância do WhatsApp"
+---
+
+<AccordionGroup>
+  <Accordion title="Como funciona a alteração da imagem de perfil?">
+    A alteração da imagem de perfil do WhatsApp é uma operação simples mas importante para a identidade visual da sua conta comercial. O sistema aceita três formatos diferentes de entrada:
+
+    **URL de imagem**: Você pode fornecer um link direto para uma imagem hospedada na internet. O sistema fará o download e aplicará a imagem ao perfil.
+
+    **Base64**: Para maior segurança ou quando a imagem não está publicamente acessível, você pode enviar a imagem codificada em base64 diretamente no corpo da requisição.
+
+    **Remoção**: Usando os valores "remove" ou "delete", você pode remover completamente a imagem de perfil atual, deixando o perfil sem foto.
+
+    O processamento é instantâneo e a mudança é sincronizada imediatamente com os servidores do WhatsApp, ficando visível para todos os seus contatos.
+  </Accordion>
+
+  <Accordion title="Especificações técnicas e requisitos da imagem">
+    O WhatsApp tem requisitos específicos para imagens de perfil que devem ser respeitados:
+
+    **Formato**: A imagem deve estar em formato JPEG. Outros formatos podem não ser aceitos ou podem causar erros durante o processamento.
+
+    **Dimensões**: A resolução ideal é 640x640 pixels. O WhatsApp usa imagens quadradas para perfis, e essa é a resolução padrão. Imagens maiores serão redimensionadas automaticamente, o que pode afetar a qualidade.
+
+    **Tamanho do arquivo**: Embora não haja um limite rígido documentado, imagens muito grandes (acima de 5MB) podem retornar erro 413. Recomenda-se otimizar imagens para ficarem entre 100KB e 500KB.
+
+    **Proporção**: Mantenha sempre proporção 1:1 (quadrada). Imagens retangulares serão cortadas automaticamente, podendo perder partes importantes da composição.
+  </Accordion>
+
+  <Accordion title="Boas práticas para imagens de perfil corporativas">
+    Para contas comerciais, a imagem de perfil é um elemento crucial da identidade da marca:
+
+    **Consistência visual**: Use a mesma imagem de perfil em todas as suas plataformas sociais para facilitar o reconhecimento da marca pelos clientes.
+
+    **Qualidade profissional**: Evite imagens borradas, pixeladas ou com baixa resolução. Uma imagem nítida transmite profissionalismo e confiança.
+
+    **Logo da empresa**: Para empresas, geralmente é melhor usar o logotipo oficial ao invés de fotos genéricas ou ilustrações complexas que podem não ser reconhecíveis em tamanhos pequenos.
+
+    **Simplicidade**: Lembre-se que a imagem será exibida em tamanhos muito pequenos na lista de conversas. Evite designs muito detalhados ou textos pequenos que ficarão ilegíveis.
+
+    **Contraste adequado**: Certifique-se de que sua imagem tem bom contraste e é visível tanto em temas claros quanto escuros do WhatsApp.
+
+    **Atualização moderada**: Evite mudar a imagem de perfil com muita frequência. Consistência ajuda no reconhecimento da marca. Mude apenas quando houver uma razão estratégica (rebranding, campanhas especiais, etc).
+  </Accordion>
+
+  <Accordion title="Casos de uso e automação">
+    A API de atualização de imagem de perfil permite diversas automações interessantes:
+
+    **Campanhas sazonais**: Altere automaticamente a imagem de perfil durante eventos especiais, feriados ou promoções (ex: logo com elementos natalinos em dezembro).
+
+    **Rotação de produtos**: Para e-commerces, você pode criar uma rotina que muda a imagem de perfil periodicamente para destacar diferentes produtos ou linhas.
+
+    **Indicadores de status**: Algumas empresas usam variações sutis na imagem de perfil para indicar diferentes estados (ex: "online", "atendimento 24h", "fechado para manutenção").
+
+    **Sincronização multi-canal**: Se você gerencia várias instâncias ou canais, pode usar a API para garantir que todas as imagens de perfil sejam atualizadas simultaneamente.
+
+    **Testes A/B**: Em contextos de múltiplas instâncias, você pode testar diferentes imagens de perfil para identificar qual gera mais engajamento ou reconhecimento dos clientes.
+
+    **Automação de branding**: Integre com sistemas de gestão de marca para aplicar automaticamente novas diretrizes visuais quando a identidade corporativa for atualizada.
+  </Accordion>
+</AccordionGroup>
+
+## Authorizations
+
+<ParamField header="token" type="string" required>
+  Token de autenticação da API. Obtenha seu token no painel administrativo.
+
+  **Exemplo**: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+## Body Parameters
+
+<ParamField body="image" type="string" required>
+  Imagem do perfil. Aceita três formatos diferentes:
+
+  - **URL**: Link direto para uma imagem JPEG (http/https)
+  - **Base64**: String codificada em base64 da imagem
+  - **Remoção**: Use "remove" ou "delete" para remover a imagem atual
+
+  **Exemplo URL**: `https://picsum.photos/640/640.jpg`
+
+  **Exemplo Base64**: `data:image/jpeg;base64,/9j/4AAQSkZJRg...`
+
+  **Exemplo Remoção**: `remove`
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.seuservidor.com/profile/image \
+  --header 'Content-Type: application/json' \
+  --header 'token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk' \
+  --data '{
+    "image": "https://picsum.photos/640/640.jpg"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.seuservidor.com/profile/image', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'token': 'zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+  },
+  body: JSON.stringify({
+    image: 'https://picsum.photos/640/640.jpg'
+  })
+});
+
+const data = await response.json();
+console.log(data);
+```
+
+```php PHP
+<?php
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://api.seuservidor.com/profile/image",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => json_encode([
+    'image' => 'https://picsum.photos/640/640.jpg'
+  ]),
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json",
+    "token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "Erro: " . $err;
+} else {
+  echo $response;
+}
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "status": "success",
+}
+```
+
+```json 400
+{
+  "status": "error",
+  "message": "Token de autenticação inválido"
+}
+```
+
+</ResponseExample>
+
+<Info>
+  A imagem de perfil é visível para todos os seus contatos e é um elemento importante da identidade da sua conta comercial no WhatsApp.
+</Info>
+
+<Warning>
+  Certifique-se de que a imagem está em formato JPEG com dimensões 640x640 pixels para melhor qualidade. Imagens muito grandes (acima de 5MB) podem retornar erro 413.
+</Warning>
+
+<Tip>
+  Você pode usar "remove" ou "delete" no campo `image` para remover completamente a foto de perfil atual, deixando o perfil sem imagem.
+</Tip>

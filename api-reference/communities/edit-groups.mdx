@@ -1,0 +1,700 @@
+---
+title: "Gerenciar Grupos da Comunidade"
+api: "POST /community/editgroups"
+description: "Adicionar ou remover grupos de uma comunidade"
+---
+
+Gerencia os grupos vinculados a uma comunidade, permitindo adicionar novos grupos ou remover grupos existentes da estrutura comunitária.
+
+## Gestão de Grupos
+
+<AccordionGroup>
+  <Accordion title="Adicionar Grupos" icon="plus">
+    Vincula grupos existentes à comunidade.
+
+    **Ação: `add`**
+    - Grupos devem existir previamente
+    - Vincula grupos à estrutura da comunidade
+    - Grupos aparecem listados na comunidade
+    - Membros têm acesso ao grupo de anúncios
+    - Permite organização hierárquica
+
+    **Requisitos:**
+    - Você deve ser admin da comunidade
+    - Grupos não podem estar em outra comunidade
+    - Grupos devem ser válidos e acessíveis
+    - Não adicionar grupos já vinculados
+  </Accordion>
+
+  <Accordion title="Remover Grupos" icon="minus">
+    Desvincula grupos da comunidade.
+
+    **Ação: `remove`**
+    - Remove vínculo do grupo com a comunidade
+    - Grupo continua existindo independentemente
+    - Membros perdem acesso ao grupo de anúncios
+    - Grupo pode ser vinculado a outra comunidade
+    - Não exclui o grupo, apenas desvincula
+
+    **Comportamento:**
+    - Grupo volta a ser independente
+    - Mantém todos os participantes
+    - Configurações do grupo preservadas
+    - Pode ser re-adicionado depois
+  </Accordion>
+
+  <Accordion title="Operações em Lote" icon="layer-group">
+    Gerenciamento de múltiplos grupos simultaneamente.
+
+    **Vantagens:**
+    - Adiciona/remove vários grupos de uma vez
+    - Economiza tempo em operações grandes
+    - Reduz número de requisições à API
+    - Ideal para estruturas complexas
+
+    **Exemplo de uso:**
+    - Vincular todos os grupos de departamentos
+    - Reorganizar estrutura de comunidade
+    - Migrar grupos entre comunidades
+    - Configuração inicial de comunidade
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações práticas para gerenciar grupos.
+
+    **Adicionar grupos:**
+    - Expansão da estrutura da comunidade
+    - Novos departamentos ou áreas
+    - Integração de grupos existentes
+    - Organização de eventos com múltiplas salas
+    - Estruturação de filiais regionais
+
+    **Remover grupos:**
+    - Reorganização da comunidade
+    - Grupos que não fazem mais sentido
+    - Migração para outra comunidade
+    - Desativação de departamentos
+    - Limpeza de estrutura obsoleta
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="community" type="string" required>
+  Identificador único da comunidade (JID). <br />
+  Formato: `número@g.us` <br />
+  Exemplo: `120363153742561022@g.us`
+</ParamField>
+
+<ParamField path="action" type="string" required>
+  Tipo de operação a executar. <br />
+  **Valores:** `add` (adicionar), `remove` (remover) <br />
+  Exemplo: `"add"`
+</ParamField>
+
+<ParamField path="groupjids" type="array" required>
+  Lista de JIDs dos grupos a gerenciar. <br />
+  Formato: `["grupo1@g.us", "grupo2@g.us"]` <br />
+  Exemplo: `["120363324255083289@g.us", "120363308883996631@g.us"]`
+</ParamField>
+
+<Warning>
+  **Importante:** Grupos já vinculados a outra comunidade não podem ser adicionados. Primeiro remova o grupo da comunidade anterior.
+</Warning>
+
+<RequestExample>
+
+```bash cURL - Adicionar grupos
+curl -X POST https://zapclass.com.br/api/community/editgroups \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "community": "120363153742561022@g.us",
+    "action": "add",
+    "groupjids": [
+      "120363324255083289@g.us",
+      "120363308883996631@g.us"
+    ]
+  }'
+```
+
+```bash cURL - Remover grupos
+curl -X POST https://zapclass.com.br/api/community/editgroups \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "community": "120363153742561022@g.us",
+    "action": "remove",
+    "groupjids": ["120363324255083289@g.us"]
+  }'
+```
+
+```javascript JavaScript - Adicionar grupos
+const response = await fetch("https://zapclass.com.br/api/community/editgroups", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    community: "120363153742561022@g.us",
+    action: "add",
+    groupjids: [
+      "120363324255083289@g.us",
+      "120363308883996631@g.us"
+    ]
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Grupos adicionados à comunidade");
+  console.log("Total de grupos:", data.groupsAdded || data.groupjids.length);
+}
+```
+
+```javascript JavaScript - Gerenciador de grupos
+class CommunityGroupManager {
+  constructor(token, baseUrl = "https://zapclass.com.br/api") {
+    this.token = token;
+    this.baseUrl = baseUrl;
+  }
+
+  async executeAction(communityJid, action, groupJids) {
+    const response = await fetch(`${this.baseUrl}/community/editgroups`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: this.token,
+      },
+      body: JSON.stringify({
+        community: communityJid,
+        action,
+        groupjids: groupJids
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message);
+    }
+
+    return data;
+  }
+
+  async addGroups(communityJid, groupJids) {
+    const result = await this.executeAction(communityJid, "add", groupJids);
+    console.log(`✓ ${groupJids.length} grupos adicionados à comunidade`);
+    return result;
+  }
+
+  async removeGroups(communityJid, groupJids) {
+    const result = await this.executeAction(communityJid, "remove", groupJids);
+    console.log(`✓ ${groupJids.length} grupos removidos da comunidade`);
+    return result;
+  }
+
+  async syncGroups(communityJid, desiredGroupJids) {
+    // Busca grupos atuais da comunidade
+    // Nota: Você precisaria implementar um endpoint para listar grupos da comunidade
+    console.log("Sincronizando grupos da comunidade...");
+
+    // Por enquanto, apenas adiciona os desejados
+    await this.addGroups(communityJid, desiredGroupJids);
+
+    console.log("✓ Sincronização concluída");
+  }
+}
+
+// Uso
+const manager = new CommunityGroupManager("zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk");
+
+await manager.addGroups(
+  "120363153742561022@g.us",
+  ["120363324255083289@g.us", "120363308883996631@g.us"]
+);
+
+await manager.removeGroups(
+  "120363153742561022@g.us",
+  ["120363324255083289@g.us"]
+);
+```
+
+```javascript JavaScript - Adicionar com validação
+async function addGroupsToCommunity(communityJid, groupJids) {
+  // Validações
+  if (!Array.isArray(groupJids) || groupJids.length === 0) {
+    throw new Error("Lista de grupos não pode estar vazia");
+  }
+
+  // Valida formato dos JIDs
+  const invalidJids = groupJids.filter(jid => !jid.endsWith('@g.us'));
+  if (invalidJids.length > 0) {
+    throw new Error(`JIDs inválidos: ${invalidJids.join(', ')}`);
+  }
+
+  console.log(`Adicionando ${groupJids.length} grupos à comunidade...`);
+
+  const response = await fetch("https://zapclass.com.br/api/community/editgroups", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      community: communityJid,
+      action: "add",
+      groupjids: groupJids
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message);
+  }
+
+  console.log("✓ Grupos adicionados com sucesso");
+
+  return data;
+}
+
+// Uso
+try {
+  await addGroupsToCommunity("120363153742561022@g.us", [
+    "120363324255083289@g.us",
+    "120363308883996631@g.us"
+  ]);
+} catch (error) {
+  console.error("Erro:", error.message);
+}
+```
+
+```javascript JavaScript - Reorganizar estrutura
+async function reorganizeCommunityStructure(communityJid, newStructure) {
+  const { groupsToAdd, groupsToRemove } = newStructure;
+
+  console.log("=== REORGANIZAÇÃO DA COMUNIDADE ===\n");
+
+  // Remove grupos antigos
+  if (groupsToRemove && groupsToRemove.length > 0) {
+    console.log(`Removendo ${groupsToRemove.length} grupos...`);
+
+    await fetch("https://zapclass.com.br/api/community/editgroups", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({
+        community: communityJid,
+        action: "remove",
+        groupjids: groupsToRemove
+      }),
+    });
+
+    console.log("✓ Grupos removidos");
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+
+  // Adiciona novos grupos
+  if (groupsToAdd && groupsToAdd.length > 0) {
+    console.log(`\nAdicionando ${groupsToAdd.length} grupos...`);
+
+    await fetch("https://zapclass.com.br/api/community/editgroups", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({
+        community: communityJid,
+        action: "add",
+        groupjids: groupsToAdd
+      }),
+    });
+
+    console.log("✓ Grupos adicionados");
+  }
+
+  console.log("\n✓ Reorganização concluída");
+
+  return {
+    removed: groupsToRemove?.length || 0,
+    added: groupsToAdd?.length || 0
+  };
+}
+
+// Uso - substituir estrutura antiga por nova
+const result = await reorganizeCommunityStructure("120363153742561022@g.us", {
+  groupsToRemove: ["120363324255083289@g.us"],
+  groupsToAdd: [
+    "120363308883996631@g.us",
+    "120363308883996632@g.us"
+  ]
+});
+
+console.log(`\nResumo: ${result.removed} removidos, ${result.added} adicionados`);
+```
+
+```javascript JavaScript - Migrar grupos entre comunidades
+async function migrateGroupsBetweenCommunities(groupJids, fromCommunityJid, toCommunityJid) {
+  console.log("=== MIGRAÇÃO DE GRUPOS ===\n");
+  console.log(`De: ${fromCommunityJid}`);
+  console.log(`Para: ${toCommunityJid}`);
+  console.log(`Grupos: ${groupJids.length}\n`);
+
+  // Remove da comunidade antiga
+  console.log("1. Removendo da comunidade antiga...");
+
+  await fetch("https://zapclass.com.br/api/community/editgroups", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      community: fromCommunityJid,
+      action: "remove",
+      groupjids: groupJids
+    }),
+  });
+
+  console.log("✓ Removidos da comunidade antiga");
+
+  // Aguarda 2 segundos
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  // Adiciona à nova comunidade
+  console.log("\n2. Adicionando à nova comunidade...");
+
+  await fetch("https://zapclass.com.br/api/community/editgroups", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      community: toCommunityJid,
+      action: "add",
+      groupjids: groupJids
+    }),
+  });
+
+  console.log("✓ Adicionados à nova comunidade");
+
+  console.log("\n✓ Migração concluída com sucesso");
+
+  return { migrated: groupJids.length };
+}
+
+// Uso
+await migrateGroupsBetweenCommunities(
+  ["120363324255083289@g.us", "120363308883996631@g.us"],
+  "120363153742561022@g.us",  // Comunidade antiga
+  "120363153742561023@g.us"   // Comunidade nova
+);
+```
+
+```php PHP - Adicionar grupos
+<?php
+$ch = curl_init('https://zapclass.com.br/api/community/editgroups');
+
+$payload = [
+    "community" => "120363153742561022@g.us",
+    "action" => "add",
+    "groupjids" => [
+        "120363324255083289@g.us",
+        "120363308883996631@g.us"
+    ]
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Grupos adicionados à comunidade\n";
+    echo "Total: " . count($payload['groupjids']) . " grupos\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Remover grupos
+<?php
+function removeGroupsFromCommunity($communityJid, $groupJids) {
+    $ch = curl_init('https://zapclass.com.br/api/community/editgroups');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'community' => $communityJid,
+        'action' => 'remove',
+        'groupjids' => $groupJids
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $data = json_decode($response, true);
+    curl_close($ch);
+
+    if (!$data['success']) {
+        throw new Exception($data['message']);
+    }
+
+    echo "✓ " . count($groupJids) . " grupos removidos da comunidade\n";
+
+    return $data;
+}
+
+// Uso
+removeGroupsFromCommunity(
+    "120363153742561022@g.us",
+    ["120363324255083289@g.us"]
+);
+?>
+```
+
+```php PHP - Classe gerenciadora completa
+<?php
+class CommunityGroupManager {
+    private $token;
+    private $baseUrl = 'https://zapclass.com.br/api';
+
+    public function __construct($token) {
+        $this->token = $token;
+    }
+
+    private function executeAction($communityJid, $action, $groupJids) {
+        $ch = curl_init($this->baseUrl . '/community/editgroups');
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            'community' => $communityJid,
+            'action' => $action,
+            'groupjids' => $groupJids
+        ]));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        if (!$data['success']) {
+            throw new Exception($data['message']);
+        }
+
+        return $data;
+    }
+
+    public function addGroups($communityJid, $groupJids) {
+        if (empty($groupJids)) {
+            throw new Exception("Lista de grupos vazia");
+        }
+
+        $result = $this->executeAction($communityJid, 'add', $groupJids);
+
+        echo "✓ " . count($groupJids) . " grupos adicionados\n";
+
+        return $result;
+    }
+
+    public function removeGroups($communityJid, $groupJids) {
+        if (empty($groupJids)) {
+            throw new Exception("Lista de grupos vazia");
+        }
+
+        $result = $this->executeAction($communityJid, 'remove', $groupJids);
+
+        echo "✓ " . count($groupJids) . " grupos removidos\n";
+
+        return $result;
+    }
+
+    public function reorganize($communityJid, $groupsToRemove, $groupsToAdd) {
+        echo "=== REORGANIZAÇÃO ===\n\n";
+
+        // Remove
+        if (!empty($groupsToRemove)) {
+            echo "Removendo " . count($groupsToRemove) . " grupos...\n";
+            $this->removeGroups($communityJid, $groupsToRemove);
+            sleep(1);
+        }
+
+        // Adiciona
+        if (!empty($groupsToAdd)) {
+            echo "\nAdicionando " . count($groupsToAdd) . " grupos...\n";
+            $this->addGroups($communityJid, $groupsToAdd);
+        }
+
+        echo "\n✓ Reorganização concluída\n";
+
+        return [
+            'removed' => count($groupsToRemove),
+            'added' => count($groupsToAdd)
+        ];
+    }
+
+    public function migrate($groupJids, $fromCommunityJid, $toCommunityJid) {
+        echo "=== MIGRAÇÃO DE GRUPOS ===\n\n";
+        echo "De: {$fromCommunityJid}\n";
+        echo "Para: {$toCommunityJid}\n";
+        echo "Grupos: " . count($groupJids) . "\n\n";
+
+        // Remove da antiga
+        echo "1. Removendo da comunidade antiga...\n";
+        $this->removeGroups($fromCommunityJid, $groupJids);
+
+        sleep(2);
+
+        // Adiciona à nova
+        echo "\n2. Adicionando à nova comunidade...\n";
+        $this->addGroups($toCommunityJid, $groupJids);
+
+        echo "\n✓ Migração concluída\n";
+
+        return ['migrated' => count($groupJids)];
+    }
+}
+
+// Uso
+$manager = new CommunityGroupManager('zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk');
+
+try {
+    // Adicionar grupos
+    $manager->addGroups(
+        "120363153742561022@g.us",
+        ["120363324255083289@g.us", "120363308883996631@g.us"]
+    );
+
+    echo "\n";
+
+    // Reorganizar
+    $manager->reorganize(
+        "120363153742561022@g.us",
+        ["120363324255083289@g.us"],  // Remover
+        ["120363308883996632@g.us"]   // Adicionar
+    );
+
+    echo "\n";
+
+    // Migrar grupos
+    $manager->migrate(
+        ["120363308883996631@g.us"],
+        "120363153742561022@g.us",
+        "120363153742561023@g.us"
+    );
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Grupos adicionados
+{
+  "success": true,
+  "message": "Groups added to community successfully",
+  "community": "120363153742561022@g.us",
+  "action": "add",
+  "groupsAdded": 2,
+  "groupjids": [
+    "120363324255083289@g.us",
+    "120363308883996631@g.us"
+  ]
+}
+```
+
+```json 200 - Grupos removidos
+{
+  "success": true,
+  "message": "Groups removed from community successfully",
+  "community": "120363153742561022@g.us",
+  "action": "remove",
+  "groupsRemoved": 1,
+  "groupjids": [
+    "120363324255083289@g.us"
+  ]
+}
+```
+
+```json 400 - Lista vazia
+{
+  "success": false,
+  "message": "A lista de grupos não pode estar vazia"
+}
+```
+
+```json 400 - Ação inválida
+{
+  "success": false,
+  "message": "Ação inválida. Use 'add' ou 'remove'"
+}
+```
+
+```json 400 - Grupo já vinculado
+{
+  "success": false,
+  "message": "Um ou mais grupos já estão vinculados a esta comunidade"
+}
+```
+
+```json 401 - Token inválido
+{
+  "success": false,
+  "message": "Token de autenticação inválido ou expirado"
+}
+```
+
+```json 403 - Sem permissão
+{
+  "success": false,
+  "message": "Você precisa ser administrador da comunidade para gerenciar grupos"
+}
+```
+
+```json 404 - Comunidade não encontrada
+{
+  "success": false,
+  "message": "Comunidade não encontrada"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao gerenciar grupos da comunidade. Tente novamente"
+}
+```
+
+</ResponseExample>

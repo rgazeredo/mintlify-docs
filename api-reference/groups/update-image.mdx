@@ -1,0 +1,746 @@
+---
+title: "Atualizar Imagem"
+api: "POST /group/updateImage"
+description: "Modificar ou remover a foto de perfil do grupo"
+---
+
+Atualiza a foto de perfil de um grupo do WhatsApp através de URL ou base64, ou remove a imagem atual do grupo.
+
+## Gerenciamento de Imagem
+
+<AccordionGroup>
+  <Accordion title="Formatos Aceitos" icon="image">
+    Opções para fornecer a imagem do grupo.
+
+    **URL da imagem:**
+    - Link direto para arquivo JPEG acessível
+    - Servidor deve permitir acesso público
+    - URL deve retornar a imagem diretamente
+    - Exemplo: `https://example.com/group-image.jpg`
+
+    **Base64:**
+    - String codificada em base64 da imagem
+    - Com ou sem prefixo `data:image/jpeg;base64,`
+    - Ideal para imagens geradas dinamicamente
+    - Não requer hospedagem externa
+
+    **Remover imagem:**
+    - Use `"remove"` ou `"delete"` como valor
+    - Remove a foto atual do grupo
+    - Grupo fica sem imagem de perfil
+  </Accordion>
+
+  <Accordion title="Requisitos Técnicos" icon="circle-check">
+    Especificações obrigatórias da imagem.
+
+    **Formato:**
+    - Apenas JPEG é aceito pelo WhatsApp
+    - PNG, GIF, WebP não são suportados
+    - Converta para JPEG antes de enviar
+
+    **Resolução:**
+    - Máximo: 640x640 pixels
+    - Recomendado: formato quadrado
+    - Imagens maiores serão rejeitadas
+    - WhatsApp redimensiona automaticamente se necessário
+
+    **Tamanho:**
+    - Mantenha arquivo otimizado
+    - Imagens muito grandes causam erro 413
+    - Recomendado: menos de 100KB
+  </Accordion>
+
+  <Accordion title="Permissões Necessárias" icon="user-shield">
+    Requisitos para alterar a imagem do grupo.
+
+    **Você precisa ser:**
+    - Membro ativo do grupo
+    - Administrador do grupo
+    - Conectado a uma instância válida
+
+    **Configuração "restrict":**
+    - Se `restrict: true`, apenas admins podem alterar
+    - Se `restrict: false`, pode depender de configurações
+    - Esta API sempre requer permissão de admin
+
+    Sem permissão de admin, retorna erro 403.
+  </Accordion>
+
+  <Accordion title="Casos de Uso" icon="lightbulb">
+    Situações para atualizar a imagem do grupo.
+
+    **Aplicações práticas:**
+    - Personalização da identidade visual
+    - Atualização para campanhas ou eventos
+    - Sincronização com logo da empresa
+    - Remoção de imagens inadequadas
+    - Automação de branding corporativo
+    - Imagens temáticas sazonais
+    - Geração dinâmica com IA ou design
+    - Integração com sistemas de gestão
+  </Accordion>
+</AccordionGroup>
+
+### Authorizations
+
+<ParamField path="token" type="string" required>
+  Token de autenticação de conexão com a API. <br />
+  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="groupjid" type="string" required>
+  Identificador único do grupo (JID). <br />
+  Formato: `número@g.us` <br />
+  Exemplo: `120363308883996631@g.us`
+</ParamField>
+
+<ParamField path="image" type="string" required>
+  URL, base64 ou comando de remoção. <br />
+  **URL:** Link direto para imagem JPEG <br />
+  **Base64:** String codificada da imagem <br />
+  **Remover:** `"remove"` ou `"delete"` <br />
+  Exemplo: `"https://example.com/logo.jpg"`
+</ParamField>
+
+<Warning>
+  **Restrições:** A imagem deve ser JPEG com resolução máxima de 640x640 pixels. Outros formatos ou tamanhos maiores serão rejeitados pelo WhatsApp.
+</Warning>
+
+<RequestExample>
+
+```bash cURL - Atualizar com URL
+curl -X POST https://zapclass.com.br/api/group/updateImage \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363308883996631@g.us",
+    "image": "https://example.com/group-logo.jpg"
+  }'
+```
+
+```bash cURL - Remover imagem
+curl -X POST https://zapclass.com.br/api/group/updateImage \
+  -H "Content-Type: application/json" \
+  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -d '{
+    "groupjid": "120363308883996631@g.us",
+    "image": "remove"
+  }'
+```
+
+```javascript JavaScript - Atualizar com URL
+const response = await fetch("https://zapclass.com.br/api/group/updateImage", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+  },
+  body: JSON.stringify({
+    groupjid: "120363308883996631@g.us",
+    image: "https://example.com/group-logo.jpg"
+  }),
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log("Imagem do grupo atualizada com sucesso");
+}
+```
+
+```javascript JavaScript - Atualizar com base64
+async function updateGroupImageFromFile(groupJid, imageFile) {
+  // Converter arquivo para base64
+  const reader = new FileReader();
+
+  return new Promise((resolve, reject) => {
+    reader.onload = async (e) => {
+      const base64 = e.target.result;
+
+      const response = await fetch("https://zapclass.com.br/api/group/updateImage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        },
+        body: JSON.stringify({
+          groupjid: groupJid,
+          image: base64
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        console.log("✓ Imagem atualizada");
+        resolve(data);
+      } else {
+        reject(new Error(data.message));
+      }
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(imageFile);
+  });
+}
+
+// Uso (em ambiente browser com input file)
+// const fileInput = document.querySelector('input[type="file"]');
+// await updateGroupImageFromFile("120363308883996631@g.us", fileInput.files[0]);
+```
+
+```javascript JavaScript - Validar e redimensionar
+async function updateGroupImageWithValidation(groupJid, imageUrl) {
+  // Em Node.js, você pode usar sharp ou jimp para processar imagens
+  // Este é um exemplo simplificado
+
+  console.log("Baixando e validando imagem...");
+
+  // Verifica se URL é acessível
+  const imageResponse = await fetch(imageUrl);
+  if (!imageResponse.ok) {
+    throw new Error("Imagem não pôde ser baixada");
+  }
+
+  const contentType = imageResponse.headers.get('content-type');
+  if (!contentType.includes('jpeg') && !contentType.includes('jpg')) {
+    throw new Error("Apenas imagens JPEG são aceitas");
+  }
+
+  console.log("✓ Imagem válida");
+
+  // Atualiza a imagem
+  const response = await fetch("https://zapclass.com.br/api/group/updateImage", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      groupjid: groupJid,
+      image: imageUrl
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message);
+  }
+
+  console.log("✓ Imagem do grupo atualizada");
+  return data;
+}
+
+// Uso
+try {
+  await updateGroupImageWithValidation(
+    "120363308883996631@g.us",
+    "https://example.com/logo.jpg"
+  );
+} catch (error) {
+  console.error("Erro:", error.message);
+}
+```
+
+```javascript JavaScript - Remover imagem
+async function removeGroupImage(groupJid) {
+  const response = await fetch("https://zapclass.com.br/api/group/updateImage", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      groupjid: groupJid,
+      image: "remove"
+    }),
+  });
+
+  const data = await response.json();
+
+  if (data.success) {
+    console.log("✓ Imagem do grupo removida");
+  }
+
+  return data;
+}
+
+// Uso
+await removeGroupImage("120363308883996631@g.us");
+```
+
+```javascript JavaScript - Atualizar múltiplos grupos
+async function updateMultipleGroupImages(updates) {
+  const results = [];
+
+  for (const update of updates) {
+    try {
+      const response = await fetch("https://zapclass.com.br/api/group/updateImage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        },
+        body: JSON.stringify({
+          groupjid: update.groupJid,
+          image: update.imageUrl
+        }),
+      });
+
+      const data = await response.json();
+
+      results.push({
+        groupJid: update.groupJid,
+        success: data.success,
+        message: data.message
+      });
+
+      // Aguarda 2 segundos entre operações
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    } catch (error) {
+      results.push({
+        groupJid: update.groupJid,
+        success: false,
+        message: error.message
+      });
+    }
+  }
+
+  return results;
+}
+
+// Uso - atualizar logo de todos os grupos da empresa
+const updates = [
+  {
+    groupJid: "120363308883996631@g.us",
+    imageUrl: "https://empresa.com/logo-vendas.jpg"
+  },
+  {
+    groupJid: "120363308883996632@g.us",
+    imageUrl: "https://empresa.com/logo-suporte.jpg"
+  }
+];
+
+const results = await updateMultipleGroupImages(updates);
+
+console.log("=== RESULTADOS ===");
+results.forEach(result => {
+  const status = result.success ? "✓" : "✗";
+  console.log(`${status} ${result.groupJid}`);
+});
+```
+
+```javascript JavaScript - Imagem temporária sazonal
+async function setSeasonalImage(groupJid, event, durationDays) {
+  const eventImages = {
+    natal: "https://cdn.example.com/natal.jpg",
+    pascoa: "https://cdn.example.com/pascoa.jpg",
+    blackfriday: "https://cdn.example.com/blackfriday.jpg",
+    default: "https://cdn.example.com/logo.jpg"
+  };
+
+  const eventImage = eventImages[event] || eventImages.default;
+
+  console.log(`Aplicando imagem de ${event}...`);
+
+  // Define imagem do evento
+  await fetch("https://zapclass.com.br/api/group/updateImage", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    },
+    body: JSON.stringify({
+      groupjid: groupJid,
+      image: eventImage
+    }),
+  });
+
+  console.log(`✓ Imagem de ${event} aplicada`);
+  console.log(`Retornará à imagem padrão em ${durationDays} dias`);
+
+  // Agenda retorno à imagem padrão
+  setTimeout(async () => {
+    console.log("Retornando à imagem padrão...");
+
+    await fetch("https://zapclass.com.br/api/group/updateImage", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      },
+      body: JSON.stringify({
+        groupjid: groupJid,
+        image: eventImages.default
+      }),
+    });
+
+    console.log("✓ Imagem padrão restaurada");
+  }, durationDays * 24 * 60 * 60 * 1000);
+}
+
+// Uso - aplicar imagem de Natal por 30 dias
+setSeasonalImage("120363308883996631@g.us", "natal", 30);
+```
+
+```php PHP - Atualizar com URL
+<?php
+$ch = curl_init('https://zapclass.com.br/api/group/updateImage');
+
+$payload = [
+    "groupjid" => "120363308883996631@g.us",
+    "image" => "https://example.com/group-logo.jpg"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo "Imagem do grupo atualizada com sucesso\n";
+} else {
+    echo "Erro: " . $data['message'];
+}
+
+curl_close($ch);
+?>
+```
+
+```php PHP - Atualizar com arquivo local
+<?php
+function updateGroupImageFromFile($groupJid, $imagePath) {
+    if (!file_exists($imagePath)) {
+        throw new Exception("Arquivo não encontrado: {$imagePath}");
+    }
+
+    // Valida se é JPEG
+    $imageInfo = getimagesize($imagePath);
+    if ($imageInfo[2] !== IMAGETYPE_JPEG) {
+        throw new Exception("Apenas imagens JPEG são aceitas");
+    }
+
+    // Valida resolução
+    if ($imageInfo[0] > 640 || $imageInfo[1] > 640) {
+        throw new Exception("Imagem excede resolução máxima de 640x640");
+    }
+
+    // Converte para base64
+    $imageData = file_get_contents($imagePath);
+    $base64 = base64_encode($imageData);
+    $base64Image = "data:image/jpeg;base64,{$base64}";
+
+    $ch = curl_init('https://zapclass.com.br/api/group/updateImage');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid,
+        'image' => $base64Image
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $data = json_decode($response, true);
+    curl_close($ch);
+
+    if (!$data['success']) {
+        throw new Exception($data['message']);
+    }
+
+    return $data;
+}
+
+// Uso
+try {
+    updateGroupImageFromFile(
+        "120363308883996631@g.us",
+        "/path/to/logo.jpg"
+    );
+    echo "✓ Imagem atualizada\n";
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+```php PHP - Remover imagem
+<?php
+function removeGroupImage($groupJid) {
+    $ch = curl_init('https://zapclass.com.br/api/group/updateImage');
+
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'groupjid' => $groupJid,
+        'image' => 'remove'
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $data = json_decode($response, true);
+    curl_close($ch);
+
+    if ($data['success']) {
+        echo "✓ Imagem do grupo removida\n";
+    } else {
+        echo "✗ Erro: {$data['message']}\n";
+    }
+
+    return $data;
+}
+
+// Uso
+removeGroupImage("120363308883996631@g.us");
+?>
+```
+
+```php PHP - Classe gerenciadora completa
+<?php
+class GroupImageManager {
+    private $token;
+    private $baseUrl = 'https://zapclass.com.br/api';
+
+    public function __construct($token) {
+        $this->token = $token;
+    }
+
+    private function makeRequest($endpoint, $payload) {
+        $ch = curl_init($this->baseUrl . $endpoint);
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            "Token: {$this->token}"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+    public function updateFromUrl($groupJid, $imageUrl) {
+        $data = $this->makeRequest('/group/updateImage', [
+            'groupjid' => $groupJid,
+            'image' => $imageUrl
+        ]);
+
+        if (!$data['success']) {
+            throw new Exception($data['message']);
+        }
+
+        return $data;
+    }
+
+    public function updateFromFile($groupJid, $imagePath) {
+        if (!file_exists($imagePath)) {
+            throw new Exception("Arquivo não encontrado");
+        }
+
+        $imageInfo = getimagesize($imagePath);
+
+        if ($imageInfo[2] !== IMAGETYPE_JPEG) {
+            throw new Exception("Apenas JPEG é aceito");
+        }
+
+        if ($imageInfo[0] > 640 || $imageInfo[1] > 640) {
+            throw new Exception("Resolução máxima: 640x640");
+        }
+
+        $imageData = file_get_contents($imagePath);
+        $base64 = "data:image/jpeg;base64," . base64_encode($imageData);
+
+        return $this->makeRequest('/group/updateImage', [
+            'groupjid' => $groupJid,
+            'image' => $base64
+        ]);
+    }
+
+    public function remove($groupJid) {
+        return $this->makeRequest('/group/updateImage', [
+            'groupjid' => $groupJid,
+            'image' => 'remove'
+        ]);
+    }
+
+    public function updateMultiple($updates, $delay = 2) {
+        $results = [];
+
+        foreach ($updates as $update) {
+            try {
+                $this->updateFromUrl($update['groupJid'], $update['imageUrl']);
+                $results[$update['groupJid']] = [
+                    'success' => true
+                ];
+            } catch (Exception $e) {
+                $results[$update['groupJid']] = [
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ];
+            }
+
+            if ($delay > 0) {
+                sleep($delay);
+            }
+        }
+
+        return $results;
+    }
+
+    public function validateImage($imagePath) {
+        if (!file_exists($imagePath)) {
+            return ['valid' => false, 'error' => 'Arquivo não encontrado'];
+        }
+
+        $imageInfo = getimagesize($imagePath);
+
+        if ($imageInfo[2] !== IMAGETYPE_JPEG) {
+            return ['valid' => false, 'error' => 'Formato deve ser JPEG'];
+        }
+
+        if ($imageInfo[0] > 640 || $imageInfo[1] > 640) {
+            return ['valid' => false, 'error' => 'Resolução máxima: 640x640'];
+        }
+
+        return [
+            'valid' => true,
+            'width' => $imageInfo[0],
+            'height' => $imageInfo[1],
+            'size' => filesize($imagePath)
+        ];
+    }
+}
+
+// Uso
+$manager = new GroupImageManager('zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk');
+
+try {
+    // Validar imagem
+    $validation = $manager->validateImage('/path/to/image.jpg');
+    if (!$validation['valid']) {
+        die("Imagem inválida: {$validation['error']}\n");
+    }
+
+    echo "✓ Imagem válida: {$validation['width']}x{$validation['height']}\n";
+
+    // Atualizar com arquivo local
+    $manager->updateFromFile("120363308883996631@g.us", "/path/to/image.jpg");
+    echo "✓ Imagem atualizada\n\n";
+
+    // Atualizar com URL
+    $manager->updateFromUrl(
+        "120363308883996631@g.us",
+        "https://example.com/logo.jpg"
+    );
+    echo "✓ Imagem atualizada via URL\n\n";
+
+    // Remover imagem
+    $manager->remove("120363308883996631@g.us");
+    echo "✓ Imagem removida\n\n";
+
+    // Atualizar múltiplos grupos
+    $updates = [
+        ['groupJid' => "120363308883996631@g.us", 'imageUrl' => "https://example.com/1.jpg"],
+        ['groupJid' => "120363308883996632@g.us", 'imageUrl' => "https://example.com/2.jpg"]
+    ];
+
+    $results = $manager->updateMultiple($updates);
+
+    echo "=== RESULTADOS ===\n";
+    foreach ($results as $groupJid => $result) {
+        $status = $result['success'] ? '✓' : '✗';
+        echo "{$status} {$groupJid}\n";
+    }
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 - Imagem atualizada
+{
+  "success": true,
+  "message": "Group image updated successfully",
+  "groupJid": "120363308883996631@g.us"
+}
+```
+
+```json 200 - Imagem removida
+{
+  "success": true,
+  "message": "Group image removed successfully",
+  "groupJid": "120363308883996631@g.us"
+}
+```
+
+```json 400 - URL inválida
+{
+  "success": false,
+  "message": "URL da imagem inválida ou inacessível"
+}
+```
+
+```json 400 - Base64 inválido
+{
+  "success": false,
+  "message": "String base64 inválida ou corrompida"
+}
+```
+
+```json 401 - Token inválido
+{
+  "success": false,
+  "message": "Token de autenticação inválido ou expirado"
+}
+```
+
+```json 403 - Sem permissão de admin
+{
+  "success": false,
+  "message": "Você precisa ser administrador do grupo para alterar a imagem"
+}
+```
+
+```json 413 - Imagem muito grande
+{
+  "success": false,
+  "message": "Imagem excede o tamanho máximo permitido"
+}
+```
+
+```json 415 - Formato inválido
+{
+  "success": false,
+  "message": "Formato de imagem inválido. Apenas JPEG é aceito com resolução máxima de 640x640"
+}
+```
+
+```json 500 - Erro no servidor
+{
+  "success": false,
+  "message": "Erro ao atualizar imagem do grupo. Tente novamente"
+}
+```
+
+</ResponseExample>
