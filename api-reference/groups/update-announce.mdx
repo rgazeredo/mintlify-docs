@@ -21,6 +21,7 @@ Define quem pode enviar mensagens no grupo, permitindo restringir a comunicaçã
     - Membros continuam vendo todas as mensagens
 
     Perfeito para comunicados importantes e unilaterais.
+
   </Accordion>
 
   <Accordion title="Modo Anúncio Desativado" icon="comments">
@@ -35,6 +36,7 @@ Define quem pode enviar mensagens no grupo, permitindo restringir a comunicaçã
     - Adequado para trabalho em equipe
 
     Ideal para grupos colaborativos e discussões.
+
   </Accordion>
 
   <Accordion title="Permissões Necessárias" icon="user-shield">
@@ -51,6 +53,7 @@ Define quem pode enviar mensagens no grupo, permitindo restringir a comunicaçã
     - Apenas admins gerenciam configurações
 
     Proteção de configurações críticas do grupo.
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -71,14 +74,18 @@ Define quem pode enviar mensagens no grupo, permitindo restringir a comunicaçã
     - Grupos de estudo colaborativo
     - Times de atendimento
     - Grupos sociais e familiares
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -97,7 +104,8 @@ Define quem pode enviar mensagens no grupo, permitindo restringir a comunicaçã
 </ParamField>
 
 <Info>
-  **Dica:** Use o modo anúncio para manter grupos organizados e focados, evitando conversas paralelas em canais de comunicação oficial.
+  **Dica:** Use o modo anúncio para manter grupos organizados e focados,
+  evitando conversas paralelas em canais de comunicação oficial.
 </Info>
 
 <RequestExample>
@@ -105,7 +113,7 @@ Define quem pode enviar mensagens no grupo, permitindo restringir a comunicaçã
 ```bash cURL - Ativar modo anúncio
 curl -X POST https://zapclass.com.br/api/group/updateAnnounce \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363339858396166@g.us",
     "announce": true
@@ -115,7 +123,7 @@ curl -X POST https://zapclass.com.br/api/group/updateAnnounce \
 ```bash cURL - Desativar modo anúncio
 curl -X POST https://zapclass.com.br/api/group/updateAnnounce \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363339858396166@g.us",
     "announce": false
@@ -123,17 +131,20 @@ curl -X POST https://zapclass.com.br/api/group/updateAnnounce \
 ```
 
 ```javascript JavaScript - Ativar modo anúncio
-const response = await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-  },
-  body: JSON.stringify({
-    groupjid: "120363339858396166@g.us",
-    announce: true
-  }),
-});
+const response = await fetch(
+  "https://zapclass.com.br/api/group/updateAnnounce",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+    },
+    body: JSON.stringify({
+      groupjid: "120363339858396166@g.us",
+      announce: true,
+    }),
+  }
+);
 
 const data = await response.json();
 if (data.success) {
@@ -148,7 +159,7 @@ async function toggleAnnounceMode(groupJid) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({ groupjid: groupJid }),
   });
@@ -162,21 +173,28 @@ async function toggleAnnounceMode(groupJid) {
   const currentAnnounce = groupInfo.group.announce;
   const newAnnounce = !currentAnnounce;
 
-  console.log(`Estado atual: ${currentAnnounce ? 'Apenas admins' : 'Todos podem enviar'}`);
-  console.log(`Alterando para: ${newAnnounce ? 'Apenas admins' : 'Todos podem enviar'}`);
+  console.log(
+    `Estado atual: ${currentAnnounce ? "Apenas admins" : "Todos podem enviar"}`
+  );
+  console.log(
+    `Alterando para: ${newAnnounce ? "Apenas admins" : "Todos podem enviar"}`
+  );
 
   // Alterna o modo
-  const updateResponse = await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-    },
-    body: JSON.stringify({
-      groupjid: groupJid,
-      announce: newAnnounce
-    }),
-  });
+  const updateResponse = await fetch(
+    "https://zapclass.com.br/api/group/updateAnnounce",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+      },
+      body: JSON.stringify({
+        groupjid: groupJid,
+        announce: newAnnounce,
+      }),
+    }
+  );
 
   const result = await updateResponse.json();
 
@@ -192,15 +210,22 @@ await toggleAnnounceMode("120363339858396166@g.us");
 ```
 
 ```javascript JavaScript - Configurar com notificação
-async function setAnnounceWithNotification(groupJid, announce, notifyMembers = false) {
-  const response = await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-    },
-    body: JSON.stringify({ groupjid: groupJid, announce }),
-  });
+async function setAnnounceWithNotification(
+  groupJid,
+  announce,
+  notifyMembers = false
+) {
+  const response = await fetch(
+    "https://zapclass.com.br/api/group/updateAnnounce",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+      },
+      body: JSON.stringify({ groupjid: groupJid, announce }),
+    }
+  );
 
   const data = await response.json();
 
@@ -220,11 +245,11 @@ async function setAnnounceWithNotification(groupJid, announce, notifyMembers = f
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
       body: JSON.stringify({
-        number: groupJid.replace('@g.us', ''),
-        message: message
+        number: groupJid.replace("@g.us", ""),
+        message: message,
       }),
     });
 
@@ -247,11 +272,11 @@ async function temporaryAnnounceMode(groupJid, durationMinutes) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({
       groupjid: groupJid,
-      announce: true
+      announce: true,
     }),
   });
 
@@ -265,11 +290,11 @@ async function temporaryAnnounceMode(groupJid, durationMinutes) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
       body: JSON.stringify({
         groupjid: groupJid,
-        announce: false
+        announce: false,
       }),
     });
 
@@ -287,30 +312,33 @@ async function updateMultipleGroupsAnnounce(groupJids, announce) {
 
   for (const groupJid of groupJids) {
     try {
-      const response = await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-        },
-        body: JSON.stringify({ groupjid: groupJid, announce }),
-      });
+      const response = await fetch(
+        "https://zapclass.com.br/api/group/updateAnnounce",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+          },
+          body: JSON.stringify({ groupjid: groupJid, announce }),
+        }
+      );
 
       const data = await response.json();
 
       results.push({
         groupJid,
         success: data.success,
-        message: data.message
+        message: data.message,
       });
 
       // Aguarda 1 segundo entre operações
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (error) {
       results.push({
         groupJid,
         success: false,
-        message: error.message
+        message: error.message,
       });
     }
   }
@@ -322,13 +350,13 @@ async function updateMultipleGroupsAnnounce(groupJids, announce) {
 const groups = [
   "120363339858396166@g.us",
   "120363339858396167@g.us",
-  "120363339858396168@g.us"
+  "120363339858396168@g.us",
 ];
 
 const results = await updateMultipleGroupsAnnounce(groups, true);
 
 console.log("=== RESULTADOS ===");
-results.forEach(result => {
+results.forEach((result) => {
   const status = result.success ? "✓" : "✗";
   console.log(`${status} ${result.groupJid}`);
 });
@@ -347,7 +375,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -376,7 +404,7 @@ function toggleAnnounceMode($groupJid) {
     ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -404,7 +432,7 @@ function toggleAnnounceMode($groupJid) {
     ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -445,7 +473,7 @@ function updateMultipleGroupsAnnounce($groupJids, $announce) {
         ]));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+            'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

@@ -34,6 +34,7 @@ Retorna todas as campanhas de mensagens em massa com possibilidade de filtro por
     - Monitorar progresso de envios
     - Gerar relatórios gerenciais
     - Auditar campanhas executadas
+
   </Accordion>
 
   <Accordion title="Status de Campanhas" icon="flag">
@@ -58,6 +59,7 @@ Retorna todas as campanhas de mensagens em massa com possibilidade de filtro por
     - `?status=sending` → Campanhas em envio
     - `?status=done` → Campanhas concluídas
     - `?status=paused` → Campanhas pausadas
+
   </Accordion>
 
   <Accordion title="Ordenação e Paginação" icon="arrow-down-1-9">
@@ -80,6 +82,7 @@ Retorna todas as campanhas de mensagens em massa com possibilidade de filtro por
     - Listar apenas campos necessários
     - Implementar cache de curta duração
     - Atualizar lista periodicamente
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -108,14 +111,18 @@ Retorna todas as campanhas de mensagens em massa com possibilidade de filtro por
     - Alimentar BI/Analytics
     - Webhook de conclusão
     - Notificações automáticas
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Query Parameters
@@ -128,7 +135,8 @@ Retorna todas as campanhas de mensagens em massa com possibilidade de filtro por
 </ParamField>
 
 <Info>
-  Sem filtro de status, o endpoint retorna todas as campanhas independente do estado atual.
+  Sem filtro de status, o endpoint retorna todas as campanhas independente do
+  estado atual.
 </Info>
 
 <RequestExample>
@@ -140,14 +148,14 @@ curl -X GET https://zapclass.com.br/api/sender/listfolders \
 ```javascript JavaScript
 const response = await fetch("https://zapclass.com.br/api/sender/listfolders", {
   headers: {
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
 });
 
 const data = await response.json();
 if (data.success) {
   console.log(`Total de campanhas: ${data.folders.length}`);
-  data.folders.forEach(folder => {
+  data.folders.forEach((folder) => {
     console.log(`- ${folder.info}: ${folder.status}`);
   });
 }
@@ -158,7 +166,7 @@ if (data.success) {
 $ch = curl_init('https://zapclass.com.br/api/sender/listfolders');
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -177,6 +185,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>

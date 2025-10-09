@@ -12,18 +12,20 @@ description: "Enviar mensagem de mídia (áudio, imagem, vídeo ou documento)"
     - **PNG** (.png) - até 5 MB
   </Accordion>
 
-  <Accordion title="Vídeos" icon="video">
-    - **3GPP** (.3gp) - até 16 MB <br />
-    - **MP4** (.mp4) - até 16 MB
-  </Accordion>
+{" "}
 
-  <Accordion title="Áudios" icon="volume">
-    - **AAC** (.aac) - até 16 MB <br />
-    - **AMR** (.amr) - até 16 MB <br />
-    - **MP3** (.mp3) - até 16 MB <br />
-    - **MP4 Audio** (.m4a) - até 16 MB <br />
-    - **OGG** (.ogg) - até 16 MB
-  </Accordion>
+<Accordion title="Vídeos" icon="video">
+  - **3GPP** (.3gp) - até 16 MB <br />- **MP4** (.mp4) - até 16 MB
+</Accordion>
+
+{" "}
+
+<Accordion title="Áudios" icon="volume">
+  - **AAC** (.aac) - até 16 MB <br />
+  - **AMR** (.amr) - até 16 MB <br />
+  - **MP3** (.mp3) - até 16 MB <br />
+  - **MP4 Audio** (.m4a) - até 16 MB <br />- **OGG** (.ogg) - até 16 MB
+</Accordion>
 
   <Accordion title="Documentos" icon="file">
     - **Text** (.txt) - até 100 MB <br />
@@ -34,11 +36,14 @@ description: "Enviar mensagem de mídia (áudio, imagem, vídeo ou documento)"
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -49,7 +54,7 @@ description: "Enviar mensagem de mídia (áudio, imagem, vídeo ou documento)"
   Exemplo: `5511999999999`
 </ParamField>
 
-<ParamField path="type" type="string" required>
+<ParamField path="type" type="enum<string>" required>
   Tipo da mídia enviada. <br />
   Opções: `audio`, `image`, `video`, `document` <br />
   Exemplo: `document`
@@ -66,7 +71,7 @@ description: "Enviar mensagem de mídia (áudio, imagem, vídeo ou documento)"
   Exemplo: `Olá! Bem-vindo à nossa plataforma ZapClass`
 </ParamField>
 
-<ParamField path="delay" type="string">
+<ParamField path="delay" type="integer">
   Atraso em milissegundos antes do envio (agendamento). <br />
   Útil para envios programados ou intervalos entre mensagens. <br />
   Aparecerá "Digitando..." antes do envio. <br />
@@ -79,7 +84,7 @@ description: "Enviar mensagem de mídia (áudio, imagem, vídeo ou documento)"
   Exemplo: `proposta.pdf`
 </ParamField>
 
-<ParamField path="forward" type="string">
+<ParamField path="forward" type="boolean">
   Marca a mensagem como encaminhada para o destinatário. <br />
   Exemplo: `true`
 </ParamField>
@@ -107,12 +112,12 @@ description: "Enviar mensagem de mídia (áudio, imagem, vídeo ou documento)"
   Exemplo: `5511999999999,5511888888888`
 </ParamField>
 
-<ParamField path="read" type="string">
+<ParamField path="read" type="boolean">
   Marca a conversa como lida após o envio. <br />
   Exemplo: `true`
 </ParamField>
 
-<ParamField path="read_messages" type="string">
+<ParamField path="read_messages" type="boolean">
   Marca as últimas mensagens como lidas após o envio. <br />
   Exemplo: `true`
 </ParamField>
@@ -122,21 +127,21 @@ description: "Enviar mensagem de mídia (áudio, imagem, vídeo ou documento)"
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/messages/media \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "number": "5511999999999",
     "type": "document",
     "file": "https://pdfobject.com/pdf/sample.pdf",
     "message": "Segue a proposta comercial conforme solicitado",
-    "delay": "3000",
+    "delay": 3000,
     "filename": "proposta.pdf",
-    "forward": "true",
+    "forward": true,
     "message_repy_id": "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
     "message_source": "typebot",
     "message_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     "mentions": "5511999999999,5511888888888",
-    "read": "true",
-    "read_messages": "true"
+    "read": true,
+    "read_messages": true
   }'
 ```
 
@@ -145,22 +150,22 @@ const response = await fetch("https://zapclass.com.br/api/messages/media", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     number: "5511999999999",
     type: "document",
     file: "https://pdfobject.com/pdf/sample.pdf",
     message: "Segue a proposta comercial conforme solicitado",
-    delay: "3000",
+    delay: 3000,
     filename: "proposta.pdf",
-    forward: "true",
+    forward: true,
     message_repy_id: "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
     message_source: "typebot",
     message_id: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     mentions: "5511999999999,5511888888888",
-    read: "true",
-    read_messages: "true",
+    read: true,
+    read_messages: true,
   }),
 });
 ```
@@ -174,22 +179,22 @@ $payload = [
     "type" => "document",
     "file" => "https://pdfobject.com/pdf/sample.pdf",
     "message" => "Segue a proposta comercial conforme solicitado",
-    "delay" => "3000",
+    "delay" => 3000,
     "filename" => "proposta.pdf",
-    "forward" => "true",
+    "forward" => true,
     "message_repy_id" => "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
     "message_source" => "typebot",
     "message_id" => "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     "mentions" => "5511999999999,5511888888888",
-    "read" => "true",
-    "read_messages" => "true"
+    "read" => true,
+    "read_messages" => true
 ];
 
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

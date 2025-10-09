@@ -33,6 +33,7 @@ Remove todas as mensagens da fila de envio em massa, incluindo mensagens pendent
     - Sem confirmação adicional
     - Remove independente do status
     - Limpa tudo de uma vez
+
   </Accordion>
 
   <Accordion title="Diferença: clearall vs cleardone" icon="code-compare">
@@ -57,6 +58,7 @@ Remove todas as mensagens da fila de envio em massa, incluindo mensagens pendent
     **Quando usar cada um:**
     - clearall: Reset completo, ambiente de teste, emergência
     - cleardone: Manutenção regular, otimização de espaço
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="list-check">
@@ -85,6 +87,7 @@ Remove todas as mensagens da fila de envio em massa, incluindo mensagens pendent
     - Mudança de cliente/conta
     - Reestruturação de processos
     - Limpeza de dados obsoletos
+
   </Accordion>
 
   <Accordion title="Segurança e Precauções" icon="shield-exclamation">
@@ -116,18 +119,24 @@ Remove todas as mensagens da fila de envio em massa, incluindo mensagens pendent
     - Validar estado do sistema
     - Recriar campanhas se necessário
     - Atualizar documentação
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 <Warning>
-  **⚠️ ATENÇÃO CRÍTICA:** Esta operação é IRREVERSÍVEL e remove TODAS as mensagens e campanhas da fila, incluindo mensagens pendentes e já enviadas. Use com extremo cuidado e apenas quando absolutamente necessário.
+  **⚠️ ATENÇÃO CRÍTICA:** Esta operação é IRREVERSÍVEL e remove TODAS as
+  mensagens e campanhas da fila, incluindo mensagens pendentes e já enviadas.
+  Use com extremo cuidado e apenas quando absolutamente necessário.
 </Warning>
 
 <RequestExample>
@@ -140,7 +149,7 @@ curl -X DELETE https://zapclass.com.br/api/sender/clearall \
 const response = await fetch("https://zapclass.com.br/api/sender/clearall", {
   method: "DELETE",
   headers: {
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
 });
 
@@ -156,7 +165,7 @@ $ch = curl_init('https://zapclass.com.br/api/sender/clearall');
 
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -172,6 +181,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>

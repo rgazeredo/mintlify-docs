@@ -15,6 +15,7 @@ description: "Atualiza a foto de perfil da instância do WhatsApp"
     **Remoção**: Usando os valores "remove" ou "delete", você pode remover completamente a imagem de perfil atual, deixando o perfil sem foto.
 
     O processamento é instantâneo e a mudança é sincronizada imediatamente com os servidores do WhatsApp, ficando visível para todos os seus contatos.
+
   </Accordion>
 
   <Accordion title="Especificações técnicas e requisitos da imagem">
@@ -27,6 +28,7 @@ description: "Atualiza a foto de perfil da instância do WhatsApp"
     **Tamanho do arquivo**: Embora não haja um limite rígido documentado, imagens muito grandes (acima de 5MB) podem retornar erro 413. Recomenda-se otimizar imagens para ficarem entre 100KB e 500KB.
 
     **Proporção**: Mantenha sempre proporção 1:1 (quadrada). Imagens retangulares serão cortadas automaticamente, podendo perder partes importantes da composição.
+
   </Accordion>
 
   <Accordion title="Boas práticas para imagens de perfil corporativas">
@@ -43,6 +45,7 @@ description: "Atualiza a foto de perfil da instância do WhatsApp"
     **Contraste adequado**: Certifique-se de que sua imagem tem bom contraste e é visível tanto em temas claros quanto escuros do WhatsApp.
 
     **Atualização moderada**: Evite mudar a imagem de perfil com muita frequência. Consistência ajuda no reconhecimento da marca. Mude apenas quando houver uma razão estratégica (rebranding, campanhas especiais, etc).
+
   </Accordion>
 
   <Accordion title="Casos de uso e automação">
@@ -59,6 +62,7 @@ description: "Atualiza a foto de perfil da instância do WhatsApp"
     **Testes A/B**: Em contextos de múltiplas instâncias, você pode testar diferentes imagens de perfil para identificar qual gera mais engajamento ou reconhecimento dos clientes.
 
     **Automação de branding**: Integre com sistemas de gestão de marca para aplicar automaticamente novas diretrizes visuais quando a identidade corporativa for atualizada.
+
   </Accordion>
 </AccordionGroup>
 
@@ -67,7 +71,8 @@ description: "Atualiza a foto de perfil da instância do WhatsApp"
 <ParamField header="token" type="string" required>
   Token de autenticação da API. Obtenha seu token no painel administrativo.
 
-  **Exemplo**: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+**Exemplo**: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+
 </ParamField>
 
 ## Body Parameters
@@ -75,15 +80,16 @@ description: "Atualiza a foto de perfil da instância do WhatsApp"
 <ParamField body="image" type="string" required>
   Imagem do perfil. Aceita três formatos diferentes:
 
-  - **URL**: Link direto para uma imagem JPEG (http/https)
-  - **Base64**: String codificada em base64 da imagem
-  - **Remoção**: Use "remove" ou "delete" para remover a imagem atual
+- **URL**: Link direto para uma imagem JPEG (http/https)
+- **Base64**: String codificada em base64 da imagem
+- **Remoção**: Use "remove" ou "delete" para remover a imagem atual
 
-  **Exemplo URL**: `https://picsum.photos/640/640.jpg`
+**Exemplo URL**: `https://picsum.photos/640/640.jpg`
 
-  **Exemplo Base64**: `data:image/jpeg;base64,/9j/4AAQSkZJRg...`
+**Exemplo Base64**: `data:image/jpeg;base64,/9j/4AAQSkZJRg...`
 
-  **Exemplo Remoção**: `remove`
+**Exemplo Remoção**: `remove`
+
 </ParamField>
 
 <RequestExample>
@@ -91,22 +97,22 @@ description: "Atualiza a foto de perfil da instância do WhatsApp"
 curl --request POST \
   --url https://api.seuservidor.com/profile/image \
   --header 'Content-Type: application/json' \
-  --header 'token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk' \
+  --header 'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP' \
   --data '{
     "image": "https://picsum.photos/640/640.jpg"
   }'
 ```
 
 ```javascript JavaScript
-const response = await fetch('https://api.seuservidor.com/profile/image', {
-  method: 'POST',
+const response = await fetch("https://api.seuservidor.com/profile/image", {
+  method: "POST",
   headers: {
-    'Content-Type': 'application/json',
-    'token': 'zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    "Content-Type": "application/json",
+    token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
   },
   body: JSON.stringify({
-    image: 'https://picsum.photos/640/640.jpg'
-  })
+    image: "https://picsum.photos/640/640.jpg",
+  }),
 });
 
 const data = await response.json();
@@ -146,6 +152,7 @@ if ($err) {
   echo $response;
 }
 ```
+
 </RequestExample>
 
 <ResponseExample>
@@ -165,13 +172,17 @@ if ($err) {
 </ResponseExample>
 
 <Info>
-  A imagem de perfil é visível para todos os seus contatos e é um elemento importante da identidade da sua conta comercial no WhatsApp.
+  A imagem de perfil é visível para todos os seus contatos e é um elemento
+  importante da identidade da sua conta comercial no WhatsApp.
 </Info>
 
 <Warning>
-  Certifique-se de que a imagem está em formato JPEG com dimensões 640x640 pixels para melhor qualidade. Imagens muito grandes (acima de 5MB) podem retornar erro 413.
+  Certifique-se de que a imagem está em formato JPEG com dimensões 640x640
+  pixels para melhor qualidade. Imagens muito grandes (acima de 5MB) podem
+  retornar erro 413.
 </Warning>
 
 <Tip>
-  Você pode usar "remove" ou "delete" no campo `image` para remover completamente a foto de perfil atual, deixando o perfil sem imagem.
+  Você pode usar "remove" ou "delete" no campo `image` para remover
+  completamente a foto de perfil atual, deixando o perfil sem imagem.
 </Tip>

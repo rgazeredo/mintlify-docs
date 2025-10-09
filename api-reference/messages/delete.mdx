@@ -19,6 +19,7 @@ Remove mensagens enviadas ou recebidas para todos os participantes, atualizando 
     - Comunidades
 
     **Importante:** A mensagem é removida para todos os participantes da conversa.
+
   </Accordion>
 
   <Accordion title="Mensagens Suportadas" icon="message">
@@ -33,6 +34,7 @@ Remove mensagens enviadas ou recebidas para todos os participantes, atualizando 
     - Mensagens com botões/listas
 
     Funciona tanto com mensagens enviadas quanto recebidas.
+
   </Accordion>
 
   <Accordion title="Formatos de ID" icon="key">
@@ -43,6 +45,7 @@ Remove mensagens enviadas ou recebidas para todos os participantes, atualizando 
     - **ID curto:** Sem ":" (ex: `messageid`) - concatenado automaticamente com owner
 
     O sistema identifica e processa o formato adequado.
+
   </Accordion>
 
   <Accordion title="Sincronização e Eventos" icon="arrows-rotate">
@@ -55,14 +58,18 @@ Remove mensagens enviadas ou recebidas para todos os participantes, atualizando 
     - Sincroniza com todos os dispositivos conectados
 
     Permite rastreamento completo da ação de exclusão.
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -74,7 +81,8 @@ Remove mensagens enviadas ou recebidas para todos os participantes, atualizando 
 </ParamField>
 
 <Warning>
-  **Atenção:** Mensagens apagadas não podem ser recuperadas. A exclusão é permanente para todos os participantes da conversa.
+  **Atenção:** Mensagens apagadas não podem ser recuperadas. A exclusão é
+  permanente para todos os participantes da conversa.
 </Warning>
 
 <RequestExample>
@@ -82,7 +90,7 @@ Remove mensagens enviadas ou recebidas para todos os participantes, atualizando 
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/message/delete \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "id": "3EB0538DA65A59F6D8A251"
   }'
@@ -93,10 +101,10 @@ const response = await fetch("https://zapclass.com.br/api/message/delete", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
-    id: "3EB0538DA65A59F6D8A251"
+    id: "3EB0538DA65A59F6D8A251",
   }),
 });
 
@@ -116,7 +124,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

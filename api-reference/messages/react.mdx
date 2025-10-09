@@ -21,6 +21,7 @@ Adiciona ou remove reações em mensagens utilizando emojis Unicode, permitindo 
     - 🙏 Obrigado
 
     **Para remover:** Envie string vazia no campo `text`
+
   </Accordion>
 
   <Accordion title="Tipos de Chat" icon="comments">
@@ -33,6 +34,7 @@ Adiciona ou remove reações em mensagens utilizando emojis Unicode, permitindo 
     - Conversas comerciais
 
     A reação é visível para todos os participantes da conversa.
+
   </Accordion>
 
   <Accordion title="Gerenciamento de Reações" icon="arrows-rotate">
@@ -45,6 +47,7 @@ Adiciona ou remove reações em mensagens utilizando emojis Unicode, permitindo 
     - Ver confirmação de envio com timestamp
 
     **Limitação:** Apenas uma reação ativa por mensagem, por usuário.
+
   </Accordion>
 
   <Accordion title="Restrições" icon="triangle-exclamation">
@@ -55,14 +58,18 @@ Adiciona ou remove reações em mensagens utilizando emojis Unicode, permitindo 
     - Mensagens antigas (>7 dias) não aceitam reações
     - Apenas uma reação ativa por mensagem
     - Emoji deve ser Unicode válido
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -85,7 +92,8 @@ Adiciona ou remove reações em mensagens utilizando emojis Unicode, permitindo 
 </ParamField>
 
 <Info>
-  **Dica:** Para trocar uma reação, simplesmente envie um novo emoji. A reação anterior será substituída automaticamente.
+  **Dica:** Para trocar uma reação, simplesmente envie um novo emoji. A reação
+  anterior será substituída automaticamente.
 </Info>
 
 <RequestExample>
@@ -93,7 +101,7 @@ Adiciona ou remove reações em mensagens utilizando emojis Unicode, permitindo 
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/message/react \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "number": "5511999999999@s.whatsapp.net",
     "text": "👍",
@@ -106,12 +114,12 @@ const response = await fetch("https://zapclass.com.br/api/message/react", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     number: "5511999999999@s.whatsapp.net",
     text: "👍",
-    id: "3EB0538DA65A59F6D8A251"
+    id: "3EB0538DA65A59F6D8A251",
   }),
 });
 
@@ -133,7 +141,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

@@ -22,6 +22,7 @@ Recupera informações completas de um grupo, incluindo detalhes, participantes,
     - Timestamp da última atualização
 
     Informações essenciais para identificação e gestão.
+
   </Accordion>
 
   <Accordion title="Lista de Participantes" icon="users">
@@ -36,6 +37,7 @@ Recupera informações completas de um grupo, incluindo detalhes, participantes,
     - Data de entrada no grupo
 
     Permite gerenciar permissões e visualizar hierarquia.
+
   </Accordion>
 
   <Accordion title="Configurações do Grupo" icon="gear">
@@ -49,6 +51,7 @@ Recupera informações completas de um grupo, incluindo detalhes, participantes,
     - `isCommunity`: Se faz parte de uma comunidade
 
     Útil para entender permissões e comportamento do grupo.
+
   </Accordion>
 
   <Accordion title="Recursos Opcionais" icon="sliders">
@@ -66,14 +69,18 @@ Recupera informações completas de um grupo, incluindo detalhes, participantes,
     **Atualização forçada** (`force: true`):
     - Ignora cache e busca dados atualizados
     - Use quando precisar de informações em tempo real
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -106,7 +113,8 @@ Recupera informações completas de um grupo, incluindo detalhes, participantes,
 </ParamField>
 
 <Info>
-  **Nota:** Para obter o link de convite, você precisa ser administrador do grupo.
+  **Nota:** Para obter o link de convite, você precisa ser administrador do
+  grupo.
 </Info>
 
 <RequestExample>
@@ -114,7 +122,7 @@ Recupera informações completas de um grupo, incluindo detalhes, participantes,
 ```bash cURL - Informações básicas
 curl -X POST https://zapclass.com.br/api/group/info \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363153742561022@g.us"
   }'
@@ -123,7 +131,7 @@ curl -X POST https://zapclass.com.br/api/group/info \
 ```bash cURL - Com link de convite
 curl -X POST https://zapclass.com.br/api/group/info \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363153742561022@g.us",
     "getInviteLink": true
@@ -133,7 +141,7 @@ curl -X POST https://zapclass.com.br/api/group/info \
 ```bash cURL - Informações completas
 curl -X POST https://zapclass.com.br/api/group/info \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363153742561022@g.us",
     "getInviteLink": true,
@@ -147,10 +155,10 @@ const response = await fetch("https://zapclass.com.br/api/group/info", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
-    groupjid: "120363153742561022@g.us"
+    groupjid: "120363153742561022@g.us",
   }),
 });
 
@@ -165,12 +173,12 @@ const response = await fetch("https://zapclass.com.br/api/group/info", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     groupjid: "120363153742561022@g.us",
     getInviteLink: true,
-    getRequestsParticipants: true
+    getRequestsParticipants: true,
   }),
 });
 
@@ -181,19 +189,19 @@ if (data.success) {
 
   console.log("=== INFORMAÇÕES DO GRUPO ===");
   console.log(`Nome: ${group.name}`);
-  console.log(`Descrição: ${group.description || 'Sem descrição'}`);
+  console.log(`Descrição: ${group.description || "Sem descrição"}`);
   console.log(`Criador: ${group.creator}`);
 
   console.log("\n=== PARTICIPANTES ===");
-  const admins = group.participants.filter(p => p.admin);
-  const members = group.participants.filter(p => !p.admin);
+  const admins = group.participants.filter((p) => p.admin);
+  const members = group.participants.filter((p) => !p.admin);
   console.log(`Total: ${group.participants.length}`);
   console.log(`Administradores: ${admins.length}`);
   console.log(`Membros: ${members.length}`);
 
   console.log("\n=== CONFIGURAÇÕES ===");
-  console.log(`Apenas admins enviam: ${group.announce ? 'Sim' : 'Não'}`);
-  console.log(`Apenas admins editam: ${group.restrict ? 'Sim' : 'Não'}`);
+  console.log(`Apenas admins enviam: ${group.announce ? "Sim" : "Não"}`);
+  console.log(`Apenas admins editam: ${group.restrict ? "Sim" : "Não"}`);
 
   if (group.inviteLink) {
     console.log("\n=== LINK DE CONVITE ===");
@@ -213,7 +221,7 @@ async function getGroupAdmins(groupJid) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({ groupjid: groupJid }),
   });
@@ -224,12 +232,12 @@ async function getGroupAdmins(groupJid) {
     throw new Error(data.message);
   }
 
-  const admins = data.group.participants.filter(p => p.admin);
+  const admins = data.group.participants.filter((p) => p.admin);
 
-  return admins.map(admin => ({
+  return admins.map((admin) => ({
     jid: admin.jid,
     number: admin.number,
-    isSuperAdmin: admin.superAdmin || false
+    isSuperAdmin: admin.superAdmin || false,
   }));
 }
 
@@ -251,7 +259,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -291,7 +299,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

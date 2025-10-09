@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "willow",
+  "name": "ZapClass API",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0080fe",
+    "light": "#4da6fe",
+    "dark": "#005ab2"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -25,7 +25,10 @@
               "api-reference/messages/contact",
               "api-reference/messages/location",
               "api-reference/messages/status",
-              "api-reference/messages/menu",
+              "api-reference/messages/menu-buttons",
+              "api-reference/messages/menu-lists",
+              "api-reference/messages/menu-polls",
+              "api-reference/messages/menu-carousel",
               "api-reference/messages/react",
               "api-reference/messages/edit",
               "api-reference/messages/delete",
@@ -119,8 +122,15 @@
     ]
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png"
+  },
+  "api": {
+    "mdx": {
+      "auth": {
+        "method": "bearer"
+      }
+    }
   },
   "navbar": {
     "links": [
@@ -149,6 +159,7 @@
   },
   "footer": {
     "socials": {
+      "instagram": "https://www.instagram.com/zapclass",
       "x": "https://x.com/mintlify",
       "github": "https://github.com/mintlify",
       "linkedin": "https://linkedin.com/company/mintlify"

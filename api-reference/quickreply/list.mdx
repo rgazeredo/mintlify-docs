@@ -26,6 +26,7 @@ Retorna a lista completa de templates de respostas rápidas cadastrados para a i
     - Conteúdo (texto, arquivo, nome do documento)
     - Origem (API ou WhatsApp)
     - Data de criação e última atualização
+
   </Accordion>
 
   <Accordion title="Templates da API vs WhatsApp" icon="code-compare">
@@ -48,6 +49,7 @@ Retorna a lista completa de templates de respostas rápidas cadastrados para a i
     **Identificação:**
     - Verifique o campo `onWhatsApp` para saber a origem
     - Templates do WhatsApp têm ícone especial
+
   </Accordion>
 
   <Accordion title="Filtragem e Organização" icon="filter">
@@ -66,6 +68,7 @@ Retorna a lista completa de templates de respostas rápidas cadastrados para a i
     - Ordenar por frequência de uso
     - Criar índice de atalhos
     - Manter biblioteca documentada
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -86,18 +89,23 @@ Retorna a lista completa de templates de respostas rápidas cadastrados para a i
     - Autocompletar atalhos em chat
     - Dashboard de gerenciamento
     - Relatórios de utilização
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 <Info>
-  Este endpoint não requer parâmetros adicionais. Basta fornecer o token de autenticação no header.
+  Este endpoint não requer parâmetros adicionais. Basta fornecer o token de
+  autenticação no header.
 </Info>
 
 <RequestExample>
@@ -110,14 +118,14 @@ curl -X GET https://zapclass.com.br/api/quickreply/showall \
 const response = await fetch("https://zapclass.com.br/api/quickreply/showall", {
   method: "GET",
   headers: {
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
 });
 
 const data = await response.json();
 if (data.success) {
   console.log(`Total de templates: ${data.quickReplies.length}`);
-  data.quickReplies.forEach(qr => {
+  data.quickReplies.forEach((qr) => {
     console.log(`- ${qr.shortCut} (${qr.type})`);
   });
 }
@@ -128,7 +136,7 @@ if (data.success) {
 $ch = curl_init('https://zapclass.com.br/api/quickreply/showall');
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -148,6 +156,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>

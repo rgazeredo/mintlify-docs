@@ -15,6 +15,7 @@ Realiza o download de arquivos associados a mensagens de mídia (imagem, vídeo,
     - **OGG** (formato original) - usando `generate_mp3: false`
 
     Ideal para armazenamento ou processamento posterior.
+
   </Accordion>
 
   <Accordion title="Transcrição de Áudio" icon="microphone">
@@ -25,6 +26,7 @@ Realiza o download de arquivos associados a mensagens de mídia (imagem, vídeo,
     - Parâmetro `transcribe: true`
 
     A chave pode ser salva na instância para reutilização automática.
+
   </Accordion>
 
   <Accordion title="Download de Mídia Citada" icon="quote-right">
@@ -34,6 +36,7 @@ Realiza o download de arquivos associados a mensagens de mídia (imagem, vídeo,
     Quando um cliente responde a uma promoção/status, você pode baixar a mídia original para entender sobre qual produto/oferta ele está perguntando.
 
     Use `download_quoted: true` para este cenário.
+
   </Accordion>
 
   <Accordion title="Formatos de Retorno" icon="file-export">
@@ -45,11 +48,14 @@ Realiza o download de arquivos associados a mensagens de mídia (imagem, vídeo,
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -101,10 +107,8 @@ Realiza o download de arquivos associados a mensagens de mídia (imagem, vídeo,
 </ParamField>
 
 <Info>
-  **Comportamento padrão:**
-  - Áudios são retornados como MP3
-  - Downloads incluem URL pública do arquivo
-  - Transcrição requer chave OpenAI configurada
+  **Comportamento padrão:** - Áudios são retornados como MP3 - Downloads incluem
+  URL pública do arquivo - Transcrição requer chave OpenAI configurada
 </Info>
 
 <RequestExample>
@@ -112,7 +116,7 @@ Realiza o download de arquivos associados a mensagens de mídia (imagem, vídeo,
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/message/download \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "id": "7EB0F01D7244B421048F0706368376E0",
     "generate_mp3": true,
@@ -127,14 +131,14 @@ const response = await fetch("https://zapclass.com.br/api/message/download", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     id: "7EB0F01D7244B421048F0706368376E0",
     transcribe: true,
     generate_mp3: true,
     return_base64: false,
-    return_link: true
+    return_link: true,
   }),
 });
 
@@ -159,7 +163,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

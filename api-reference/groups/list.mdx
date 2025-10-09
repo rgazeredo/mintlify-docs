@@ -22,6 +22,7 @@ Retorna todos os grupos aos quais a instância conectada pertence, com opções 
     - Lista completa de participantes (opcional)
 
     Ideal para dashboards e sistemas de gerenciamento.
+
   </Accordion>
 
   <Accordion title="Controle de Cache" icon="arrows-rotate">
@@ -40,6 +41,7 @@ Retorna todos os grupos aos quais a instância conectada pertence, com opções 
     - Use quando precisar de dados precisos e atuais
 
     Escolha o modo baseado na necessidade de atualização.
+
   </Accordion>
 
   <Accordion title="Otimização com Participantes" icon="gauge-high">
@@ -58,6 +60,7 @@ Retorna todos os grupos aos quais a instância conectada pertence, com opções 
     - Perfeito para listagens simples
 
     Use `noparticipants=true` quando não precisar dos membros.
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -71,14 +74,18 @@ Retorna todos os grupos aos quais a instância conectada pertence, com opções 
     - Relatórios de gestão de comunidades
     - Sincronização com sistemas CRM
     - Automação de tarefas em múltiplos grupos
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Query Parameters
@@ -98,7 +105,9 @@ Retorna todos os grupos aos quais a instância conectada pertence, com opções 
 </ParamField>
 
 <Tip>
-  **Dica de Performance:** Use `noparticipants=true` quando precisar apenas de informações básicas dos grupos. Isso reduz significativamente o tamanho da resposta e o tempo de processamento.
+  **Dica de Performance:** Use `noparticipants=true` quando precisar apenas de
+  informações básicas dos grupos. Isso reduz significativamente o tamanho da
+  resposta e o tempo de processamento.
 </Tip>
 
 <RequestExample>
@@ -128,21 +137,18 @@ curl -X GET "https://zapclass.com.br/api/group/list?force=true&noparticipants=tr
 ```
 
 ```javascript JavaScript - Listar grupos
-const response = await fetch(
-  "https://zapclass.com.br/api/group/list",
-  {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-    },
-  }
-);
+const response = await fetch("https://zapclass.com.br/api/group/list", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+  },
+});
 
 const data = await response.json();
 if (data.success) {
   console.log(`Total de grupos: ${data.groups.length}`);
-  data.groups.forEach(group => {
+  data.groups.forEach((group) => {
     console.log(`- ${group.name} (${group.participants?.length || 0} membros)`);
   });
 }
@@ -153,16 +159,18 @@ async function listGroups(options = {}) {
   const { force = false, noparticipants = false } = options;
 
   const params = new URLSearchParams();
-  if (force) params.append('force', 'true');
-  if (noparticipants) params.append('noparticipants', 'true');
+  if (force) params.append("force", "true");
+  if (noparticipants) params.append("noparticipants", "true");
 
-  const url = `https://zapclass.com.br/api/group/list${params.toString() ? '?' + params.toString() : ''}`;
+  const url = `https://zapclass.com.br/api/group/list${
+    params.toString() ? "?" + params.toString() : ""
+  }`;
 
   const response = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
   });
 
@@ -182,7 +190,7 @@ console.log(`Grupos em cache: ${groups.length}`);
 // Uso - forçar atualização sem participantes
 const freshGroups = await listGroups({
   force: true,
-  noparticipants: true
+  noparticipants: true,
 });
 console.log(`Grupos atualizados: ${freshGroups.length}`);
 ```
@@ -195,7 +203,7 @@ async function analyzeGroups() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
     }
   );
@@ -216,21 +224,27 @@ async function analyzeGroups() {
     withRestrict: 0,
     avgParticipants: 0,
     largestGroup: null,
-    smallestGroup: null
+    smallestGroup: null,
   };
 
-  groups.forEach(group => {
+  groups.forEach((group) => {
     const participantCount = group.participants?.length || 0;
     stats.totalParticipants += participantCount;
 
     if (group.announce) stats.withAnnounce++;
     if (group.restrict) stats.withRestrict++;
 
-    if (!stats.largestGroup || participantCount > (stats.largestGroup.participants?.length || 0)) {
+    if (
+      !stats.largestGroup ||
+      participantCount > (stats.largestGroup.participants?.length || 0)
+    ) {
       stats.largestGroup = group;
     }
 
-    if (!stats.smallestGroup || participantCount < (stats.smallestGroup.participants?.length || 0)) {
+    if (
+      !stats.smallestGroup ||
+      participantCount < (stats.smallestGroup.participants?.length || 0)
+    ) {
       stats.smallestGroup = group;
     }
   });
@@ -245,8 +259,16 @@ async function analyzeGroups() {
   console.log(`Média de participantes: ${stats.avgParticipants}`);
   console.log(`\nGrupos apenas admin: ${stats.withAnnounce}`);
   console.log(`Grupos com edição restrita: ${stats.withRestrict}`);
-  console.log(`\nMaior grupo: ${stats.largestGroup.name} (${stats.largestGroup.participants?.length || 0} membros)`);
-  console.log(`Menor grupo: ${stats.smallestGroup.name} (${stats.smallestGroup.participants?.length || 0} membros)`);
+  console.log(
+    `\nMaior grupo: ${stats.largestGroup.name} (${
+      stats.largestGroup.participants?.length || 0
+    } membros)`
+  );
+  console.log(
+    `Menor grupo: ${stats.smallestGroup.name} (${
+      stats.smallestGroup.participants?.length || 0
+    } membros)`
+  );
 
   return stats;
 }
@@ -263,7 +285,7 @@ async function filterGroups(criteria) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
     }
   );
@@ -278,35 +300,35 @@ async function filterGroups(criteria) {
 
   // Filtrar por nome
   if (criteria.nameContains) {
-    filtered = filtered.filter(g =>
+    filtered = filtered.filter((g) =>
       g.name.toLowerCase().includes(criteria.nameContains.toLowerCase())
     );
   }
 
   // Filtrar por número mínimo de participantes
   if (criteria.minParticipants) {
-    filtered = filtered.filter(g =>
-      (g.participants?.length || 0) >= criteria.minParticipants
+    filtered = filtered.filter(
+      (g) => (g.participants?.length || 0) >= criteria.minParticipants
     );
   }
 
   // Filtrar por número máximo de participantes
   if (criteria.maxParticipants) {
-    filtered = filtered.filter(g =>
-      (g.participants?.length || 0) <= criteria.maxParticipants
+    filtered = filtered.filter(
+      (g) => (g.participants?.length || 0) <= criteria.maxParticipants
     );
   }
 
   // Filtrar apenas grupos onde sou admin
   if (criteria.onlyAdmin) {
-    filtered = filtered.filter(g =>
-      g.participants?.some(p => p.admin && p.isMe)
+    filtered = filtered.filter((g) =>
+      g.participants?.some((p) => p.admin && p.isMe)
     );
   }
 
   // Filtrar por modo announce
   if (criteria.announce !== undefined) {
-    filtered = filtered.filter(g => g.announce === criteria.announce);
+    filtered = filtered.filter((g) => g.announce === criteria.announce);
   }
 
   return filtered;
@@ -315,11 +337,11 @@ async function filterGroups(criteria) {
 // Uso - grupos com "vendas" no nome e mais de 10 membros
 const vendas = await filterGroups({
   nameContains: "vendas",
-  minParticipants: 10
+  minParticipants: 10,
 });
 
 console.log(`Grupos de vendas (10+ membros): ${vendas.length}`);
-vendas.forEach(g => console.log(`  - ${g.name}`));
+vendas.forEach((g) => console.log(`  - ${g.name}`));
 
 // Uso - grupos onde sou admin
 const myAdminGroups = await filterGroups({ onlyAdmin: true });
@@ -334,7 +356,7 @@ async function exportGroupsToCSV() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
     }
   );
@@ -349,17 +371,17 @@ async function exportGroupsToCSV() {
   let csv = "ID,Nome,Descrição,Participantes,Apenas Admin,Edição Restrita\n";
 
   // Adiciona cada grupo
-  data.groups.forEach(group => {
+  data.groups.forEach((group) => {
     const row = [
       group.id,
       `"${group.name.replace(/"/g, '""')}"`,
-      `"${(group.description || '').replace(/"/g, '""')}"`,
+      `"${(group.description || "").replace(/"/g, '""')}"`,
       group.participants?.length || 0,
-      group.announce ? 'Sim' : 'Não',
-      group.restrict ? 'Sim' : 'Não'
-    ].join(',');
+      group.announce ? "Sim" : "Não",
+      group.restrict ? "Sim" : "Não",
+    ].join(",");
 
-    csv += row + '\n';
+    csv += row + "\n";
   });
 
   return csv;
@@ -382,7 +404,7 @@ $ch = curl_init($url);
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -419,7 +441,7 @@ function listGroups($force = false, $noparticipants = false) {
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -452,7 +474,7 @@ function analyzeGroups() {
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

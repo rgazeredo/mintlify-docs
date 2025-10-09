@@ -7,7 +7,9 @@
       "WebSearch",
       "WebFetch(domain:api.uzapi.com.br)",
       "WebFetch(domain:www.postman.com)",
-      "WebFetch(domain:free.uazapi.com)"
+      "WebFetch(domain:free.uazapi.com)",
+      "WebFetch(domain:mintlify.com)",
+      "WebFetch(domain:www.mintlify.com)"
     ],
     "deny": [],
     "ask": []

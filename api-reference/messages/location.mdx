@@ -4,11 +4,14 @@ api: "POST /messages/location"
 description: "Enviar localização geográfica com coordenadas"
 ---
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -41,14 +44,14 @@ description: "Enviar localização geográfica com coordenadas"
   Exemplo: `Parque da Independência - Ipiranga, São Paulo - SP, 04263-000`
 </ParamField>
 
-<ParamField path="delay" type="string">
+<ParamField path="delay" type="integer">
   Atraso em milissegundos antes do envio (agendamento). <br />
   Útil para envios programados ou intervalos entre mensagens. <br />
   Aparecerá "Digitando..." antes do envio. <br />
   Exemplo: `3000`
 </ParamField>
 
-<ParamField path="forward" type="string">
+<ParamField path="forward" type="boolean">
   Marca a mensagem como encaminhada para o destinatário. <br />
   Exemplo: `true`
 </ParamField>
@@ -76,12 +79,12 @@ description: "Enviar localização geográfica com coordenadas"
   Exemplo: `5511999999999,5511888888888`
 </ParamField>
 
-<ParamField path="read" type="string">
+<ParamField path="read" type="boolean">
   Marca a conversa como lida após o envio. <br />
   Exemplo: `true`
 </ParamField>
 
-<ParamField path="read_messages" type="string">
+<ParamField path="read_messages" type="boolean">
   Marca as últimas mensagens como lidas após o envio. <br />
   Exemplo: `true`
 </ParamField>
@@ -91,21 +94,21 @@ description: "Enviar localização geográfica com coordenadas"
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/messages/location \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "number": "5511999999999",
     "latitude": "-23.5855563",
     "longitude": "-46.6920806",
     "location_name": "Museu do Ipiranga",
     "location_address": "Parque da Independência - Ipiranga, São Paulo - SP, 04263-000",
-    "delay": "3000",
-    "forward": "true",
+    "delay": 3000,
+    "forward": true,
     "message_repy_id": "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
     "message_source": "typebot",
     "message_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     "mentions": "5511999999999,5511888888888",
-    "read": "true",
-    "read_messages": "true"
+    "read": true,
+    "read_messages": true
   }'
 ```
 
@@ -114,22 +117,23 @@ const response = await fetch("https://zapclass.com.br/api/messages/location", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     number: "5511999999999",
     latitude: "-23.5855563",
     longitude: "-46.6920806",
     location_name: "Museu do Ipiranga",
-    location_address: "Parque da Independência - Ipiranga, São Paulo - SP, 04263-000",
-    delay: "3000",
-    forward: "true",
+    location_address:
+      "Parque da Independência - Ipiranga, São Paulo - SP, 04263-000",
+    delay: 3000,
+    forward: true,
     message_repy_id: "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
     message_source: "typebot",
     message_id: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     mentions: "5511999999999,5511888888888",
-    read: "true",
-    read_messages: "true",
+    read: true,
+    read_messages: true,
   }),
 });
 ```
@@ -144,21 +148,21 @@ $payload = [
     "longitude" => "-46.6920806",
     "location_name" => "Museu do Ipiranga",
     "location_address" => "Parque da Independência - Ipiranga, São Paulo - SP, 04263-000",
-    "delay" => "3000",
-    "forward" => "true",
+    "delay" => 3000,
+    "forward" => true,
     "message_repy_id" => "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
     "message_source" => "typebot",
     "message_id" => "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     "mentions" => "5511999999999,5511888888888",
-    "read" => "true",
-    "read_messages" => "true"
+    "read" => true,
+    "read_messages" => true
 ];
 
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

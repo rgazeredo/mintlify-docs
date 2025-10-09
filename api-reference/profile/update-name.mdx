@@ -30,6 +30,7 @@ Altera o nome de exibição do perfil da instância do WhatsApp. O nome será vi
     - Pode haver limite de alterações por período
     - Alterações frequentes podem ser bloqueadas
     - Respeite políticas do WhatsApp
+
   </Accordion>
 
   <Accordion title="Boas Práticas de Nomes" icon="sparkles">
@@ -60,6 +61,7 @@ Altera o nome de exibição do perfil da instância do WhatsApp. O nome será vi
     - Use capitalização adequada
     - Seja consistente entre canais
     - Teste visualização em diferentes dispositivos
+
   </Accordion>
 
   <Accordion title="Limitações do WhatsApp" icon="triangle-exclamation">
@@ -85,6 +87,7 @@ Altera o nome de exibição do perfil da instância do WhatsApp. O nome será vi
     - Evite alterações automáticas frequentes
     - Mantenha histórico de mudanças
     - Aguarde confirmação antes de nova alteração
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -113,14 +116,18 @@ Altera o nome de exibição do perfil da instância do WhatsApp. O nome será vi
     - Times diferentes
     - Filiais ou unidades
     - Identificação de bot/humano
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -132,14 +139,15 @@ Altera o nome de exibição do perfil da instância do WhatsApp. O nome será vi
 </ParamField>
 
 <Warning>
-  Alterações frequentes podem resultar em bloqueio temporário pelo WhatsApp. Altere apenas quando necessário.
+  Alterações frequentes podem resultar em bloqueio temporário pelo WhatsApp.
+  Altere apenas quando necessário.
 </Warning>
 
 <RequestExample>
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/profile/name \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "name": "Minha Empresa - Atendimento"
   }'
@@ -150,10 +158,10 @@ const response = await fetch("https://zapclass.com.br/api/profile/name", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
-    name: "Minha Empresa - Atendimento"
+    name: "Minha Empresa - Atendimento",
   }),
 });
 
@@ -175,7 +183,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -191,6 +199,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>
@@ -206,4 +215,5 @@ curl_close($ch);
   "message": "Token de autenticação inválido"
 }
 ```
+
 </ResponseExample>

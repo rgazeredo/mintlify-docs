@@ -19,6 +19,7 @@ Retorna o link de convite do grupo especificado, permitindo compartilhar acesso 
     - Mesmo link funciona em múltiplos dispositivos
 
     **Importante:** Apenas administradores podem gerar links de convite.
+
   </Accordion>
 
   <Accordion title="Permissões Necessárias" icon="shield-check">
@@ -31,6 +32,7 @@ Retorna o link de convite do grupo especificado, permitindo compartilhar acesso 
     - Sessão deve estar conectada
 
     **Sem permissão:** Retorna erro 403 (Forbidden)
+
   </Accordion>
 
   <Accordion title="Formato do Link" icon="square-up-right">
@@ -42,6 +44,7 @@ Retorna o link de convite do grupo especificado, permitindo compartilhar acesso 
     - Exemplo completo: `https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt`
 
     O código é único e permanente até ser revogado.
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -55,14 +58,18 @@ Retorna o link de convite do grupo especificado, permitindo compartilhar acesso 
     - Integrar com plataformas de terceiros
     - Criar QR codes de acesso
     - Enviar por e-mail ou SMS
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Path Parameters
@@ -74,7 +81,8 @@ Retorna o link de convite do grupo especificado, permitindo compartilhar acesso 
 </ParamField>
 
 <Warning>
-  **Atenção:** Compartilhe links de convite com cuidado. Qualquer pessoa com o link pode entrar no grupo (a menos que aprovação de admin esteja ativada).
+  **Atenção:** Compartilhe links de convite com cuidado. Qualquer pessoa com o
+  link pode entrar no grupo (a menos que aprovação de admin esteja ativada).
 </Warning>
 
 <RequestExample>
@@ -88,7 +96,7 @@ curl -X GET https://zapclass.com.br/api/group/invitelink/120363153742561022@g.us
 ```bash cURL - Gerar e salvar em variável
 INVITE_LINK=$(curl -s -X GET https://zapclass.com.br/api/group/invitelink/120363153742561022@g.us \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   | jq -r '.inviteLink')
 
 echo "Link de convite: $INVITE_LINK"
@@ -103,7 +111,7 @@ const response = await fetch(
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
   }
 );
@@ -123,7 +131,7 @@ async function getAndCopyInviteLink(groupJID) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
     }
   );
@@ -160,7 +168,7 @@ async function generateInviteQRCode(groupJID) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
     }
   );
@@ -172,11 +180,13 @@ async function generateInviteQRCode(groupJID) {
   }
 
   // Gera URL de QR Code usando API externa
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(data.inviteLink)}`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
+    data.inviteLink
+  )}`;
 
   return {
     inviteLink: data.inviteLink,
-    qrCodeUrl: qrCodeUrl
+    qrCodeUrl: qrCodeUrl,
   };
 }
 
@@ -197,7 +207,8 @@ async function getInviteLinks(groupJIDs) {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+              Authorization:
+                "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
             },
           }
         );
@@ -208,14 +219,14 @@ async function getInviteLinks(groupJIDs) {
           groupJID,
           success: data.success,
           inviteLink: data.inviteLink || null,
-          error: data.message || null
+          error: data.message || null,
         };
       } catch (error) {
         return {
           groupJID,
           success: false,
           inviteLink: null,
-          error: error.message
+          error: error.message,
         };
       }
     })
@@ -228,11 +239,11 @@ async function getInviteLinks(groupJIDs) {
 const groups = [
   "120363153742561022@g.us",
   "120363153742561023@g.us",
-  "120363153742561024@g.us"
+  "120363153742561024@g.us",
 ];
 
 const links = await getInviteLinks(groups);
-links.forEach(result => {
+links.forEach((result) => {
   if (result.success) {
     console.log(`✓ ${result.groupJID}: ${result.inviteLink}`);
   } else {
@@ -250,7 +261,7 @@ $ch = curl_init($url);
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -276,7 +287,7 @@ function sendGroupInviteByEmail($groupJID, $recipientEmail, $groupName) {
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

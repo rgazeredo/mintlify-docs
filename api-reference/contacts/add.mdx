@@ -19,6 +19,7 @@ Salva um novo contato na agenda do WhatsApp conectado, permitindo organizar e id
     - Aparece com nome ao invés de apenas número
 
     **Importante:** O nome fornecido é usado tanto para nome completo quanto primeiro nome.
+
   </Accordion>
 
   <Accordion title="Formatos de Telefone Aceitos" icon="phone">
@@ -33,6 +34,7 @@ Salva um novo contato na agenda do WhatsApp conectado, permitindo organizar e id
     - Formato JID: `5511999999999@s.whatsapp.net`
 
     **Obrigatório:** Código do país (Brasil = 55)
+
   </Accordion>
 
   <Accordion title="Restrições de Tipo" icon="ban">
@@ -45,6 +47,7 @@ Salva um novo contato na agenda do WhatsApp conectado, permitindo organizar e id
     - Canais e listas de transmissão
 
     Apenas números de telefone pessoais são válidos.
+
   </Accordion>
 
   <Accordion title="Informações Retornadas" icon="circle-info">
@@ -56,14 +59,18 @@ Salva um novo contato na agenda do WhatsApp conectado, permitindo organizar e id
     - JID do WhatsApp
     - Status de sucesso
     - Timestamp da operação
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -71,7 +78,8 @@ Salva um novo contato na agenda do WhatsApp conectado, permitindo organizar e id
 <ParamField path="phone" type="string" required>
   Número de telefone no formato internacional. <br />
   Deve incluir código do país (Brasil = 55). <br />
-  Aceita diversos formatos com/sem símbolos, parênteses, hífen ou espaços. <br />
+  Aceita diversos formatos com/sem símbolos, parênteses, hífen ou espaços.{" "}
+  <br />
   Também aceita formato JID (@s.whatsapp.net). <br />
   Exemplo: `5511999999999` ou `+55 (11) 99999-9999`
 </ParamField>
@@ -83,7 +91,8 @@ Salva um novo contato na agenda do WhatsApp conectado, permitindo organizar e id
 </ParamField>
 
 <Tip>
-  **Dica:** Use o nome completo no formato "Nome Sobrenome" para facilitar a busca e identificação do contato na agenda.
+  **Dica:** Use o nome completo no formato "Nome Sobrenome" para facilitar a
+  busca e identificação do contato na agenda.
 </Tip>
 
 <RequestExample>
@@ -91,7 +100,7 @@ Salva um novo contato na agenda do WhatsApp conectado, permitindo organizar e id
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/contact/add \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "phone": "5511999999999",
     "name": "João Silva"
@@ -103,11 +112,11 @@ const response = await fetch("https://zapclass.com.br/api/contact/add", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     phone: "5511999999999",
-    name: "João Silva"
+    name: "João Silva",
   }),
 });
 
@@ -128,7 +137,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

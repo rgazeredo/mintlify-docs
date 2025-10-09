@@ -27,6 +27,7 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
     - Campanhas de marketing
     - Pesquisas de satisfação
     - Lembretes e confirmações
+
   </Accordion>
 
   <Accordion title="Delay entre Mensagens" icon="clock">
@@ -48,6 +49,7 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
     - Delays muito curtos podem causar bloqueio
     - Randomização evita padrões detectáveis
     - Considere horário de pico do destinatário
+
   </Accordion>
 
   <Accordion title="Agendamento de Campanhas" icon="calendar-clock">
@@ -76,6 +78,7 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
     - Considere fuso horário do destinatário
     - Teste com grupo pequeno primeiro
     - Agende com antecedência mínima de 5 minutos
+
   </Accordion>
 
   <Accordion title="Tipos de Mensagem Suportados" icon="message-circle">
@@ -105,14 +108,18 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
     - Documento: `file`, `docName`, opcional `text`
     - Contato: `fullName`, `phoneNumber`, `organization`, `email`, `url`
     - Localização: `latitude`, `longitude`, `name`, `address`
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -123,9 +130,10 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
   Exemplo: `["5511999999999@s.whatsapp.net"]`
 </ParamField>
 
-<ParamField path="type" type="string" required>
+<ParamField path="type" type="enum<string>" required>
   Tipo da mensagem. <br />
-  **Opções:** `text`, `image`, `video`, `audio`, `document`, `button`, `list`, `poll`, `carousel`, `contact`, `location` <br />
+  **Opções:** `text`, `image`, `video`, `audio`, `document`, `button`, `list`, `poll`,
+  `carousel`, `contact`, `location` <br />
   Exemplo: `"text"`
 </ParamField>
 
@@ -144,8 +152,7 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
   Agendamento do envio. <br />
   **Formatos:** <br />
   - Timestamp em ms: `1706198400000` <br />
-  - Minutos a partir de agora: `30` <br />
-  - Imediato: `0`
+  - Minutos a partir de agora: `30` <br />- Imediato: `0`
 </ParamField>
 
 <ParamField path="info" type="string">
@@ -298,14 +305,15 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
 </ParamField>
 
 <Info>
-  **Importante:** Campos obrigatórios variam conforme o tipo de mensagem escolhido. Consulte a documentação de cada tipo.
+  **Importante:** Campos obrigatórios variam conforme o tipo de mensagem
+  escolhido. Consulte a documentação de cada tipo.
 </Info>
 
 <RequestExample>
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/sender/simple \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "numbers": [
       "5511999999999@s.whatsapp.net",
@@ -325,19 +333,16 @@ const response = await fetch("https://zapclass.com.br/api/sender/simple", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
-    numbers: [
-      "5511999999999@s.whatsapp.net",
-      "5511888888888@s.whatsapp.net"
-    ],
+    numbers: ["5511999999999@s.whatsapp.net", "5511888888888@s.whatsapp.net"],
     type: "text",
     text: "Olá! Temos uma oferta especial para você!",
     delayMin: 10,
     delayMax: 30,
     scheduled_for: 0,
-    info: "Campanha Promoção Janeiro"
+    info: "Campanha Promoção Janeiro",
   }),
 });
 
@@ -368,7 +373,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -384,6 +389,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>

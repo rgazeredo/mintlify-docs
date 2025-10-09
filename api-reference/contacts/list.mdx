@@ -19,6 +19,7 @@ Recupera todos os contatos armazenados na agenda do WhatsApp conectado, incluind
     - Agenda do WhatsApp Business
 
     **Importante:** Apenas contatos que possuem WhatsApp ativo aparecem na lista.
+
   </Accordion>
 
   <Accordion title="Dados Retornados" icon="list">
@@ -31,6 +32,7 @@ Recupera todos os contatos armazenados na agenda do WhatsApp conectado, incluind
     - `number`: Número no formato internacional
     - `isMyContact`: Se está salvo na sua agenda
     - `profilePicUrl`: URL da foto de perfil (se disponível)
+
   </Accordion>
 
   <Accordion title="Formato JID" icon="hashtag">
@@ -41,6 +43,7 @@ Recupera todos os contatos armazenados na agenda do WhatsApp conectado, incluind
     - Exemplo: `5511999999999@s.whatsapp.net`
 
     Use o JID para enviar mensagens e identificar contatos de forma única.
+
   </Accordion>
 
   <Accordion title="Performance e Cache" icon="gauge-high">
@@ -53,18 +56,23 @@ Recupera todos os contatos armazenados na agenda do WhatsApp conectado, incluind
     - Índices para busca rápida
 
     Para listas muito grandes (>1000 contatos), considere implementar paginação no cliente.
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 <Info>
-  **Nota:** Este é um endpoint GET que não requer parâmetros no body. Apenas inclua o token no header de autenticação.
+  **Nota:** Este é um endpoint GET que não requer parâmetros no body. Apenas
+  inclua o token no header de autenticação.
 </Info>
 
 <RequestExample>
@@ -80,13 +88,13 @@ const response = await fetch("https://zapclass.com.br/api/contacts", {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
 });
 
 const data = await response.json();
 console.log(`Total de contatos: ${data.contacts.length}`);
-data.contacts.forEach(contact => {
+data.contacts.forEach((contact) => {
   console.log(`${contact.name} - ${contact.number}`);
 });
 ```
@@ -97,7 +105,7 @@ $ch = curl_init('https://zapclass.com.br/api/contacts');
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

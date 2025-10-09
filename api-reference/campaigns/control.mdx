@@ -32,6 +32,7 @@ Permite controlar campanhas de envio em massa através de diferentes ações: pa
     - Mensagens já enviadas são preservadas no histórico
     - Operação executada de forma assíncrona
     - Status muda para "deleting" durante processo
+
   </Accordion>
 
   <Accordion title="Status de Campanhas" icon="flag">
@@ -54,6 +55,7 @@ Permite controlar campanhas de envio em massa através de diferentes ações: pa
     **Transições Bloqueadas:**
     - done → * (campanha finalizada é imutável)
     - deleting → * (aguardar conclusão)
+
   </Accordion>
 
   <Accordion title="Comportamento de Delete" icon="trash">
@@ -81,6 +83,7 @@ Permite controlar campanhas de envio em massa através de diferentes ações: pa
     - Operação irreversível
     - Não cancela mensagens em envio
     - Aguarde status "deleting" antes de recriar
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -105,14 +108,18 @@ Permite controlar campanhas de envio em massa através de diferentes ações: pa
     - Campanha duplicada
     - Mudança completa de estratégia
     - Limpeza de campanhas antigas
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -133,7 +140,8 @@ Permite controlar campanhas de envio em massa através de diferentes ações: pa
 </ParamField>
 
 <Warning>
-  **Atenção:** A ação `delete` é irreversível e executada de forma assíncrona. Mensagens já enviadas não podem ser deletadas.
+  **Atenção:** A ação `delete` é irreversível e executada de forma assíncrona.
+  Mensagens já enviadas não podem ser deletadas.
 </Warning>
 
 <RequestExample>
@@ -141,7 +149,7 @@ Permite controlar campanhas de envio em massa através de diferentes ações: pa
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/sender/edit \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "folder_id": "folder_123",
     "action": "stop"
@@ -153,11 +161,11 @@ const response = await fetch("https://zapclass.com.br/api/sender/edit", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     folder_id: "folder_123",
-    action: "stop"
+    action: "stop",
   }),
 });
 
@@ -180,7 +188,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

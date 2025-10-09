@@ -20,6 +20,7 @@ Permite que sua instância entre em um grupo do WhatsApp usando um código ou UR
     5. Confirmação e retorno de informações
 
     Garante que apenas convites válidos sejam processados.
+
   </Accordion>
 
   <Accordion title="Formatos Aceitos" icon="link">
@@ -31,6 +32,7 @@ Permite que sua instância entre em um grupo do WhatsApp usando um código ou UR
     - **URL encurtada:** Links bit.ly, tinyurl que redirecionam para WhatsApp
 
     O sistema extrai automaticamente o código do convite.
+
   </Accordion>
 
   <Accordion title="Informações Retornadas" icon="circle-info">
@@ -45,6 +47,7 @@ Permite que sua instância entre em um grupo do WhatsApp usando um código ou UR
     - Se você é administrador (geralmente não)
 
     Útil para confirmar e registrar a entrada.
+
   </Accordion>
 
   <Accordion title="Cenários de Entrada" icon="diagram-project">
@@ -62,14 +65,18 @@ Permite que sua instância entre em um grupo do WhatsApp usando um código ou UR
     - Já é membro do grupo
     - Banido do grupo
     - Convite expirado ou revogado
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -77,11 +84,13 @@ Permite que sua instância entre em um grupo do WhatsApp usando um código ou UR
 <ParamField path="inviteCode" type="string" required>
   Código de convite ou URL completa do grupo. <br />
   Aceita código curto ou URL do WhatsApp. <br />
-  Exemplo: `IYnl5Zg9bUcJD32rJrDzO7` ou `https://chat.whatsapp.com/IYnl5Zg9bUcJD32rJrDzO7`
+  Exemplo: `IYnl5Zg9bUcJD32rJrDzO7` ou
+  `https://chat.whatsapp.com/IYnl5Zg9bUcJD32rJrDzO7`
 </ParamField>
 
 <Warning>
-  **Atenção:** Ao entrar em grupos desconhecidos, você pode ser exposto a spam ou conteúdo indesejado. Valide a origem do convite antes de entrar.
+  **Atenção:** Ao entrar em grupos desconhecidos, você pode ser exposto a spam
+  ou conteúdo indesejado. Valide a origem do convite antes de entrar.
 </Warning>
 
 <RequestExample>
@@ -89,7 +98,7 @@ Permite que sua instância entre em um grupo do WhatsApp usando um código ou UR
 ```bash cURL - Código curto
 curl -X POST https://zapclass.com.br/api/group/join \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "inviteCode": "IYnl5Zg9bUcJD32rJrDzO7"
   }'
@@ -98,7 +107,7 @@ curl -X POST https://zapclass.com.br/api/group/join \
 ```bash cURL - URL completa
 curl -X POST https://zapclass.com.br/api/group/join \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "inviteCode": "https://chat.whatsapp.com/IYnl5Zg9bUcJD32rJrDzO7"
   }'
@@ -109,10 +118,10 @@ const response = await fetch("https://zapclass.com.br/api/group/join", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
-    inviteCode: "https://chat.whatsapp.com/IYnl5Zg9bUcJD32rJrDzO7"
+    inviteCode: "https://chat.whatsapp.com/IYnl5Zg9bUcJD32rJrDzO7",
   }),
 });
 
@@ -129,7 +138,7 @@ async function joinGroup(inviteCode) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({ inviteCode }),
   });
@@ -144,13 +153,15 @@ async function joinGroup(inviteCode) {
     groupId: data.group.id,
     groupName: data.group.name,
     participantsCount: data.group.participantsCount,
-    requiresApproval: data.group.memberAddMode === 'admin_approval'
+    requiresApproval: data.group.memberAddMode === "admin_approval",
   };
 }
 
 // Uso
 try {
-  const group = await joinGroup("https://chat.whatsapp.com/IYnl5Zg9bUcJD32rJrDzO7");
+  const group = await joinGroup(
+    "https://chat.whatsapp.com/IYnl5Zg9bUcJD32rJrDzO7"
+  );
 
   if (group.requiresApproval) {
     console.log(`✓ Solicitação enviada para o grupo "${group.groupName}"`);
@@ -174,7 +185,7 @@ async function joinMultipleGroups(inviteCodes) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+          Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
         },
         body: JSON.stringify({ inviteCode: code }),
       });
@@ -185,17 +196,17 @@ async function joinMultipleGroups(inviteCodes) {
         inviteCode: code,
         success: data.success,
         groupName: data.group?.name || null,
-        error: data.message || null
+        error: data.message || null,
       });
 
       // Aguarda 2 segundos entre requisições para evitar rate limit
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
     } catch (error) {
       results.push({
         inviteCode: code,
         success: false,
         groupName: null,
-        error: error.message
+        error: error.message,
       });
     }
   }
@@ -207,11 +218,11 @@ async function joinMultipleGroups(inviteCodes) {
 const invites = [
   "https://chat.whatsapp.com/IYnl5Zg9bUcJD32rJrDzO7",
   "https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt",
-  "https://chat.whatsapp.com/XyZ123456789"
+  "https://chat.whatsapp.com/XyZ123456789",
 ];
 
 const results = await joinMultipleGroups(invites);
-results.forEach(result => {
+results.forEach((result) => {
   if (result.success) {
     console.log(`✓ ${result.groupName}`);
   } else {
@@ -223,14 +234,17 @@ results.forEach(result => {
 ```javascript JavaScript - Entrar com confirmação
 async function joinGroupWithConfirmation(inviteCode) {
   // Primeiro, busca informações do grupo
-  const infoResponse = await fetch("https://zapclass.com.br/api/group/inviteInfo", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-    },
-    body: JSON.stringify({ inviteCode }),
-  });
+  const infoResponse = await fetch(
+    "https://zapclass.com.br/api/group/inviteInfo",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+      },
+      body: JSON.stringify({ inviteCode }),
+    }
+  );
 
   const infoData = await infoResponse.json();
 
@@ -243,7 +257,7 @@ async function joinGroupWithConfirmation(inviteCode) {
   console.log("Você está prestes a entrar em:");
   console.log(`Nome: ${infoData.group.name}`);
   console.log(`Participantes: ${infoData.group.participantsCount}`);
-  console.log(`Descrição: ${infoData.group.description || 'Sem descrição'}`);
+  console.log(`Descrição: ${infoData.group.description || "Sem descrição"}`);
   console.log("═══════════════════════════════");
 
   // Confirma (em ambiente de navegador)
@@ -259,7 +273,7 @@ async function joinGroupWithConfirmation(inviteCode) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({ inviteCode }),
   });
@@ -274,7 +288,9 @@ async function joinGroupWithConfirmation(inviteCode) {
 }
 
 // Uso
-await joinGroupWithConfirmation("https://chat.whatsapp.com/IYnl5Zg9bUcJD32rJrDzO7");
+await joinGroupWithConfirmation(
+  "https://chat.whatsapp.com/IYnl5Zg9bUcJD32rJrDzO7"
+);
 ```
 
 ```php PHP - Entrar no grupo
@@ -289,7 +305,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -318,7 +334,7 @@ function joinGroupWithReport($inviteCode) {
     ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

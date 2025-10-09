@@ -1,0 +1,232 @@
+---
+title: "Enviar Carrossel"
+api: "POST /messages/menu"
+description: "Criar carrossel de cartões com imagens e botões de ação"
+---
+
+Carrosseis permitem exibir múltiplos cartões (cards) com imagens, textos e botões deslizáveis. Ideal para catálogos de produtos, galerias e apresentações visuais.
+
+## Como Funciona
+
+Cada cartão do carrossel pode conter uma imagem, texto descritivo e botões de ação (copiar, URL ou ligar). O usuário desliza horizontalmente para navegar entre os cartões.
+
+## Estrutura de um Cartão
+
+Cada cartão é composto por uma sequência específica de elementos no array `choices`:
+
+<Steps>
+  <Step title="Texto do Cartão">
+    Texto entre colchetes: `"[Descrição do produto]"`
+  </Step>
+  <Step title="Imagem">
+    URL ou Base64 entre chaves: `"{https://exemplo.com/imagem.jpg}"`
+  </Step>
+  <Step title="Botões (opcional)">
+    Botões de ação no formato:
+    - Cópia: `"Copiar Cupom|copy:CODIGO"`
+    - URL: `"Ver Mais|https://site.com"`
+    - Chamada: `"Ligar|call:+5511999999999"`
+  </Step>
+</Steps>
+
+<Note>
+  **Formato especial:** Os elementos devem aparecer nesta ordem exata para cada cartão. Você pode ter múltiplos cartões no mesmo carrossel.
+</Note>
+
+### Authorization
+
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="number" type="string" required>
+  Número do destinatário no formato internacional. <br />
+  Deve incluir código do país DDI + DDD + número. <br />
+  Exemplo: `5511999999999`
+</ParamField>
+
+<ParamField path="type" type="string" required>
+  Tipo do menu interativo. <br />
+  Valor fixo: `carousel` <br />
+  Exemplo: `carousel`
+</ParamField>
+
+<ParamField path="text" type="string" required>
+  Texto principal exibido acima do carrossel. <br />
+  Exemplo: `Confira nossas ofertas especiais`
+</ParamField>
+
+<ParamField path="choices" type="array" required>
+  Array com os elementos dos cartões em sequência. <br />
+  Cada cartão deve ter: texto `[entre colchetes]`, imagem `{entre chaves}` e botões opcionais. <br />
+  Exemplo: `["[iPhone 15]", "{https://img.com/iphone.jpg}", "Comprar|https://loja.com"]`
+</ParamField>
+
+<ParamField path="delay" type="integer">
+  Atraso em milissegundos antes do envio. <br />
+  Durante o atraso aparecerá "Digitando...". <br />
+  Exemplo: `1000`
+</ParamField>
+
+<ParamField path="replyid" type="string">
+  ID da mensagem para responder. <br />
+  Exemplo: `3EB0538DA65A59F6D8A251`
+</ParamField>
+
+<ParamField path="mentions" type="string">
+  Números para mencionar (separados por vírgula). <br />
+  Exemplo: `5511999999999,5511888888888`
+</ParamField>
+
+<ParamField path="readchat" type="boolean">
+  Marca conversa como lida após envio. <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="readmessages" type="boolean">
+  Marca últimas mensagens recebidas como lidas. <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="track_source" type="string">
+  Origem do rastreamento da mensagem. <br />
+  Exemplo: `chatwoot`
+</ParamField>
+
+<ParamField path="track_id" type="string">
+  ID para rastreamento da mensagem (aceita valores duplicados). <br />
+  Exemplo: `msg_123456789`
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://zapclass.com.br/api/messages/menu \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
+  -d '{
+    "number": "5511999999999",
+    "type": "carousel",
+    "text": "🎉 Confira nossas ofertas especiais do mês!",
+    "choices": [
+      "[iPhone 15 Pro - R$ 7.499]",
+      "[Smartphone top de linha com chip A17 Pro e câmera de 48MP. Disponível em 4 cores.]",
+      "{https://placehold.co/600x400/4A90E2/FFF?text=iPhone+15}",
+      "Comprar Agora|https://loja.com/iphone15",
+      "Copiar Cupom|copy:IPHONE50",
+
+      "[MacBook Air M2 - R$ 9.999]",
+      "[Notebook ultrafino com chip M2, 8GB RAM e 256GB SSD. Perfeito para trabalho e estudos.]",
+      "{https://placehold.co/600x400/50C878/FFF?text=MacBook+Air}",
+      "Ver Detalhes|https://loja.com/macbook",
+      "Falar com Vendedor|call:+5511999999999",
+
+      "[AirPods Pro 2 - R$ 2.199]",
+      "[Fones com cancelamento de ruído ativo, som espacial e até 6h de bateria.]",
+      "{https://placehold.co/600x400/FF6B6B/FFF?text=AirPods+Pro}",
+      "Comprar|https://loja.com/airpods",
+      "Cupom de Desconto|copy:AIRPODS20"
+    ]
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/messages/menu", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+  },
+  body: JSON.stringify({
+    number: "5511999999999",
+    type: "carousel",
+    text: "🎉 Confira nossas ofertas especiais do mês!",
+    choices: [
+      "[iPhone 15 Pro - R$ 7.499]",
+      "[Smartphone top de linha com chip A17 Pro e câmera de 48MP. Disponível em 4 cores.]",
+      "{https://placehold.co/600x400/4A90E2/FFF?text=iPhone+15}",
+      "Comprar Agora|https://loja.com/iphone15",
+      "Copiar Cupom|copy:IPHONE50",
+
+      "[MacBook Air M2 - R$ 9.999]",
+      "[Notebook ultrafino com chip M2, 8GB RAM e 256GB SSD. Perfeito para trabalho e estudos.]",
+      "{https://placehold.co/600x400/50C878/FFF?text=MacBook+Air}",
+      "Ver Detalhes|https://loja.com/macbook",
+      "Falar com Vendedor|call:+5511999999999",
+
+      "[AirPods Pro 2 - R$ 2.199]",
+      "[Fones com cancelamento de ruído ativo, som espacial e até 6h de bateria.]",
+      "{https://placehold.co/600x400/FF6B6B/FFF?text=AirPods+Pro}",
+      "Comprar|https://loja.com/airpods",
+      "Cupom de Desconto|copy:AIRPODS20"
+    ],
+  }),
+});
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/messages/menu');
+
+$payload = [
+    "number" => "5511999999999",
+    "type" => "carousel",
+    "text" => "🎉 Confira nossas ofertas especiais do mês!",
+    "choices" => [
+        "[iPhone 15 Pro - R$ 7.499]",
+        "[Smartphone top de linha com chip A17 Pro e câmera de 48MP. Disponível em 4 cores.]",
+        "{https://placehold.co/600x400/4A90E2/FFF?text=iPhone+15}",
+        "Comprar Agora|https://loja.com/iphone15",
+        "Copiar Cupom|copy:IPHONE50",
+
+        "[MacBook Air M2 - R$ 9.999]",
+        "[Notebook ultrafino com chip M2, 8GB RAM e 256GB SSD. Perfeito para trabalho e estudos.]",
+        "{https://placehold.co/600x400/50C878/FFF?text=MacBook+Air}",
+        "Ver Detalhes|https://loja.com/macbook",
+        "Falar com Vendedor|call:+5511999999999",
+
+        "[AirPods Pro 2 - R$ 2.199]",
+        "[Fones com cancelamento de ruído ativo, som espacial e até 6h de bateria.]",
+        "{https://placehold.co/600x400/FF6B6B/FFF?text=AirPods+Pro}",
+        "Comprar|https://loja.com/airpods",
+        "Cupom de Desconto|copy:AIRPODS20"
+    ]
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "token": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "Requisição inválida"
+}
+```
+
+</ResponseExample>

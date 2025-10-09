@@ -24,6 +24,7 @@ Gerencia os grupos vinculados a uma comunidade, permitindo adicionar novos grupo
     - Grupos não podem estar em outra comunidade
     - Grupos devem ser válidos e acessíveis
     - Não adicionar grupos já vinculados
+
   </Accordion>
 
   <Accordion title="Remover Grupos" icon="minus">
@@ -41,6 +42,7 @@ Gerencia os grupos vinculados a uma comunidade, permitindo adicionar novos grupo
     - Mantém todos os participantes
     - Configurações do grupo preservadas
     - Pode ser re-adicionado depois
+
   </Accordion>
 
   <Accordion title="Operações em Lote" icon="layer-group">
@@ -57,6 +59,7 @@ Gerencia os grupos vinculados a uma comunidade, permitindo adicionar novos grupo
     - Reorganizar estrutura de comunidade
     - Migrar grupos entre comunidades
     - Configuração inicial de comunidade
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -75,14 +78,18 @@ Gerencia os grupos vinculados a uma comunidade, permitindo adicionar novos grupo
     - Migração para outra comunidade
     - Desativação de departamentos
     - Limpeza de estrutura obsoleta
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -106,7 +113,8 @@ Gerencia os grupos vinculados a uma comunidade, permitindo adicionar novos grupo
 </ParamField>
 
 <Warning>
-  **Importante:** Grupos já vinculados a outra comunidade não podem ser adicionados. Primeiro remova o grupo da comunidade anterior.
+  **Importante:** Grupos já vinculados a outra comunidade não podem ser
+  adicionados. Primeiro remova o grupo da comunidade anterior.
 </Warning>
 
 <RequestExample>
@@ -114,7 +122,7 @@ Gerencia os grupos vinculados a uma comunidade, permitindo adicionar novos grupo
 ```bash cURL - Adicionar grupos
 curl -X POST https://zapclass.com.br/api/community/editgroups \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "community": "120363153742561022@g.us",
     "action": "add",
@@ -128,7 +136,7 @@ curl -X POST https://zapclass.com.br/api/community/editgroups \
 ```bash cURL - Remover grupos
 curl -X POST https://zapclass.com.br/api/community/editgroups \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "community": "120363153742561022@g.us",
     "action": "remove",
@@ -137,21 +145,21 @@ curl -X POST https://zapclass.com.br/api/community/editgroups \
 ```
 
 ```javascript JavaScript - Adicionar grupos
-const response = await fetch("https://zapclass.com.br/api/community/editgroups", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-  },
-  body: JSON.stringify({
-    community: "120363153742561022@g.us",
-    action: "add",
-    groupjids: [
-      "120363324255083289@g.us",
-      "120363308883996631@g.us"
-    ]
-  }),
-});
+const response = await fetch(
+  "https://zapclass.com.br/api/community/editgroups",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+    },
+    body: JSON.stringify({
+      community: "120363153742561022@g.us",
+      action: "add",
+      groupjids: ["120363324255083289@g.us", "120363308883996631@g.us"],
+    }),
+  }
+);
 
 const data = await response.json();
 if (data.success) {
@@ -177,7 +185,7 @@ class CommunityGroupManager {
       body: JSON.stringify({
         community: communityJid,
         action,
-        groupjids: groupJids
+        groupjids: groupJids,
       }),
     });
 
@@ -215,17 +223,18 @@ class CommunityGroupManager {
 }
 
 // Uso
-const manager = new CommunityGroupManager("zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk");
-
-await manager.addGroups(
-  "120363153742561022@g.us",
-  ["120363324255083289@g.us", "120363308883996631@g.us"]
+const manager = new CommunityGroupManager(
+  "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
 );
 
-await manager.removeGroups(
-  "120363153742561022@g.us",
-  ["120363324255083289@g.us"]
-);
+await manager.addGroups("120363153742561022@g.us", [
+  "120363324255083289@g.us",
+  "120363308883996631@g.us",
+]);
+
+await manager.removeGroups("120363153742561022@g.us", [
+  "120363324255083289@g.us",
+]);
 ```
 
 ```javascript JavaScript - Adicionar com validação
@@ -236,25 +245,28 @@ async function addGroupsToCommunity(communityJid, groupJids) {
   }
 
   // Valida formato dos JIDs
-  const invalidJids = groupJids.filter(jid => !jid.endsWith('@g.us'));
+  const invalidJids = groupJids.filter((jid) => !jid.endsWith("@g.us"));
   if (invalidJids.length > 0) {
-    throw new Error(`JIDs inválidos: ${invalidJids.join(', ')}`);
+    throw new Error(`JIDs inválidos: ${invalidJids.join(", ")}`);
   }
 
   console.log(`Adicionando ${groupJids.length} grupos à comunidade...`);
 
-  const response = await fetch("https://zapclass.com.br/api/community/editgroups", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-    },
-    body: JSON.stringify({
-      community: communityJid,
-      action: "add",
-      groupjids: groupJids
-    }),
-  });
+  const response = await fetch(
+    "https://zapclass.com.br/api/community/editgroups",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+      },
+      body: JSON.stringify({
+        community: communityJid,
+        action: "add",
+        groupjids: groupJids,
+      }),
+    }
+  );
 
   const data = await response.json();
 
@@ -271,7 +283,7 @@ async function addGroupsToCommunity(communityJid, groupJids) {
 try {
   await addGroupsToCommunity("120363153742561022@g.us", [
     "120363324255083289@g.us",
-    "120363308883996631@g.us"
+    "120363308883996631@g.us",
   ]);
 } catch (error) {
   console.error("Erro:", error.message);
@@ -292,17 +304,17 @@ async function reorganizeCommunityStructure(communityJid, newStructure) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
       body: JSON.stringify({
         community: communityJid,
         action: "remove",
-        groupjids: groupsToRemove
+        groupjids: groupsToRemove,
       }),
     });
 
     console.log("✓ Grupos removidos");
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
   // Adiciona novos grupos
@@ -313,12 +325,12 @@ async function reorganizeCommunityStructure(communityJid, newStructure) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
       body: JSON.stringify({
         community: communityJid,
         action: "add",
-        groupjids: groupsToAdd
+        groupjids: groupsToAdd,
       }),
     });
 
@@ -329,24 +341,27 @@ async function reorganizeCommunityStructure(communityJid, newStructure) {
 
   return {
     removed: groupsToRemove?.length || 0,
-    added: groupsToAdd?.length || 0
+    added: groupsToAdd?.length || 0,
   };
 }
 
 // Uso - substituir estrutura antiga por nova
 const result = await reorganizeCommunityStructure("120363153742561022@g.us", {
   groupsToRemove: ["120363324255083289@g.us"],
-  groupsToAdd: [
-    "120363308883996631@g.us",
-    "120363308883996632@g.us"
-  ]
+  groupsToAdd: ["120363308883996631@g.us", "120363308883996632@g.us"],
 });
 
-console.log(`\nResumo: ${result.removed} removidos, ${result.added} adicionados`);
+console.log(
+  `\nResumo: ${result.removed} removidos, ${result.added} adicionados`
+);
 ```
 
 ```javascript JavaScript - Migrar grupos entre comunidades
-async function migrateGroupsBetweenCommunities(groupJids, fromCommunityJid, toCommunityJid) {
+async function migrateGroupsBetweenCommunities(
+  groupJids,
+  fromCommunityJid,
+  toCommunityJid
+) {
   console.log("=== MIGRAÇÃO DE GRUPOS ===\n");
   console.log(`De: ${fromCommunityJid}`);
   console.log(`Para: ${toCommunityJid}`);
@@ -359,19 +374,19 @@ async function migrateGroupsBetweenCommunities(groupJids, fromCommunityJid, toCo
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({
       community: fromCommunityJid,
       action: "remove",
-      groupjids: groupJids
+      groupjids: groupJids,
     }),
   });
 
   console.log("✓ Removidos da comunidade antiga");
 
   // Aguarda 2 segundos
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   // Adiciona à nova comunidade
   console.log("\n2. Adicionando à nova comunidade...");
@@ -380,12 +395,12 @@ async function migrateGroupsBetweenCommunities(groupJids, fromCommunityJid, toCo
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({
       community: toCommunityJid,
       action: "add",
-      groupjids: groupJids
+      groupjids: groupJids,
     }),
   });
 
@@ -399,8 +414,8 @@ async function migrateGroupsBetweenCommunities(groupJids, fromCommunityJid, toCo
 // Uso
 await migrateGroupsBetweenCommunities(
   ["120363324255083289@g.us", "120363308883996631@g.us"],
-  "120363153742561022@g.us",  // Comunidade antiga
-  "120363153742561023@g.us"   // Comunidade nova
+  "120363153742561022@g.us", // Comunidade antiga
+  "120363153742561023@g.us" // Comunidade nova
 );
 ```
 
@@ -421,7 +436,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -452,7 +467,7 @@ function removeGroupsFromCommunity($communityJid, $groupJids) {
     ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -628,10 +643,7 @@ try {
   "community": "120363153742561022@g.us",
   "action": "add",
   "groupsAdded": 2,
-  "groupjids": [
-    "120363324255083289@g.us",
-    "120363308883996631@g.us"
-  ]
+  "groupjids": ["120363324255083289@g.us", "120363308883996631@g.us"]
 }
 ```
 
@@ -642,9 +654,7 @@ try {
   "community": "120363153742561022@g.us",
   "action": "remove",
   "groupsRemoved": 1,
-  "groupjids": [
-    "120363324255083289@g.us"
-  ]
+  "groupjids": ["120363324255083289@g.us"]
 }
 ```
 

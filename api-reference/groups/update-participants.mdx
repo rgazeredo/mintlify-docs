@@ -23,6 +23,7 @@ Gerencia participantes de um grupo através de múltiplas ações: adicionar, re
     - Retorna lista de sucessos e falhas
     - Não bloqueia operação se alguns falharem
     - Participantes já no grupo são ignorados
+
   </Accordion>
 
   <Accordion title="Remover Participantes" icon="user-minus">
@@ -39,6 +40,7 @@ Gerencia participantes de um grupo através de múltiplas ações: adicionar, re
     - Não é possível remover o criador do grupo
     - Outros admins podem ou não ser removíveis
     - Remoção é permanente até novo convite
+
   </Accordion>
 
   <Accordion title="Promover Administradores" icon="arrow-up">
@@ -56,6 +58,7 @@ Gerencia participantes de um grupo através de múltiplas ações: adicionar, re
     - Promover/rebaixar outros membros
     - Alterar nome, descrição, imagem
     - Configurar permissões do grupo
+
   </Accordion>
 
   <Accordion title="Rebaixar Administradores" icon="arrow-down">
@@ -72,6 +75,7 @@ Gerencia participantes de um grupo através de múltiplas ações: adicionar, re
     - Criador do grupo não pode ser rebaixado
     - Você não pode rebaixar a si mesmo
     - Mantenha pelo menos um administrador
+
   </Accordion>
 
   <Accordion title="Aprovar Solicitações" icon="check">
@@ -85,6 +89,7 @@ Gerencia participantes de um grupo através de múltiplas ações: adicionar, re
     - Lista de pendentes visível em `/group/info`
 
     Útil para grupos privados e seletivos.
+
   </Accordion>
 
   <Accordion title="Rejeitar Solicitações" icon="x">
@@ -98,14 +103,18 @@ Gerencia participantes de um grupo através de múltiplas ações: adicionar, re
     - Não notifica sobre rejeição
 
     Use para manter controle de acesso ao grupo.
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -129,7 +138,8 @@ Gerencia participantes de um grupo através de múltiplas ações: adicionar, re
 </ParamField>
 
 <Info>
-  **Formato de números:** Use apenas dígitos no formato internacional (código do país + DDD + número). Exemplo: `5511999999999` para Brasil.
+  **Formato de números:** Use apenas dígitos no formato internacional (código do
+  país + DDD + número). Exemplo: `5511999999999` para Brasil.
 </Info>
 
 <RequestExample>
@@ -137,7 +147,7 @@ Gerencia participantes de um grupo através de múltiplas ações: adicionar, re
 ```bash cURL - Adicionar participantes
 curl -X POST https://zapclass.com.br/api/group/updateParticipants \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363308883996631@g.us",
     "action": "add",
@@ -148,7 +158,7 @@ curl -X POST https://zapclass.com.br/api/group/updateParticipants \
 ```bash cURL - Promover a admin
 curl -X POST https://zapclass.com.br/api/group/updateParticipants \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363308883996631@g.us",
     "action": "promote",
@@ -159,7 +169,7 @@ curl -X POST https://zapclass.com.br/api/group/updateParticipants \
 ```bash cURL - Remover participantes
 curl -X POST https://zapclass.com.br/api/group/updateParticipants \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363308883996631@g.us",
     "action": "remove",
@@ -168,18 +178,21 @@ curl -X POST https://zapclass.com.br/api/group/updateParticipants \
 ```
 
 ```javascript JavaScript - Adicionar participantes
-const response = await fetch("https://zapclass.com.br/api/group/updateParticipants", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-  },
-  body: JSON.stringify({
-    groupjid: "120363308883996631@g.us",
-    action: "add",
-    participants: ["5511999999999", "5511888888888"]
-  }),
-});
+const response = await fetch(
+  "https://zapclass.com.br/api/group/updateParticipants",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+    },
+    body: JSON.stringify({
+      groupjid: "120363308883996631@g.us",
+      action: "add",
+      participants: ["5511999999999", "5511888888888"],
+    }),
+  }
+);
 
 const data = await response.json();
 if (data.success) {
@@ -216,11 +229,13 @@ class GroupParticipantManager {
 
   async add(groupJid, numbers) {
     const result = await this.executeAction(groupJid, "add", numbers);
-    console.log(`✓ ${result.results?.success?.length || 0} participantes adicionados`);
+    console.log(
+      `✓ ${result.results?.success?.length || 0} participantes adicionados`
+    );
 
     if (result.results?.failed?.length > 0) {
       console.log(`✗ ${result.results.failed.length} falharam`);
-      result.results.failed.forEach(f => {
+      result.results.failed.forEach((f) => {
         console.log(`  - ${f.number}: ${f.reason}`);
       });
     }
@@ -260,7 +275,9 @@ class GroupParticipantManager {
 }
 
 // Uso
-const manager = new GroupParticipantManager("zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk");
+const manager = new GroupParticipantManager(
+  "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+);
 
 await manager.add("120363308883996631@g.us", ["5511999999999"]);
 await manager.promote("120363308883996631@g.us", ["5511999999999"]);
@@ -269,7 +286,7 @@ await manager.promote("120363308883996631@g.us", ["5511999999999"]);
 ```javascript JavaScript - Adicionar com validação
 async function addParticipantsValidated(groupJid, numbers) {
   // Valida formato dos números
-  const validNumbers = numbers.filter(num => {
+  const validNumbers = numbers.filter((num) => {
     const isValid = /^\d{10,15}$/.test(num);
     if (!isValid) {
       console.warn(`Número inválido ignorado: ${num}`);
@@ -283,18 +300,21 @@ async function addParticipantsValidated(groupJid, numbers) {
 
   console.log(`Adicionando ${validNumbers.length} participantes...`);
 
-  const response = await fetch("https://zapclass.com.br/api/group/updateParticipants", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-    },
-    body: JSON.stringify({
-      groupjid: groupJid,
-      action: "add",
-      participants: validNumbers
-    }),
-  });
+  const response = await fetch(
+    "https://zapclass.com.br/api/group/updateParticipants",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+      },
+      body: JSON.stringify({
+        groupjid: groupJid,
+        action: "add",
+        participants: validNumbers,
+      }),
+    }
+  );
 
   const data = await response.json();
 
@@ -310,7 +330,7 @@ async function addParticipantsValidated(groupJid, numbers) {
 
   if (data.results?.failed?.length > 0) {
     console.log("\nDetalhes das falhas:");
-    data.results.failed.forEach(f => {
+    data.results.failed.forEach((f) => {
       console.log(`  ✗ ${f.number}: ${f.reason}`);
     });
   }
@@ -322,7 +342,7 @@ async function addParticipantsValidated(groupJid, numbers) {
 await addParticipantsValidated("120363308883996631@g.us", [
   "5511999999999",
   "5511888888888",
-  "invalido"  // Será ignorado
+  "invalido", // Será ignorado
 ]);
 ```
 
@@ -333,11 +353,11 @@ async function approvePendingRequests(groupJid) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({
       groupjid: groupJid,
-      getRequestsParticipants: true
+      getRequestsParticipants: true,
     }),
   });
 
@@ -357,21 +377,26 @@ async function approvePendingRequests(groupJid) {
   console.log(`${pending.length} solicitações pendentes encontradas`);
 
   // Extrai números das solicitações
-  const numbers = pending.map(p => p.number || p.jid.replace('@s.whatsapp.net', ''));
+  const numbers = pending.map(
+    (p) => p.number || p.jid.replace("@s.whatsapp.net", "")
+  );
 
   // Aprova todas
-  const response = await fetch("https://zapclass.com.br/api/group/updateParticipants", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-    },
-    body: JSON.stringify({
-      groupjid: groupJid,
-      action: "approve",
-      participants: numbers
-    }),
-  });
+  const response = await fetch(
+    "https://zapclass.com.br/api/group/updateParticipants",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+      },
+      body: JSON.stringify({
+        groupjid: groupJid,
+        action: "approve",
+        participants: numbers,
+      }),
+    }
+  );
 
   const data = await response.json();
 
@@ -393,7 +418,7 @@ async function syncGroupParticipants(groupJid, desiredParticipants) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({ groupjid: groupJid }),
   });
@@ -404,13 +429,13 @@ async function syncGroupParticipants(groupJid, desiredParticipants) {
     throw new Error(groupInfo.message);
   }
 
-  const current = groupInfo.group.participants.map(p =>
-    p.number || p.jid.replace('@s.whatsapp.net', '')
+  const current = groupInfo.group.participants.map(
+    (p) => p.number || p.jid.replace("@s.whatsapp.net", "")
   );
 
   // Identifica diferenças
-  const toAdd = desiredParticipants.filter(p => !current.includes(p));
-  const toRemove = current.filter(p => !desiredParticipants.includes(p));
+  const toAdd = desiredParticipants.filter((p) => !current.includes(p));
+  const toRemove = current.filter((p) => !desiredParticipants.includes(p));
 
   console.log(`\n=== SINCRONIZAÇÃO ===`);
   console.log(`Participantes atuais: ${current.length}`);
@@ -424,12 +449,12 @@ async function syncGroupParticipants(groupJid, desiredParticipants) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
       body: JSON.stringify({
         groupjid: groupJid,
         action: "add",
-        participants: toAdd
+        participants: toAdd,
       }),
     });
     console.log(`✓ ${toAdd.length} participantes adicionados`);
@@ -441,12 +466,12 @@ async function syncGroupParticipants(groupJid, desiredParticipants) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
       body: JSON.stringify({
         groupjid: groupJid,
         action: "remove",
-        participants: toRemove
+        participants: toRemove,
       }),
     });
     console.log(`✓ ${toRemove.length} participantes removidos`);
@@ -476,7 +501,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -512,7 +537,7 @@ function promoteToAdmin($groupJid, $participants) {
     ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -705,10 +730,7 @@ try {
   "action": "add",
   "groupJid": "120363308883996631@g.us",
   "results": {
-    "success": [
-      "5511999999999@s.whatsapp.net",
-      "5511888888888@s.whatsapp.net"
-    ],
+    "success": ["5511999999999@s.whatsapp.net", "5511888888888@s.whatsapp.net"],
     "failed": []
   }
 }
@@ -720,9 +742,7 @@ try {
   "message": "Some participants could not be added",
   "action": "add",
   "results": {
-    "success": [
-      "5511999999999@s.whatsapp.net"
-    ],
+    "success": ["5511999999999@s.whatsapp.net"],
     "failed": [
       {
         "number": "5511777777777",
@@ -739,9 +759,7 @@ try {
   "message": "Participants promoted successfully",
   "action": "promote",
   "groupJid": "120363308883996631@g.us",
-  "participants": [
-    "5511999999999@s.whatsapp.net"
-  ]
+  "participants": ["5511999999999@s.whatsapp.net"]
 }
 ```
 

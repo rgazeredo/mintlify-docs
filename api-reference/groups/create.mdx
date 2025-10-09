@@ -20,6 +20,7 @@ Cria um novo grupo no WhatsApp adicionando participantes iniciais e configurando
     5. Retorno das informações do grupo
 
     **Importante:** Você será automaticamente definido como administrador do grupo.
+
   </Accordion>
 
   <Accordion title="Requisitos de Participantes" icon="user-check">
@@ -33,6 +34,7 @@ Cria um novo grupo no WhatsApp adicionando participantes iniciais e configurando
     - Não podem estar bloqueando você
 
     **Formato:** `5511999999999` (código país + DDD + número)
+
   </Accordion>
 
   <Accordion title="Resposta Detalhada" icon="circle-info">
@@ -47,6 +49,7 @@ Cria um novo grupo no WhatsApp adicionando participantes iniciais e configurando
     - Status de cada operação
 
     Permite identificar problemas na adição de participantes.
+
   </Accordion>
 
   <Accordion title="Limitações e Comportamento" icon="triangle-exclamation">
@@ -59,14 +62,18 @@ Cria um novo grupo no WhatsApp adicionando participantes iniciais e configurando
     - Participantes inválidos não impedem a criação
 
     **Comportamento:** Grupo é criado mesmo se alguns participantes falharem.
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -85,7 +92,9 @@ Cria um novo grupo no WhatsApp adicionando participantes iniciais e configurando
 </ParamField>
 
 <Tip>
-  **Dica:** Mesmo que alguns participantes falhem ao serem adicionados, o grupo será criado. Verifique a resposta para identificar quais participantes foram adicionados com sucesso.
+  **Dica:** Mesmo que alguns participantes falhem ao serem adicionados, o grupo
+  será criado. Verifique a resposta para identificar quais participantes foram
+  adicionados com sucesso.
 </Tip>
 
 <RequestExample>
@@ -93,7 +102,7 @@ Cria um novo grupo no WhatsApp adicionando participantes iniciais e configurando
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/group/create \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "name": "Equipe de Vendas",
     "participants": ["5511999999999", "5511888888888"]
@@ -105,11 +114,11 @@ const response = await fetch("https://zapclass.com.br/api/group/create", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     name: "Equipe de Vendas",
-    participants: ["5511999999999", "5511888888888"]
+    participants: ["5511999999999", "5511888888888"],
   }),
 });
 
@@ -134,7 +143,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -167,10 +176,7 @@ curl_close($ch);
     "creator": "5511999999999@s.whatsapp.net"
   },
   "participants": {
-    "success": [
-      "5511999999999@s.whatsapp.net",
-      "5511888888888@s.whatsapp.net"
-    ],
+    "success": ["5511999999999@s.whatsapp.net", "5511888888888@s.whatsapp.net"],
     "failed": []
   }
 }

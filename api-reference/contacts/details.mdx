@@ -21,6 +21,7 @@ Retorna informações detalhadas e completas sobre um chat, incluindo mais de 60
     - `phone`: Número de telefone formatado
 
     Esses campos formam a base de identificação para todas as operações.
+
   </Accordion>
 
   <Accordion title="Informações do WhatsApp" icon="whatsapp">
@@ -37,6 +38,7 @@ Retorna informações detalhadas e completas sobre um chat, incluindo mais de 60
     - `profilePicUrl`: URL da foto de perfil
 
     Para grupos: `wa_isGroup`, `wa_isGroup_admin`, `wa_isGroup_announce`
+
   </Accordion>
 
   <Accordion title="Dados de Lead/CRM" icon="user-tag">
@@ -51,6 +53,7 @@ Retorna informações detalhadas e completas sobre um chat, incluindo mais de 60
     - `lead_notes`: Anotações sobre o lead
 
     Permite integração completa com sistemas CRM.
+
   </Accordion>
 
   <Accordion title="Chatbot e Automação" icon="robot">
@@ -64,6 +67,7 @@ Retorna informações detalhadas e completas sobre um chat, incluindo mais de 60
     - `chatbot_variables`: Variáveis do contexto
 
     Útil para rastrear automações em andamento.
+
   </Accordion>
 
   <Accordion title="Configurações Especiais" icon="gear">
@@ -77,14 +81,18 @@ Retorna informações detalhadas e completas sobre um chat, incluindo mais de 60
     - Combinação de múltiplas fontes de dados
 
     O sistema mantém dados sempre sincronizados.
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -104,7 +112,8 @@ Retorna informações detalhadas e completas sobre um chat, incluindo mais de 60
 </ParamField>
 
 <Tip>
-  **Dica:** Use `preview: true` para listagens e `preview: false` para visualização de perfil completo, economizando banda quando necessário.
+  **Dica:** Use `preview: true` para listagens e `preview: false` para
+  visualização de perfil completo, economizando banda quando necessário.
 </Tip>
 
 <RequestExample>
@@ -112,7 +121,7 @@ Retorna informações detalhadas e completas sobre um chat, incluindo mais de 60
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/chat/details \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "number": "5511999999999",
     "preview": true
@@ -124,11 +133,11 @@ const response = await fetch("https://zapclass.com.br/api/chat/details", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     number: "5511999999999",
-    preview: true
+    preview: true,
   }),
 });
 
@@ -152,7 +161,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

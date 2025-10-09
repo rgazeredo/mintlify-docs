@@ -28,6 +28,7 @@ Atualiza a foto de perfil de um grupo do WhatsApp através de URL ou base64, ou 
     - Use `"remove"` ou `"delete"` como valor
     - Remove a foto atual do grupo
     - Grupo fica sem imagem de perfil
+
   </Accordion>
 
   <Accordion title="Requisitos Técnicos" icon="circle-check">
@@ -48,6 +49,7 @@ Atualiza a foto de perfil de um grupo do WhatsApp através de URL ou base64, ou 
     - Mantenha arquivo otimizado
     - Imagens muito grandes causam erro 413
     - Recomendado: menos de 100KB
+
   </Accordion>
 
   <Accordion title="Permissões Necessárias" icon="user-shield">
@@ -64,6 +66,7 @@ Atualiza a foto de perfil de um grupo do WhatsApp através de URL ou base64, ou 
     - Esta API sempre requer permissão de admin
 
     Sem permissão de admin, retorna erro 403.
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -78,14 +81,18 @@ Atualiza a foto de perfil de um grupo do WhatsApp através de URL ou base64, ou 
     - Imagens temáticas sazonais
     - Geração dinâmica com IA ou design
     - Integração com sistemas de gestão
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -105,7 +112,8 @@ Atualiza a foto de perfil de um grupo do WhatsApp através de URL ou base64, ou 
 </ParamField>
 
 <Warning>
-  **Restrições:** A imagem deve ser JPEG com resolução máxima de 640x640 pixels. Outros formatos ou tamanhos maiores serão rejeitados pelo WhatsApp.
+  **Restrições:** A imagem deve ser JPEG com resolução máxima de 640x640 pixels.
+  Outros formatos ou tamanhos maiores serão rejeitados pelo WhatsApp.
 </Warning>
 
 <RequestExample>
@@ -113,7 +121,7 @@ Atualiza a foto de perfil de um grupo do WhatsApp através de URL ou base64, ou 
 ```bash cURL - Atualizar com URL
 curl -X POST https://zapclass.com.br/api/group/updateImage \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363308883996631@g.us",
     "image": "https://example.com/group-logo.jpg"
@@ -123,7 +131,7 @@ curl -X POST https://zapclass.com.br/api/group/updateImage \
 ```bash cURL - Remover imagem
 curl -X POST https://zapclass.com.br/api/group/updateImage \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363308883996631@g.us",
     "image": "remove"
@@ -135,11 +143,11 @@ const response = await fetch("https://zapclass.com.br/api/group/updateImage", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     groupjid: "120363308883996631@g.us",
-    image: "https://example.com/group-logo.jpg"
+    image: "https://example.com/group-logo.jpg",
   }),
 });
 
@@ -158,17 +166,20 @@ async function updateGroupImageFromFile(groupJid, imageFile) {
     reader.onload = async (e) => {
       const base64 = e.target.result;
 
-      const response = await fetch("https://zapclass.com.br/api/group/updateImage", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-        },
-        body: JSON.stringify({
-          groupjid: groupJid,
-          image: base64
-        }),
-      });
+      const response = await fetch(
+        "https://zapclass.com.br/api/group/updateImage",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+          },
+          body: JSON.stringify({
+            groupjid: groupJid,
+            image: base64,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -203,25 +214,28 @@ async function updateGroupImageWithValidation(groupJid, imageUrl) {
     throw new Error("Imagem não pôde ser baixada");
   }
 
-  const contentType = imageResponse.headers.get('content-type');
-  if (!contentType.includes('jpeg') && !contentType.includes('jpg')) {
+  const contentType = imageResponse.headers.get("content-type");
+  if (!contentType.includes("jpeg") && !contentType.includes("jpg")) {
     throw new Error("Apenas imagens JPEG são aceitas");
   }
 
   console.log("✓ Imagem válida");
 
   // Atualiza a imagem
-  const response = await fetch("https://zapclass.com.br/api/group/updateImage", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-    },
-    body: JSON.stringify({
-      groupjid: groupJid,
-      image: imageUrl
-    }),
-  });
+  const response = await fetch(
+    "https://zapclass.com.br/api/group/updateImage",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+      },
+      body: JSON.stringify({
+        groupjid: groupJid,
+        image: imageUrl,
+      }),
+    }
+  );
 
   const data = await response.json();
 
@@ -246,17 +260,20 @@ try {
 
 ```javascript JavaScript - Remover imagem
 async function removeGroupImage(groupJid) {
-  const response = await fetch("https://zapclass.com.br/api/group/updateImage", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-    },
-    body: JSON.stringify({
-      groupjid: groupJid,
-      image: "remove"
-    }),
-  });
+  const response = await fetch(
+    "https://zapclass.com.br/api/group/updateImage",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+      },
+      body: JSON.stringify({
+        groupjid: groupJid,
+        image: "remove",
+      }),
+    }
+  );
 
   const data = await response.json();
 
@@ -277,33 +294,36 @@ async function updateMultipleGroupImages(updates) {
 
   for (const update of updates) {
     try {
-      const response = await fetch("https://zapclass.com.br/api/group/updateImage", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-        },
-        body: JSON.stringify({
-          groupjid: update.groupJid,
-          image: update.imageUrl
-        }),
-      });
+      const response = await fetch(
+        "https://zapclass.com.br/api/group/updateImage",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+          },
+          body: JSON.stringify({
+            groupjid: update.groupJid,
+            image: update.imageUrl,
+          }),
+        }
+      );
 
       const data = await response.json();
 
       results.push({
         groupJid: update.groupJid,
         success: data.success,
-        message: data.message
+        message: data.message,
       });
 
       // Aguarda 2 segundos entre operações
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
     } catch (error) {
       results.push({
         groupJid: update.groupJid,
         success: false,
-        message: error.message
+        message: error.message,
       });
     }
   }
@@ -315,18 +335,18 @@ async function updateMultipleGroupImages(updates) {
 const updates = [
   {
     groupJid: "120363308883996631@g.us",
-    imageUrl: "https://empresa.com/logo-vendas.jpg"
+    imageUrl: "https://empresa.com/logo-vendas.jpg",
   },
   {
     groupJid: "120363308883996632@g.us",
-    imageUrl: "https://empresa.com/logo-suporte.jpg"
-  }
+    imageUrl: "https://empresa.com/logo-suporte.jpg",
+  },
 ];
 
 const results = await updateMultipleGroupImages(updates);
 
 console.log("=== RESULTADOS ===");
-results.forEach(result => {
+results.forEach((result) => {
   const status = result.success ? "✓" : "✗";
   console.log(`${status} ${result.groupJid}`);
 });
@@ -338,7 +358,7 @@ async function setSeasonalImage(groupJid, event, durationDays) {
     natal: "https://cdn.example.com/natal.jpg",
     pascoa: "https://cdn.example.com/pascoa.jpg",
     blackfriday: "https://cdn.example.com/blackfriday.jpg",
-    default: "https://cdn.example.com/logo.jpg"
+    default: "https://cdn.example.com/logo.jpg",
   };
 
   const eventImage = eventImages[event] || eventImages.default;
@@ -350,11 +370,11 @@ async function setSeasonalImage(groupJid, event, durationDays) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({
       groupjid: groupJid,
-      image: eventImage
+      image: eventImage,
     }),
   });
 
@@ -369,11 +389,11 @@ async function setSeasonalImage(groupJid, event, durationDays) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
       },
       body: JSON.stringify({
         groupjid: groupJid,
-        image: eventImages.default
+        image: eventImages.default,
       }),
     });
 
@@ -398,7 +418,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -447,7 +467,7 @@ function updateGroupImageFromFile($groupJid, $imagePath) {
     ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -487,7 +507,7 @@ function removeGroupImage($groupJid) {
     ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

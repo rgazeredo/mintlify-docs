@@ -31,6 +31,7 @@ Cria uma nova campanha de envio em massa com configurações avançadas, permiti
     - Enviar diferentes tipos de mensagem na mesma campanha
     - Ter controle individual sobre cada envio
     - Integrar com CRM/planilhas com dados únicos
+
   </Accordion>
 
   <Accordion title="Estrutura de Mensagens" icon="brackets-curly">
@@ -66,6 +67,7 @@ Cria uma nova campanha de envio em massa com configurações avançadas, permiti
     - Textos únicos com nome, dados, variáveis
     - Mídias diferentes por destinatário
     - Botões e listas customizados
+
   </Accordion>
 
   <Accordion title="Delay e Agendamento" icon="timer">
@@ -97,6 +99,7 @@ Cria uma nova campanha de envio em massa com configurações avançadas, permiti
     - Para envio imediato: `scheduled_for: 0`
     - Para horário específico: timestamp em ms
     - Para agendar X minutos: valor numérico
+
   </Accordion>
 
   <Accordion title="Casos de Uso Avançados" icon="lightbulb">
@@ -125,14 +128,18 @@ Cria uma nova campanha de envio em massa com configurações avançadas, permiti
     - Follow-up baseado em dados
     - Campanhas de nutrição de leads
     - Comunicação one-to-one em escala
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -166,19 +173,20 @@ Cria uma nova campanha de envio em massa com configurações avançadas, permiti
   Agendamento do envio. <br />
   **Formatos:** <br />
   - Timestamp em ms: `1706198400000` <br />
-  - Minutos a partir de agora: `30` <br />
-  - Imediato: `0` ou omitir
+  - Minutos a partir de agora: `30` <br />- Imediato: `0` ou omitir
 </ParamField>
 
 <Info>
-  **Estrutura de cada mensagem no array:** Cada objeto em `messages` deve conter `to`, `type` e os campos específicos do tipo escolhido (text, file, etc). Consulte a documentação de tipos de mensagem.
+  **Estrutura de cada mensagem no array:** Cada objeto em `messages` deve conter
+  `to`, `type` e os campos específicos do tipo escolhido (text, file, etc).
+  Consulte a documentação de tipos de mensagem.
 </Info>
 
 <RequestExample>
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/sender/advanced \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "delayMin": 10,
     "delayMax": 30,
@@ -204,7 +212,7 @@ const response = await fetch("https://zapclass.com.br/api/sender/advanced", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     delayMin: 10,
@@ -215,14 +223,14 @@ const response = await fetch("https://zapclass.com.br/api/sender/advanced", {
       {
         to: "5511999999999@s.whatsapp.net",
         type: "text",
-        text: "Olá João! Temos uma oferta especial para você."
+        text: "Olá João! Temos uma oferta especial para você.",
       },
       {
         to: "5511888888888@s.whatsapp.net",
         type: "text",
-        text: "Olá Maria! Confira nossos novos produtos."
-      }
-    ]
+        text: "Olá Maria! Confira nossos novos produtos.",
+      },
+    ],
   }),
 });
 
@@ -260,7 +268,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -277,6 +285,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>

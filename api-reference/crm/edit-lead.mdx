@@ -26,6 +26,7 @@ Atualiza as informações de lead associadas a um chat específico. Permite modi
     - Eventos disparados via webhook/SSE
     - Integração com CRM e sistemas externos
     - Auditoria completa de alterações
+
   </Accordion>
 
   <Accordion title="Identificação de Chats" icon="fingerprint">
@@ -46,6 +47,7 @@ Atualiza as informações de lead associadas a um chat específico. Permite modi
     **Quando usar cada um:**
     - chatid: Integrações padrão, webhooks
     - fastid: Buscas rápidas, sistemas multi-tenant
+
   </Accordion>
 
   <Accordion title="Gerenciamento de Tickets" icon="ticket">
@@ -68,6 +70,7 @@ Atualiza as informações de lead associadas a um chat específico. Permite modi
     - `0`: Reativa imediatamente
     - Útil durante atendimento humano
     - Evita interferência do bot
+
   </Accordion>
 
   <Accordion title="Organização com Tags e Kanban" icon="tags">
@@ -92,14 +95,18 @@ Atualiza as informações de lead associadas a um chat específico. Permite modi
     - Mantenha hierarquia clara de prioridades
     - Documente significado das tags
     - Revise e limpe tags periodicamente
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -107,8 +114,8 @@ Atualiza as informações de lead associadas a um chat específico. Permite modi
 <ParamField path="id" type="string" required>
   Identificador do chat. <br />
   **Formatos aceitos:** <br />
-  - wa_chatid: `5511999999999@s.whatsapp.net` <br />
-  - wa_fastid: `5511888888888:5511999999999`
+  - wa_chatid: `5511999999999@s.whatsapp.net` <br />- wa_fastid:
+  `5511888888888:5511999999999`
 </ParamField>
 
 <ParamField path="chatbot_disableUntil" type="integer">
@@ -275,14 +282,15 @@ Atualiza as informações de lead associadas a um chat específico. Permite modi
 </ParamField>
 
 <Info>
-  Envie apenas os campos que deseja atualizar. Campos não enviados permanecerão com seus valores atuais.
+  Envie apenas os campos que deseja atualizar. Campos não enviados permanecerão
+  com seus valores atuais.
 </Info>
 
 <RequestExample>
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/chat/editLead \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "id": "5511999999999@s.whatsapp.net",
     "lead_name": "João Silva",
@@ -296,13 +304,13 @@ const response = await fetch("https://zapclass.com.br/api/chat/editLead", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     id: "5511999999999@s.whatsapp.net",
     lead_name: "João Silva",
     lead_email: "joao@exemplo.com",
-    lead_personalId: "123.456.789-00"
+    lead_personalId: "123.456.789-00",
   }),
 });
 
@@ -327,7 +335,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -344,6 +352,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>

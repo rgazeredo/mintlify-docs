@@ -1,0 +1,230 @@
+---
+title: "Enviar Lista Interativa"
+api: "POST /messages/menu-lists"
+description: "Enviar menu organizado em seções com itens selecionáveis"
+---
+
+Listas interativas permitem organizar múltiplas opções em seções categorizadas, facilitando a navegação do usuário. Ideal para catálogos, menus de serviços e seleção de produtos.
+
+## Como Funciona
+
+O usuário clica no botão principal, visualiza a lista organizada em seções e seleciona uma opção. A opção selecionada é enviada como resposta automática.
+
+## Formato das Opções
+
+<AccordionGroup>
+  <Accordion title="Seção" icon="folder">
+    Inicia uma nova categoria na lista.
+
+    **Formato:** `"[Título da Seção]"`
+
+    Exemplo: `"[Eletrônicos]"` ou `"[Acessórios]"`
+
+  </Accordion>
+
+  <Accordion title="Item da Lista" icon="list-check">
+    Item selecionável dentro de uma seção.
+
+    **Formato:** `"título|id|descrição"`
+
+    - `título`: Texto principal do item
+    - `id`: Identificador único retornado ao selecionar
+    - `descrição`: Texto secundário explicativo
+
+    Exemplo: `"iPhone 15|iphone15|Último lançamento Apple"`
+
+  </Accordion>
+</AccordionGroup>
+
+### Authorization
+
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
+</ParamField>
+
+### Body Parameters
+
+<ParamField path="number" type="string" required>
+  Número do destinatário no formato internacional. <br />
+  Deve incluir código do país DDI + DDD + número. <br />
+  Exemplo: `5511999999999`
+</ParamField>
+
+<ParamField path="text" type="string" required>
+  Texto principal da mensagem exibida acima do botão. <br />
+  Exemplo: `Confira nosso catálogo completo`
+</ParamField>
+
+<ParamField path="choices" type="array" required>
+  Lista de seções e itens da lista. <br />
+  Inicie seções com `[Título]` e adicione itens no formato `título|id|descrição`.{" "}
+  <br />
+  Exemplo: `["[Eletrônicos]", "iPhone 15|iphone15|Último lançamento",
+  "[Acessórios]", "Fones Bluetooth|fones|Som de alta qualidade"]`
+</ParamField>
+
+<ParamField path="button_text" type="string" required>
+  Texto do botão que abre a lista. <br />
+  Exemplo: `Ver Catálogo`
+</ParamField>
+
+<ParamField path="footer_text" type="string">
+  Texto do rodapé exibido abaixo do botão. <br />
+  Exemplo: `Preços sujeitos a alteração`
+</ParamField>
+
+<ParamField path="delay" type="integer">
+  Atraso em milissegundos antes do envio. <br />
+  Durante o atraso aparecerá "Digitando...". <br />
+  Exemplo: `1000`
+</ParamField>
+
+<ParamField path="replyid" type="string">
+  ID da mensagem para responder. <br />
+  Exemplo: `3EB0538DA65A59F6D8A251`
+</ParamField>
+
+<ParamField path="mentions" type="string">
+  Números para mencionar (separados por vírgula). <br />
+  Exemplo: `5511999999999,5511888888888`
+</ParamField>
+
+<ParamField path="readchat" type="boolean">
+  Marca conversa como lida após envio. <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="readmessages" type="boolean">
+  Marca últimas mensagens recebidas como lidas. <br />
+  Exemplo: `true`
+</ParamField>
+
+<ParamField path="track_source" type="string">
+  Origem do rastreamento da mensagem. <br />
+  Exemplo: `chatwoot`
+</ParamField>
+
+<ParamField path="track_id" type="string">
+  ID para rastreamento da mensagem (aceita valores duplicados). <br />
+  Exemplo: `msg_123456789`
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://zapclass.com.br/api/messages/menu \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
+  -d '{
+    "number": "5511999999999",
+    "type": "list",
+    "text": "Confira nosso catálogo completo de produtos",
+    "choices": [
+      "[Eletrônicos]",
+      "iPhone 15 Pro|iphone15|Último lançamento Apple com chip A17",
+      "MacBook Air M2|macbook|Notebook ultrafino e potente",
+      "iPad Air|ipad|Tablet versátil para trabalho e lazer",
+      "[Acessórios]",
+      "AirPods Pro 2|airpods|Cancelamento de ruído ativo",
+      "Magic Mouse|mouse|Mouse sem fio elegante",
+      "Carregador MagSafe|magsafe|Carregamento sem fio rápido",
+      "[Serviços]",
+      "Garantia Estendida|garantia|Proteção adicional de 2 anos",
+      "Instalação|instalacao|Configuração e setup completo"
+    ],
+    "button_text": "Ver Catálogo Completo",
+    "footer_text": "Preços e disponibilidade sujeitos a alteração"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch("https://zapclass.com.br/api/messages/menu", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+  },
+  body: JSON.stringify({
+    number: "5511999999999",
+    type: "list",
+    text: "Confira nosso catálogo completo de produtos",
+    choices: [
+      "[Eletrônicos]",
+      "iPhone 15 Pro|iphone15|Último lançamento Apple com chip A17",
+      "MacBook Air M2|macbook|Notebook ultrafino e potente",
+      "iPad Air|ipad|Tablet versátil para trabalho e lazer",
+      "[Acessórios]",
+      "AirPods Pro 2|airpods|Cancelamento de ruído ativo",
+      "Magic Mouse|mouse|Mouse sem fio elegante",
+      "Carregador MagSafe|magsafe|Carregamento sem fio rápido",
+      "[Serviços]",
+      "Garantia Estendida|garantia|Proteção adicional de 2 anos",
+      "Instalação|instalacao|Configuração e setup completo",
+    ],
+    button_text: "Ver Catálogo Completo",
+    footer_text: "Preços e disponibilidade sujeitos a alteração",
+  }),
+});
+```
+
+```php PHP
+<?php
+$ch = curl_init('https://zapclass.com.br/api/messages/menu');
+
+$payload = [
+    "number" => "5511999999999",
+    "type" => "list",
+    "text" => "Confira nosso catálogo completo de produtos",
+    "choices" => [
+        "[Eletrônicos]",
+        "iPhone 15 Pro|iphone15|Último lançamento Apple com chip A17",
+        "MacBook Air M2|macbook|Notebook ultrafino e potente",
+        "iPad Air|ipad|Tablet versátil para trabalho e lazer",
+        "[Acessórios]",
+        "AirPods Pro 2|airpods|Cancelamento de ruído ativo",
+        "Magic Mouse|mouse|Mouse sem fio elegante",
+        "Carregador MagSafe|magsafe|Carregamento sem fio rápido",
+        "[Serviços]",
+        "Garantia Estendida|garantia|Proteção adicional de 2 anos",
+        "Instalação|instalacao|Configuração e setup completo"
+    ],
+    "button_text" => "Ver Catálogo Completo",
+    "footer_text" => "Preços e disponibilidade sujeitos a alteração"
+];
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+curl_close($ch);
+?>
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "token": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+```json 400
+{
+  "success": false,
+  "message": "Requisição inválida"
+}
+```
+
+</ResponseExample>

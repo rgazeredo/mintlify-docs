@@ -19,6 +19,7 @@ Modifica as propriedades de uma label (etiqueta) existente ou a remove completam
     - Histórico de categorização é preservado
 
     **Uso:** Útil para renomear categorias conforme evolução do negócio.
+
   </Accordion>
 
   <Accordion title="Alterar Cor" icon="palette">
@@ -32,6 +33,7 @@ Modifica as propriedades de uma label (etiqueta) existente ou a remove completam
     - Cinza e outras variações
 
     **Dica:** Use cores consistentes para categorias relacionadas.
+
   </Accordion>
 
   <Accordion title="Excluir Label" icon="trash">
@@ -46,6 +48,7 @@ Modifica as propriedades de uma label (etiqueta) existente ou a remove completam
     - Sincroniza com todos os dispositivos
 
     **Importante:** Exclusão não afeta o histórico de mensagens, apenas remove a categorização.
+
   </Accordion>
 
   <Accordion title="Validações e Regras" icon="circle-check">
@@ -58,14 +61,18 @@ Modifica as propriedades de uma label (etiqueta) existente ou a remove completam
     - Ao usar `delete: true`, outros parâmetros são ignorados
 
     **Flexibilidade:** Você pode editar apenas nome, apenas cor, ou ambos na mesma requisição.
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -95,7 +102,8 @@ Modifica as propriedades de uma label (etiqueta) existente ou a remove completam
 </ParamField>
 
 <Warning>
-  **Atenção:** A exclusão de uma label é permanente e não pode ser desfeita. A label será removida de todos os chats que a utilizam.
+  **Atenção:** A exclusão de uma label é permanente e não pode ser desfeita. A
+  label será removida de todos os chats que a utilizam.
 </Warning>
 
 <RequestExample>
@@ -103,7 +111,7 @@ Modifica as propriedades de uma label (etiqueta) existente ou a remove completam
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/label/edit \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "labelid": "25",
     "name": "Cliente VIP",
@@ -116,12 +124,12 @@ const response = await fetch("https://zapclass.com.br/api/label/edit", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     labelid: "25",
     name: "Cliente VIP",
-    color: 5
+    color: 5,
   }),
 });
 
@@ -145,7 +153,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

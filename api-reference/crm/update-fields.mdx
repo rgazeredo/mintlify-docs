@@ -25,6 +25,7 @@ Configura o mapeamento de campos personalizados (custom fields) da instância. P
     - Acesse os dados em qualquer consulta de lead
     - Campos não configurados permanecem vazios
     - Atualização parcial preserva campos não enviados
+
   </Accordion>
 
   <Accordion title="Casos de Uso Comuns" icon="lightbulb">
@@ -53,6 +54,7 @@ Configura o mapeamento de campos personalizados (custom fields) da instância. P
     - Setor, porte da empresa
     - Região, território de vendas
     - Perfil comportamental
+
   </Accordion>
 
   <Accordion title="Configuração e Mapeamento" icon="gear">
@@ -78,6 +80,7 @@ Configura o mapeamento de campos personalizados (custom fields) da instância. P
     - lead_field04: "cidade"
     - lead_field05: "estado"
     - lead_field06: "cargo"
+
   </Accordion>
 
   <Accordion title="Integração com CRM" icon="diagram-project">
@@ -100,14 +103,18 @@ Configura o mapeamento de campos personalizados (custom fields) da instância. P
     - Planilhas Google Sheets, Excel
     - Sistemas ERP internos
     - Plataformas de e-commerce
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -233,14 +240,15 @@ Configura o mapeamento de campos personalizados (custom fields) da instância. P
 </ParamField>
 
 <Info>
-  **Importante:** Envie apenas os campos que deseja atualizar. Campos não enviados manterão seus valores atuais.
+  **Importante:** Envie apenas os campos que deseja atualizar. Campos não
+  enviados manterão seus valores atuais.
 </Info>
 
 <RequestExample>
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/instance/updateFieldsMap \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "lead_field01": "nome_completo",
     "lead_field02": "email",
@@ -251,20 +259,23 @@ curl -X POST https://zapclass.com.br/api/instance/updateFieldsMap \
 ```
 
 ```javascript JavaScript
-const response = await fetch("https://zapclass.com.br/api/instance/updateFieldsMap", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-  },
-  body: JSON.stringify({
-    lead_field01: "nome_completo",
-    lead_field02: "email",
-    lead_field03: "telefone",
-    lead_field04: "cidade",
-    lead_field05: "estado"
-  }),
-});
+const response = await fetch(
+  "https://zapclass.com.br/api/instance/updateFieldsMap",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+    },
+    body: JSON.stringify({
+      lead_field01: "nome_completo",
+      lead_field02: "email",
+      lead_field03: "telefone",
+      lead_field04: "cidade",
+      lead_field05: "estado",
+    }),
+  }
+);
 
 const data = await response.json();
 if (data.success) {
@@ -288,7 +299,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -305,6 +316,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>

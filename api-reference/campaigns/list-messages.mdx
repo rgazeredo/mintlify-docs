@@ -36,6 +36,7 @@ Retorna a lista de mensagens de uma campanha específica, com opções de filtro
     - Rastrear progresso da campanha
     - Reenviar mensagens falhadas
     - Gerar relatórios detalhados
+
   </Accordion>
 
   <Accordion title="Paginação de Resultados" icon="table-rows">
@@ -71,6 +72,7 @@ Retorna a lista de mensagens de uma campanha específica, com opções de filtro
     - Total de páginas
     - Tem próxima página
     - Tem página anterior
+
   </Accordion>
 
   <Accordion title="Filtros por Status" icon="filter">
@@ -98,6 +100,7 @@ Retorna a lista de mensagens de uma campanha específica, com opções de filtro
     // Segunda página de mensagens entregues
     { folder_id: "123", messageStatus: "delivered", page: 2, pageSize: 50 }
     ```
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -126,14 +129,18 @@ Retorna a lista de mensagens de uma campanha específica, com opções de filtro
     - Gerar CSV de entregas
     - Análise de performance
     - Auditoria de envios
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -146,7 +153,8 @@ Retorna a lista de mensagens de uma campanha específica, com opções de filtro
 
 <ParamField path="messageStatus" type="string">
   Filtrar por status da mensagem. <br />
-  **Valores:** `scheduled`, `sending`, `sent`, `delivered`, `read`, `error`, `failed` <br />
+  **Valores:** `scheduled`, `sending`, `sent`, `delivered`, `read`, `error`, `failed`{" "}
+  <br />
   Omitir para retornar todas. <br />
   Exemplo: `"delivered"`
 </ParamField>
@@ -166,36 +174,40 @@ Retorna a lista de mensagens de uma campanha específica, com opções de filtro
 </ParamField>
 
 <Info>
-  Use paginação para campanhas com muitas mensagens. Listar tudo de uma vez pode causar timeout ou alto consumo de memória.
+  Use paginação para campanhas com muitas mensagens. Listar tudo de uma vez pode
+  causar timeout ou alto consumo de memória.
 </Info>
 
 <RequestExample>
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/sender/listmessages \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "folder_id": "folder_123"
   }'
 ```
 
 ```javascript JavaScript
-const response = await fetch("https://zapclass.com.br/api/sender/listmessages", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-  },
-  body: JSON.stringify({
-    folder_id: "folder_123"
-  }),
-});
+const response = await fetch(
+  "https://zapclass.com.br/api/sender/listmessages",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+    },
+    body: JSON.stringify({
+      folder_id: "folder_123",
+    }),
+  }
+);
 
 const data = await response.json();
 if (data.success) {
   console.log(`Total: ${data.total}`);
   console.log(`Página ${data.page} de ${data.totalPages}`);
-  data.messages.forEach(msg => {
+  data.messages.forEach((msg) => {
     console.log(`- ${msg.to}: ${msg.status}`);
   });
 }
@@ -213,7 +225,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -233,6 +245,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>

@@ -24,6 +24,7 @@ Remove permanentemente um template de resposta rápida. Esta ação é irrevers�
     - Dados do template são perdidos permanentemente
     - Atalho fica disponível para reuso imediato
     - Considere backup antes de exclusões em massa
+
   </Accordion>
 
   <Accordion title="Identificação de Templates" icon="fingerprint">
@@ -40,6 +41,7 @@ Remove permanentemente um template de resposta rápida. Esta ação é irrevers�
     - Verifique se não é template do WhatsApp
     - Liste templates para ver quais são deletáveis
     - IDs inválidos retornam erro 404
+
   </Accordion>
 
   <Accordion title="Limitações" icon="shield-exclamation">
@@ -58,6 +60,7 @@ Remove permanentemente um template de resposta rápida. Esta ação é irrevers�
     **Alternativa:**
     - Templates do WhatsApp podem ser apenas desativados
     - Considere desabilitar ao invés de excluir
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -75,14 +78,18 @@ Remove permanentemente um template de resposta rápida. Esta ação é irrevers�
     - Exclua duplicatas e versões antigas
     - Mantenha apenas templates ativos
     - Documente templates importantes antes de excluir
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -94,14 +101,15 @@ Remove permanentemente um template de resposta rápida. Esta ação é irrevers�
 </ParamField>
 
 <Warning>
-  **Atenção:** Esta ação é irreversível. O template será permanentemente removido e não poderá ser recuperado.
+  **Atenção:** Esta ação é irreversível. O template será permanentemente
+  removido e não poderá ser recuperado.
 </Warning>
 
 <RequestExample>
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/quickreply/delete \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "id": "rb9da9c03637452"
   }'
@@ -112,10 +120,10 @@ const response = await fetch("https://zapclass.com.br/api/quickreply/delete", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
-    id: "rb9da9c03637452"
+    id: "rb9da9c03637452",
   }),
 });
 
@@ -137,7 +145,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -153,6 +161,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>

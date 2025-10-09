@@ -21,6 +21,7 @@ Altera o nome de um grupo do WhatsApp, permitindo personalizar a identificação
     - Reflete a identidade do grupo
 
     Um bom nome ajuda na identificação rápida e contextualização.
+
   </Accordion>
 
   <Accordion title="Restrições do WhatsApp" icon="ruler">
@@ -38,6 +39,7 @@ Altera o nome de um grupo do WhatsApp, permitindo personalizar a identificação
     - Nome muito longo retorna erro 400
     - String vazia é rejeitada
     - Caracteres especiais são aceitos
+
   </Accordion>
 
   <Accordion title="Boas Práticas de Nomenclatura" icon="lightbulb-on">
@@ -56,6 +58,7 @@ Altera o nome de um grupo do WhatsApp, permitindo personalizar a identificação
     - "📊 Vendas 2024"
     - "🛠️ Suporte Técnico"
     - "👥 RH - Comunicados"
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="list-check">
@@ -70,14 +73,18 @@ Altera o nome de um grupo do WhatsApp, permitindo personalizar a identificação
     - Atualizar após eventos ou campanhas
     - Sincronizar com sistemas externos
     - Aplicar políticas de nomenclatura
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -96,7 +103,8 @@ Altera o nome de um grupo do WhatsApp, permitindo personalizar a identificação
 </ParamField>
 
 <Warning>
-  **Limite de caracteres:** O nome do grupo deve ter entre 1 e 25 caracteres. Emojis contam como caracteres e podem ocupar mais de uma posição.
+  **Limite de caracteres:** O nome do grupo deve ter entre 1 e 25 caracteres.
+  Emojis contam como caracteres e podem ocupar mais de uma posição.
 </Warning>
 
 <RequestExample>
@@ -104,7 +112,7 @@ Altera o nome de um grupo do WhatsApp, permitindo personalizar a identificação
 ```bash cURL - Atualizar nome
 curl -X POST https://zapclass.com.br/api/group/updateName \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363339858396166@g.us",
     "name": "Equipe de Vendas 2024"
@@ -114,7 +122,7 @@ curl -X POST https://zapclass.com.br/api/group/updateName \
 ```bash cURL - Nome com emoji
 curl -X POST https://zapclass.com.br/api/group/updateName \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "groupjid": "120363339858396166@g.us",
     "name": "📊 Vendas - Q1 2024"
@@ -126,11 +134,11 @@ const response = await fetch("https://zapclass.com.br/api/group/updateName", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     groupjid: "120363339858396166@g.us",
-    name: "Equipe de Vendas 2024"
+    name: "Equipe de Vendas 2024",
   }),
 });
 
@@ -155,7 +163,7 @@ async function updateGroupName(groupJid, newName) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({ groupjid: groupJid, name: newName }),
   });
@@ -174,10 +182,7 @@ async function updateGroupName(groupJid, newName) {
 
 // Uso
 try {
-  await updateGroupName(
-    "120363339858396166@g.us",
-    "📊 Vendas 2024"
-  );
+  await updateGroupName("120363339858396166@g.us", "📊 Vendas 2024");
 } catch (error) {
   console.error("Erro:", error.message);
 }
@@ -207,7 +212,7 @@ async function updateGroupNameWithYear(groupJid, baseName) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({ groupjid: groupJid, name: finalName }),
   });
@@ -233,7 +238,7 @@ async function standardizeGroupName(groupJid, department, purpose) {
     rh: "👥",
     marketing: "📢",
     ti: "💻",
-    financeiro: "💰"
+    financeiro: "💰",
   };
 
   const emoji = emojiMap[department.toLowerCase()] || "📁";
@@ -255,7 +260,7 @@ async function standardizeGroupName(groupJid, department, purpose) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({ groupjid: groupJid, name: finalName }),
   });
@@ -270,11 +275,7 @@ async function standardizeGroupName(groupJid, department, purpose) {
 }
 
 // Uso
-await standardizeGroupName(
-  "120363339858396166@g.us",
-  "Vendas",
-  "Comunicados"
-);
+await standardizeGroupName("120363339858396166@g.us", "Vendas", "Comunicados");
 ```
 
 ```javascript JavaScript - Atualizar múltiplos grupos
@@ -283,17 +284,20 @@ async function updateMultipleGroupNames(updates) {
 
   for (const update of updates) {
     try {
-      const response = await fetch("https://zapclass.com.br/api/group/updateName", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-        },
-        body: JSON.stringify({
-          groupjid: update.groupJid,
-          name: update.name
-        }),
-      });
+      const response = await fetch(
+        "https://zapclass.com.br/api/group/updateName",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+          },
+          body: JSON.stringify({
+            groupjid: update.groupJid,
+            name: update.name,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -302,16 +306,16 @@ async function updateMultipleGroupNames(updates) {
         oldName: update.oldName,
         newName: update.name,
         success: data.success,
-        message: data.message
+        message: data.message,
       });
 
       // Aguarda 1 segundo entre operações
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (error) {
       results.push({
         groupJid: update.groupJid,
         success: false,
-        message: error.message
+        message: error.message,
       });
     }
   }
@@ -325,19 +329,19 @@ const updates = [
   {
     groupJid: "120363339858396166@g.us",
     oldName: "Vendas 2023",
-    name: `Vendas ${currentYear}`
+    name: `Vendas ${currentYear}`,
   },
   {
     groupJid: "120363339858396167@g.us",
     oldName: "Suporte 2023",
-    name: `Suporte ${currentYear}`
-  }
+    name: `Suporte ${currentYear}`,
+  },
 ];
 
 const results = await updateMultipleGroupNames(updates);
 
 console.log("=== RESULTADOS ===");
-results.forEach(result => {
+results.forEach((result) => {
   if (result.success) {
     console.log(`✓ ${result.oldName} → ${result.newName}`);
   } else {
@@ -353,7 +357,7 @@ async function renameWithBackup(groupJid, newName) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
     },
     body: JSON.stringify({ groupjid: groupJid }),
   });
@@ -370,14 +374,17 @@ async function renameWithBackup(groupJid, newName) {
   console.log(`Novo nome: "${newName}"`);
 
   // Atualiza nome
-  const updateResponse = await fetch("https://zapclass.com.br/api/group/updateName", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
-    },
-    body: JSON.stringify({ groupjid: groupJid, name: newName }),
-  });
+  const updateResponse = await fetch(
+    "https://zapclass.com.br/api/group/updateName",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+      },
+      body: JSON.stringify({ groupjid: groupJid, name: newName }),
+    }
+  );
 
   const result = await updateResponse.json();
 
@@ -389,7 +396,7 @@ async function renameWithBackup(groupJid, newName) {
     success: result.success,
     oldName,
     newName,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 }
 
@@ -415,7 +422,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -453,7 +460,7 @@ function updateGroupName($groupJid, $newName) {
     ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -509,7 +516,7 @@ function updateGroupNameWithYear($groupJid, $baseName) {
     ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+        'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

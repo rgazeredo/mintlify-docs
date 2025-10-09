@@ -24,6 +24,7 @@ Atualiza um template de resposta rápida existente. Permite modificar atalho, ti
     - ID do template não pode ser alterado
     - Atalho deve ser único entre seus templates
     - Validações de tipo continuam aplicadas
+
   </Accordion>
 
   <Accordion title="Identificação de Templates" icon="fingerprint">
@@ -39,6 +40,7 @@ Atualiza um template de resposta rápida existente. Permite modificar atalho, ti
     - Armazene IDs ao criar templates
     - Use endpoint de listagem para recuperar IDs
     - IDs não mudam durante a vida do template
+
   </Accordion>
 
   <Accordion title="Mudança de Tipo" icon="arrow-right-arrow-left">
@@ -55,6 +57,7 @@ Atualiza um template de resposta rápida existente. Permite modificar atalho, ti
     - Ao mudar para mídia, campo `file` é obrigatório
     - Tipo `document` aceita campo `docName` opcional
     - Valide URL ou base64 ao atualizar arquivo
+
   </Accordion>
 
   <Accordion title="Boas Práticas" icon="star">
@@ -71,14 +74,18 @@ Atualiza um template de resposta rápida existente. Permite modificar atalho, ti
     - Valide dados antes de enviar
     - Implemente retry para falhas temporárias
     - Monitore tempo de resposta
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -120,14 +127,15 @@ Atualiza um template de resposta rápida existente. Permite modificar atalho, ti
 </ParamField>
 
 <Info>
-  **Importante:** Templates criados pelo WhatsApp não podem ser editados. Apenas templates criados pela API são editáveis.
+  **Importante:** Templates criados pelo WhatsApp não podem ser editados. Apenas
+  templates criados pela API são editáveis.
 </Info>
 
 <RequestExample>
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/quickreply/edit \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "id": "rb9da9c03637452",
     "text": "Olá! Nosso horário foi atualizado: Seg-Sex 8h-20h"
@@ -139,11 +147,11 @@ const response = await fetch("https://zapclass.com.br/api/quickreply/edit", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     id: "rb9da9c03637452",
-    text: "Olá! Nosso horário foi atualizado: Seg-Sex 8h-20h"
+    text: "Olá! Nosso horário foi atualizado: Seg-Sex 8h-20h",
   }),
 });
 
@@ -166,7 +174,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -182,6 +190,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>

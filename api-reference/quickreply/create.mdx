@@ -24,6 +24,7 @@ Cria um novo template de resposta rápida para agilizar o atendimento. Suporta m
     - Consistência nas mensagens
     - Redução de erros de digitação
     - Maior produtividade da equipe
+
   </Accordion>
 
   <Accordion title="Tipos de Mensagem Suportados" icon="message">
@@ -40,6 +41,7 @@ Cria um novo template de resposta rápida para agilizar o atendimento. Suporta m
     - Texto: campo `text` obrigatório
     - Mídia: campo `file` obrigatório (URL ou base64)
     - Documento: campo `docName` opcional para nome do arquivo
+
   </Accordion>
 
   <Accordion title="Atalhos (Shortcuts)" icon="keyboard">
@@ -56,6 +58,7 @@ Cria um novo template de resposta rápida para agilizar o atendimento. Suporta m
     - Exemplos: `saudacao`, `horario`, `catalogo`
     - Evite caracteres especiais
     - Mantenha padrão de nomenclatura
+
   </Accordion>
 
   <Accordion title="Casos de Uso" icon="lightbulb">
@@ -70,14 +73,18 @@ Cria um novo template de resposta rápida para agilizar o atendimento. Suporta m
     - Perguntas frequentes (FAQ)
     - Mensagens de ausência
     - Agradecimentos e despedidas
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -114,14 +121,15 @@ Cria um novo template de resposta rápida para agilizar o atendimento. Suporta m
 </ParamField>
 
 <Info>
-  **Dica:** Use atalhos descritivos como `saudacao`, `horario`, `catalogo` para facilitar a busca e uso dos templates.
+  **Dica:** Use atalhos descritivos como `saudacao`, `horario`, `catalogo` para
+  facilitar a busca e uso dos templates.
 </Info>
 
 <RequestExample>
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/quickreply/create \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "shortCut": "saudacao",
     "type": "text",
@@ -134,12 +142,12 @@ const response = await fetch("https://zapclass.com.br/api/quickreply/create", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     shortCut: "saudacao",
     type: "text",
-    text: "Olá! Como posso ajudar você hoje?"
+    text: "Olá! Como posso ajudar você hoje?",
   }),
 });
 
@@ -163,7 +171,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -179,6 +187,7 @@ if ($data['success']) {
 curl_close($ch);
 ?>
 ```
+
 </RequestExample>
 
 <ResponseExample>

@@ -20,6 +20,7 @@ Gerencia o bloqueio de contatos no WhatsApp, impedindo ou permitindo o recebimen
     - Bloqueio sincroniza com todos os dispositivos
 
     **Importante:** O bloqueio é bidirecional e afeta ambos os lados da comunicação.
+
   </Accordion>
 
   <Accordion title="Bloqueio vs Outras Ações" icon="scale-balanced">
@@ -37,6 +38,7 @@ Gerencia o bloqueio de contatos no WhatsApp, impedindo ou permitindo o recebimen
     **Arquivar:**
     - Apenas organiza conversas
     - Não afeta funcionalidade
+
   </Accordion>
 
   <Accordion title="Desbloquear Contatos" icon="unlock">
@@ -50,6 +52,7 @@ Gerencia o bloqueio de contatos no WhatsApp, impedindo ou permitindo o recebimen
     - Não há notificação sobre o desbloqueio
 
     Use `"block": false` para desbloquear um contato previamente bloqueado.
+
   </Accordion>
 
   <Accordion title="Casos de Uso Comuns" icon="lightbulb">
@@ -67,14 +70,18 @@ Gerencia o bloqueio de contatos no WhatsApp, impedindo ou permitindo o recebimen
     - Remoção de bloqueio acidental
     - Mudança de política de bloqueio
     - Reativação de relacionamento comercial
+
   </Accordion>
 </AccordionGroup>
 
-### Authorizations
+### Authorization
 
-<ParamField path="token" type="string" required>
-  Token de autenticação de conexão com a API. <br />
-  Exemplo: `zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk`
+<ParamField path="api_key" type="string" required>
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  Bearer Token. <br />
+  Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
+  A chave sempre começa com o prefixo `zc_`. <br />
+  Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
 </ParamField>
 
 ### Body Parameters
@@ -93,7 +100,9 @@ Gerencia o bloqueio de contatos no WhatsApp, impedindo ou permitindo o recebimen
 </ParamField>
 
 <Warning>
-  **Atenção:** Quando um contato está bloqueado, nenhuma mensagem pode ser trocada em nenhuma direção. Use com cuidado para evitar perder comunicações importantes.
+  **Atenção:** Quando um contato está bloqueado, nenhuma mensagem pode ser
+  trocada em nenhuma direção. Use com cuidado para evitar perder comunicações
+  importantes.
 </Warning>
 
 <RequestExample>
@@ -101,7 +110,7 @@ Gerencia o bloqueio de contatos no WhatsApp, impedindo ou permitindo o recebimen
 ```bash cURL
 curl -X POST https://zapclass.com.br/api/chat/block \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk" \
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "number": "5511999999999",
     "block": true
@@ -113,11 +122,11 @@ const response = await fetch("https://zapclass.com.br/api/chat/block", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Token: "zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk",
+    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
     number: "5511999999999",
-    block: true
+    block: true,
   }),
 });
 
@@ -142,7 +151,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
-    'Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk'
+    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
