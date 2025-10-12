@@ -1,97 +1,38 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Introdução"
+description: "Conheça o ZapClass — a API RESTful para automações simples, rápidas e confiáveis com o WhatsApp."
 ---
 
-## Setting up
+# ZapClass — Conecte. Automatize. Entregue.
 
-Get your documentation site up and running in minutes.
+Bem-vindo ao **ZapClass** 👋
+Se você gosta de simplicidade, previsibilidade e resultados rápidos, está no lugar certo.
+Aqui, a regra é clara: **menos atrito, mais entrega**.
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+O **ZapClass** é uma **API RESTful** para integrar seu sistema ao **WhatsApp** de forma simples e confiável.
+Você envia requisições **HTTP + JSON**, recebe **webhooks** de eventos e controla tudo por **tokens de autenticação**.
+Sem firulas. Sem complicação.
 
-## Make it yours
+---
 
-Design a docs site that looks great and empowers your users.
+## O que é o ZapClass?
 
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+Um serviço REST que permite **enviar e receber mensagens**, acompanhar **status de entrega/leitura**, trabalhar com **mídias**, **grupos** e **contatos**, além de **escutar eventos** via webhooks para manter seu app sempre sincronizado.
 
-## Create beautiful pages
+Se você já usa HTTP/JSON no dia a dia, você já sabe usar o ZapClass.
 
-Everything you need to create world-class documentation.
+---
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+## Para quem é
 
-## Need inspiration?
+- **Desenvolvedores** que precisam integrar WhatsApp de forma rápida e escalável.
+- **Produtos e sistemas** que desejam automatizar **atendimento, notificações, alertas ou vendas**.
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+---
+
+## Como funciona (visão rápida)
+
+1. **Autentique** suas chamadas com **Bearer Token**
+2. **Envie** mensagens via endpoints REST (`/messages/text`, `/messages/media`, etc.)
+3. **Receba** eventos via **webhook** (mensagens recebidas, status de envio, etc.)
+4. **Monitore** sua instância e acompanhe o **status em tempo real**

@@ -1,33 +1,38 @@
 ---
 title: "Introdução"
-description: "Example section for showcasing API endpoints"
+description: "Conheça o ZapClass — a API RESTful para automações simples, rápidas e confiáveis com o WhatsApp."
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+# ZapClass — Conecte. Automatize. Entregue.
 
-## Welcome
+Bem-vindo ao **ZapClass** 👋  
+Se você gosta de simplicidade, previsibilidade e resultados rápidos, está no lugar certo.  
+Aqui, a regra é clara: **menos atrito, mais entrega**.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+O **ZapClass** é uma **API RESTful** para integrar seu sistema ao **WhatsApp** de forma simples e confiável.  
+Você envia requisições **HTTP + JSON**, recebe **webhooks** de eventos e controla tudo por **tokens de autenticação**.  
+Sem firulas. Sem complicação.
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+---
 
-## Authentication
+## O que é o ZapClass?
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+Um serviço REST que permite **enviar e receber mensagens**, acompanhar **status de entrega/leitura**, trabalhar com **mídias**, **grupos** e **contatos**, além de **escutar eventos** via webhooks para manter seu app sempre sincronizado.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+Se você já usa HTTP/JSON no dia a dia, você já sabe usar o ZapClass.
+
+---
+
+## Para quem é
+
+- **Desenvolvedores** que precisam integrar WhatsApp de forma rápida e escalável.
+- **Produtos e sistemas** que desejam automatizar **atendimento, notificações, alertas ou vendas**.
+
+---
+
+## Como funciona (visão rápida)
+
+1. **Autentique** suas chamadas com **Bearer Token**
+2. **Envie** mensagens via endpoints REST (`/messages/text`, `/messages/media`, etc.)
+3. **Receba** eventos via **webhook** (mensagens recebidas, status de envio, etc.)
+4. **Monitore** sua instância e acompanhe o **status em tempo real**
