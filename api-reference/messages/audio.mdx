@@ -1,8 +1,16 @@
 ---
-title: "Enviar Texto"
-api: "POST /messages/text"
-description: "Enviar mensagem de texto simples"
+title: "Enviar Áudio"
+api: "POST /messages/audio"
+description: "Enviar mensagem de áudio"
 ---
+
+## Tipos de arquivos suportados
+
+- **AAC** (.aac) - até 16 MB <br />
+- **AMR** (.amr) - até 16 MB <br />
+- **MP3** (.mp3) - até 16 MB <br />
+- **MP4 Audio** (.m4a) - até 16 MB <br />
+- **OGG** (.ogg) - até 16 MB
 
 ### Authorization
 
@@ -22,7 +30,12 @@ description: "Enviar mensagem de texto simples"
   Exemplo: `5511999999999`
 </ParamField>
 
-<ParamField path="message" type="string" required>
+<ParamField path="file" type="string" required>
+  URL ou Base64da do arquivo enviado. <br />
+  Exemplo: `https://download.samplelib.com/mp3/sample-3s.mp3`
+</ParamField>
+
+<ParamField path="message" type="string">
   Conteúdo da mensagem de texto a ser enviada. <br />
   Suporta texto simples, emojis e caracteres especiais. <br />
   Exemplo: `Olá! Bem-vindo à nossa plataforma ZapClass`
@@ -37,38 +50,6 @@ description: "Enviar mensagem de texto simples"
 
 <ParamField path="forward" type="boolean">
   Marca a mensagem como encaminhada para o destinatário. <br />
-  Exemplo: `true`
-</ParamField>
-
-<ParamField path="link_preview" type="boolean">
-  Controla se links na mensagem devem exibir prévia automática. <br />
-  true: exibe prévia, false: apenas o link. <br />
-  Exemplo: `true`
-</ParamField>
-
-<ParamField path="link_preview_title" type="string">
-  Título personalizado para prévia de link. <br />
-  Se fornecido, será exibido como o título da prévia do link. <br />
-  Limite: `60 caracteres` <br />
-  Exemplo: `Novidade! Loja online com frete grátis em todo o Brasil`
-</ParamField>
-
-<ParamField path="link_preview_description" type="string">
-  Descrição personalizada para prévia de link. <br />
-  Se fornecido, será exibido como a descrição da prévia do link. <br />
-  Limite: `80 caracteres` <br />
-  Exemplo: `Aproveite promoções exclusivas e receba seus produtos sem custo de entrega.`
-</ParamField>
-
-<ParamField path="link_preview_image" type="string">
-  URL ou Base64da imagem personalizada para prévia de link. <br />
-  Se fornecido, será exibido como a imagem da prévia do link. <br />
-  Exemplo: `https://placehold.co/600x400.png`
-</ParamField>
-
-<ParamField path="link_preview_large" type="boolean">
-  Controla se a prévia de link deve ser exibida em tamanho grande. <br />
-  true: exibe em tamanho grande, false: exibe em tamanho padrão <br />
   Exemplo: `true`
 </ParamField>
 
@@ -108,19 +89,15 @@ description: "Enviar mensagem de texto simples"
 <RequestExample>
 
 ```bash cURL
-curl -X POST https://zapclass.com.br/api/messages/text \
+curl -X POST https://zapclass.com.br/api/messages/audio \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "number": "5511999999999",
-    "message": "Olá! Confira nossas novidades em https://zapclass.com.br",
+    "file": "https://download.samplelib.com/mp3/sample-3s.mp3",
+    "message": "Segue o áudio solicitado",
     "delay": 3000,
     "forward": true,
-    "link_preview": true,
-    "link_preview_title": "Novidade! Loja online com frete grátis em todo o Brasil",
-    "link_preview_description": "Aproveite promoções exclusivas e receba seus produtos sem custo de entrega.",
-    "link_preview_image": "https://placehold.co/600x400.png",
-    "link_preview_large": true,
     "message_repy_id": "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
     "message_source": "typebot",
     "message_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
@@ -131,7 +108,7 @@ curl -X POST https://zapclass.com.br/api/messages/text \
 ```
 
 ```javascript JavaScript
-const response = await fetch("https://zapclass.com.br/api/messages/text", {
+const response = await fetch("https://zapclass.com.br/api/messages/audio", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -139,16 +116,10 @@ const response = await fetch("https://zapclass.com.br/api/messages/text", {
   },
   body: JSON.stringify({
     number: "5511999999999",
-    message: "Olá! Confira nossas novidades em https://zapclass.com.br",
+    file: "https://download.samplelib.com/mp3/sample-3s.mp3",
+    message: "Segue o áudio solicitado",
     delay: 3000,
     forward: true,
-    link_preview: true,
-    link_preview_title:
-      "Novidade! Loja online com frete grátis em todo o Brasil",
-    link_preview_description:
-      "Aproveite promoções exclusivas e receba seus produtos sem custo de entrega.",
-    link_preview_image: "https://placehold.co/600x400.png",
-    link_preview_large: true,
     message_repy_id: "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
     message_source: "typebot",
     message_id: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
@@ -161,18 +132,14 @@ const response = await fetch("https://zapclass.com.br/api/messages/text", {
 
 ```php PHP
 <?php
-$ch = curl_init('https://zapclass.com.br/api/messages/text');
+$ch = curl_init('https://zapclass.com.br/api/messages/audio');
 
 $payload = [
     "number" => "5511999999999",
-    "message" => "Olá! Confira nossas novidades em https://zapclass.com.br",
+    "file" => "https://download.samplelib.com/mp3/sample-3s.mp3",
+    "message" => "Segue o áudio solicitado",
     "delay" => 3000,
     "forward" => true,
-    "link_preview" => true,
-    "link_preview_title" => "Novidade! Loja online com frete grátis em todo o Brasil",
-    "link_preview_description" => "Aproveite promoções exclusivas e receba seus produtos sem custo de entrega.",
-    "link_preview_image" => "https://placehold.co/600x400.png",
-    "link_preview_large" => true,
     "message_repy_id" => "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
     "message_source" => "typebot",
     "message_id" => "f47ac10b-58cc-4372-a567-0e02b2c3d479",

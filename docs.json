@@ -21,7 +21,15 @@
             "group": "Mensagens",
             "pages": [
               "api-reference/messages/text",
-              "api-reference/messages/media"
+              "api-reference/messages/image",
+              "api-reference/messages/audio",
+              "api-reference/messages/record",
+              "api-reference/messages/video",
+              "api-reference/messages/document",
+              "api-reference/messages/menu-list",
+              "api-reference/messages/menu-button",
+              "api-reference/messages/menu-poll",
+              "api-reference/messages/menu-carousel"
             ]
           }
         ]

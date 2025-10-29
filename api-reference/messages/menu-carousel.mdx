@@ -30,13 +30,15 @@ Cada cartão é composto por uma sequência específica de elementos no array `c
 </Steps>
 
 <Note>
-  **Formato especial:** Os elementos devem aparecer nesta ordem exata para cada cartão. Você pode ter múltiplos cartões no mesmo carrossel.
+  **Formato especial:** Os elementos devem aparecer nesta ordem exata para cada
+  cartão. Você pode ter múltiplos cartões no mesmo carrossel.
 </Note>
 
 ### Authorization
 
 <ParamField path="api_key" type="string" required>
-  Chave de autenticação da sua conexão, utilizada no header Authorization como Bearer Token. <br />
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  **Bearer** Token. <br />
   Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
   A chave sempre começa com o prefixo `zc_`. <br />
   Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
@@ -163,7 +165,7 @@ const response = await fetch("https://zapclass.com.br/api/messages/menu", {
       "[Fones com cancelamento de ruído ativo, som espacial e até 6h de bateria.]",
       "{https://placehold.co/600x400/FF6B6B/FFF?text=AirPods+Pro}",
       "Comprar|https://loja.com/airpods",
-      "Cupom de Desconto|copy:AIRPODS20"
+      "Cupom de Desconto|copy:AIRPODS20",
     ],
   }),
 });

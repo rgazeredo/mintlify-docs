@@ -1,6 +1,6 @@
 ---
 title: "Enviar Enquete"
-api: "POST /messages/menu"
+api: "POST /messages/menu-poll"
 description: "Criar enquete interativa para votação e coleta de opinião"
 ---
 
@@ -30,7 +30,8 @@ O usuário visualiza a pergunta e as opções disponíveis, seleciona sua(s) esc
 ### Authorization
 
 <ParamField path="api_key" type="string" required>
-  Chave de autenticação da sua conexão, utilizada no header Authorization como Bearer Token. <br />
+  Chave de autenticação da sua conexão, utilizada no header Authorization como
+  **Bearer** Token. <br />
   Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
   A chave sempre começa com o prefixo `zc_`. <br />
   Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
@@ -42,12 +43,6 @@ O usuário visualiza a pergunta e as opções disponíveis, seleciona sua(s) esc
   Número do destinatário no formato internacional. <br />
   Deve incluir código do país DDI + DDD + número. <br />
   Exemplo: `5511999999999`
-</ParamField>
-
-<ParamField path="type" type="string" required>
-  Tipo do menu interativo. <br />
-  Valor fixo: `poll` <br />
-  Exemplo: `poll`
 </ParamField>
 
 <ParamField path="text" type="string" required>
@@ -155,12 +150,7 @@ const response = await fetch("https://zapclass.com.br/api/messages/menu", {
     number: "5511999999999",
     type: "poll",
     text: "Qual sua forma de pagamento preferida?",
-    choices: [
-      "Cartão de Crédito",
-      "Pix",
-      "Boleto Bancário",
-      "Dinheiro"
-    ],
+    choices: ["Cartão de Crédito", "Pix", "Boleto Bancário", "Dinheiro"],
     selectableCount: 1,
   }),
 });
@@ -183,7 +173,7 @@ const response = await fetch("https://zapclass.com.br/api/messages/menu", {
       "Relatórios e Estatísticas",
       "Integração com CRM",
       "Chatbot Inteligente",
-      "Agendamento de Mensagens"
+      "Agendamento de Mensagens",
     ],
     selectableCount: 3,
   }),

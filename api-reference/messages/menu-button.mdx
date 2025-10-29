@@ -1,6 +1,6 @@
 ---
 title: "Enviar Botões Interativos"
-api: "POST /messages/menu-buttons"
+api: "POST /messages/menu-button"
 description: "Enviar mensagem com botões de ação rápida (resposta, cópia, chamada ou URL)"
 ---
 
@@ -41,7 +41,7 @@ Botões interativos permitem que o usuário execute ações rápidas diretamente
 
     **Formato:** `"texto|https://url"`
 
-    Exemplo: `"Ver Site|https://minhaloja.com"`
+    Exemplo: `"Ver Site|https://zapclass.com.br"`
 
   </Accordion>
 </AccordionGroup>
@@ -56,7 +56,7 @@ Botões interativos permitem que o usuário execute ações rápidas diretamente
 
 <ParamField path="api_key" type="string" required>
   Chave de autenticação da sua conexão, utilizada no header Authorization como
-  Bearer Token. <br />
+  **Bearer** Token. <br />
   Você encontra sua API Key no botão **API** da sua conexão no painel ZapClass. <br />
   A chave sempre começa com o prefixo `zc_`. <br />
   Exemplo: `zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP`
@@ -70,22 +70,21 @@ Botões interativos permitem que o usuário execute ações rápidas diretamente
   Exemplo: `5511999999999`
 </ParamField>
 
-<ParamField path="text" type="string" required>
-  Texto principal da mensagem que aparece acima dos botões. <br />
-  Exemplo: `Olá! Como podemos ajudar você hoje?`
+<ParamField path="title" type="string" required>
+  Título principal da lista exibido acima do botão. <br />
+  Exemplo: `Confira nosso catálogo completo`
 </ParamField>
 
 <ParamField path="choices" type="array" required>
-  Lista de botões (máximo 3 botões). <br />
-  Cada item segue o formato conforme o tipo de botão desejado. <br />
-  Exemplo: `["Falar com Atendente|atendente", "Ver Catálogo|https://loja.com",
+  Lista de botões interativos. <br />
+  Exemplo: `["Falar com Atendente|atendente", "Ver Catálogo|https://zapclass.com.br",
   "Copiar Cupom|copy:DESC10"]`
 </ParamField>
 
 <ParamField path="button_image" type="string">
   URL ou Base64 da imagem exibida acima dos botões. <br />
   Recomendado para deixar a mensagem mais visual. <br />
-  Exemplo: `https://exemplo.com/banner-atendimento.jpg`
+  Exemplo: `https://placehold.co/600x400.png`
 </ParamField>
 
 <ParamField path="footer_text" type="string">
@@ -134,26 +133,8 @@ Botões interativos permitem que o usuário execute ações rápidas diretamente
 
 <RequestExample>
 
-```bash cURL - Botões de Resposta
-curl -X POST https://zapclass.com.br/api/messages/menu \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
-  -d '{
-    "number": "5511999999999",
-    "type": "button",
-    "text": "Olá! Como podemos ajudar você hoje?",
-    "choices": [
-      "Falar com Atendente|atendente",
-      "Ver Produtos|produtos",
-      "Rastrear Pedido|rastreio"
-    ],
-    "imageButton": "https://exemplo.com/banner-atendimento.jpg",
-    "footer_text": "Atendimento disponível 24/7"
-  }'
-```
-
-```bash cURL - Botões Mistos
-curl -X POST https://zapclass.com.br/api/messages/menu \
+```bash cURL
+curl -X POST https://zapclass.com.br/api/messages/menu-button \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -162,89 +143,42 @@ curl -X POST https://zapclass.com.br/api/messages/menu \
     "text": "🎉 Promoção exclusiva! Use o cupom DESCONTO20",
     "choices": [
       "Copiar Cupom|copy:DESCONTO20",
-      "Ver Produtos|https://minhaloja.com/promocao",
+      "Ver Produtos|https://zapclass.com.br",
       "Ligar para Loja|call:+5511999999999"
     ],
-    "footer_text": "Válido até 31/12/2024"
+    "footer_text": "Válido até 31/12/2024",
+    "button_image": "https://placehold.co/600x400.png",
   }'
 ```
 
-```javascript JavaScript - Botões de Resposta
-const response = await fetch("https://zapclass.com.br/api/messages/menu", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
-  },
-  body: JSON.stringify({
-    number: "5511999999999",
-    type: "button",
-    text: "Olá! Como podemos ajudar você hoje?",
-    choices: [
-      "Falar com Atendente|atendente",
-      "Ver Produtos|produtos",
-      "Rastrear Pedido|rastreio",
-    ],
-    imageButton: "https://exemplo.com/banner-atendimento.jpg",
-    footer_text: "Atendimento disponível 24/7",
-  }),
-});
+```javascript JavaScript
+const response = await fetch(
+  "https://zapclass.com.br/api/messages/menu-button",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
+    },
+    body: JSON.stringify({
+      number: "5511999999999",
+      type: "button",
+      text: "🎉 Promoção exclusiva! Use o cupom DESCONTO20",
+      choices: [
+        "Copiar Cupom|copy:DESCONTO20",
+        "Ver Produtos|https://zapclass.com.br",
+        "Ligar para Loja|call:+5511999999999",
+      ],
+      footer_text: "Válido até 31/12/2024",
+      button_image: "https://placehold.co/600x400.png",
+    }),
+  }
+);
 ```
 
-```javascript JavaScript - Botões Mistos
-const response = await fetch("https://zapclass.com.br/api/messages/menu", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
-  },
-  body: JSON.stringify({
-    number: "5511999999999",
-    type: "button",
-    text: "🎉 Promoção exclusiva! Use o cupom DESCONTO20",
-    choices: [
-      "Copiar Cupom|copy:DESCONTO20",
-      "Ver Produtos|https://minhaloja.com/promocao",
-      "Ligar para Loja|call:+5511999999999",
-    ],
-    footer_text: "Válido até 31/12/2024",
-  }),
-});
-```
-
-```php PHP - Botões de Resposta
+```php PHP
 <?php
-$ch = curl_init('https://zapclass.com.br/api/messages/menu');
-
-$payload = [
-    "number" => "5511999999999",
-    "type" => "button",
-    "text" => "Olá! Como podemos ajudar você hoje?",
-    "choices" => [
-        "Falar com Atendente|atendente",
-        "Ver Produtos|produtos",
-        "Rastrear Pedido|rastreio"
-    ],
-    "imageButton" => "https://exemplo.com/banner-atendimento.jpg",
-    "footer_text" => "Atendimento disponível 24/7"
-];
-
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Content-Type: application/json',
-    'Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP'
-]);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-$response = curl_exec($ch);
-curl_close($ch);
-?>
-```
-
-```php PHP - Botões Mistos
-<?php
-$ch = curl_init('https://zapclass.com.br/api/messages/menu');
+$ch = curl_init('https://zapclass.com.br/api/messages/menu-button');
 
 $payload = [
     "number" => "5511999999999",
@@ -252,10 +186,11 @@ $payload = [
     "text" => "🎉 Promoção exclusiva! Use o cupom DESCONTO20",
     "choices" => [
         "Copiar Cupom|copy:DESCONTO20",
-        "Ver Produtos|https://minhaloja.com/promocao",
+        "Ver Produtos|https://zapclass.com.br",
         "Ligar para Loja|call:+5511999999999"
     ],
-    "footer_text" => "Válido até 31/12/2024"
+    "footer_text" => "Válido até 31/12/2024",
+    "button_image" => "https://placehold.co/600x400.png",
 ];
 
 curl_setopt($ch, CURLOPT_POST, 1);
