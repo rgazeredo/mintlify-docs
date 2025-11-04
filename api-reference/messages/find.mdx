@@ -73,16 +73,16 @@ Realiza buscas de mensagens utilizando múltiplos filtros disponíveis para loca
   Exemplo: `5511999999999@s.whatsapp.net`
 </ParamField>
 
-<ParamField path="track_source" type="string">
-  Origem do rastreamento para filtrar mensagens. <br />
-  Identifica de qual sistema/integração as mensagens foram enviadas. <br />
-  Exemplo: `chatwoot`
+<ParamField path="message_source" type="string">
+  Origem do envio da mensagem. <br />
+  Normalmente usado para rastreamento da mensagem. <br />
+  Exemplo: `typebot`
 </ParamField>
 
-<ParamField path="track_id" type="string">
-  ID de rastreamento para filtrar mensagens. <br />
-  Identificador personalizado usado no envio da mensagem. <br />
-  Exemplo: `msg_123456789`
+<ParamField path="message_id" type="string">
+  Identificador do envio da mensagem. <br />
+  Combinado com o `message_source` pode ser usado para rastreamento. <br />
+  Exemplo: `f47ac10b-58cc-4372-a567-0e02b2c3d479`
 </ParamField>
 
 <ParamField path="limit" type="integer">

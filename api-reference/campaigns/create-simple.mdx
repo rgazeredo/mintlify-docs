@@ -137,12 +137,12 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
   Exemplo: `"text"`
 </ParamField>
 
-<ParamField path="delayMin" type="integer" required>
+<ParamField path="delay_min" type="integer" required>
   Delay mínimo entre mensagens em segundos. <br />
   Exemplo: `10`
 </ParamField>
 
-<ParamField path="delayMax" type="integer" required>
+<ParamField path="delay_max" type="integer" required>
   Delay máximo entre mensagens em segundos. <br />
   Deve ser maior que delayMin. <br />
   Exemplo: `30`
@@ -168,32 +168,32 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
   Exemplo: `"Olá! Confira nossa promoção!"`
 </ParamField>
 
-<ParamField path="linkPreview" type="boolean">
+<ParamField path="link_preview" type="boolean">
   Habilitar preview de links. <br />
   Apenas para tipo `text`. <br />
   Preview gerado automaticamente da URL. <br />
   Exemplo: `true`
 </ParamField>
 
-<ParamField path="linkPreviewTitle" type="string">
+<ParamField path="link_preview_title" type="string">
   Título customizado do preview. <br />
   Requer `linkPreview: true`. <br />
   Exemplo: `"Ofertas Especiais"`
 </ParamField>
 
-<ParamField path="linkPreviewDescription" type="string">
+<ParamField path="link_preview_description" type="string">
   Descrição customizada do preview. <br />
   Requer `linkPreview: true`. <br />
   Exemplo: `"Descontos de até 50%"`
 </ParamField>
 
-<ParamField path="linkPreviewImage" type="string">
+<ParamField path="link_preview_image" type="string">
   Imagem do preview (URL ou base64). <br />
   Requer `linkPreview: true`. <br />
   Exemplo: `"https://exemplo.com/banner.jpg"`
 </ParamField>
 
-<ParamField path="linkPreviewLarge" type="boolean">
+<ParamField path="link_preview_large" type="boolean">
   Usar preview grande. <br />
   Padrão: `false` (preview pequeno). <br />
   Exemplo: `true`
@@ -205,19 +205,19 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
   Exemplo: `"https://exemplo.com/video.mp4"`
 </ParamField>
 
-<ParamField path="docName" type="string">
+<ParamField path="doc_name" type="string">
   Nome do documento. <br />
   Usado com tipo `document`. <br />
   Exemplo: `"Catalogo_2024.pdf"`
 </ParamField>
 
-<ParamField path="fullName" type="string">
+<ParamField path="full_name" type="string">
   Nome completo do contato. <br />
   Usado com tipo `contact`. <br />
   Exemplo: `"João Silva"`
 </ParamField>
 
-<ParamField path="phoneNumber" type="string">
+<ParamField path="phone_number" type="string">
   Telefone do contato. <br />
   Usado com tipo `contact`. <br />
   Exemplo: `"5511999999999"`
@@ -265,25 +265,25 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
   Exemplo: `"Av. Paulista, 1578 - Bela Vista"`
 </ParamField>
 
-<ParamField path="footerText" type="string">
+<ParamField path="footer_text" type="string">
   Texto do rodapé. <br />
   Usado com tipos `list`, `button`, `poll`, `carousel`. <br />
   Exemplo: `"Escolha uma opção"`
 </ParamField>
 
-<ParamField path="buttonText" type="string">
+<ParamField path="button_text" type="string">
   Texto do botão. <br />
   Usado com tipos `button`. <br />
   Exemplo: `"Saiba Mais"`
 </ParamField>
 
-<ParamField path="listButton" type="string">
+<ParamField path="list_button" type="string">
   Texto do botão da lista. <br />
   Usado com tipo `list`. <br />
   Exemplo: `"Ver opções"`
 </ParamField>
 
-<ParamField path="selectableCount" type="integer">
+<ParamField path="selectable_count" type="integer">
   Número de opções selecionáveis. <br />
   Usado com tipo `poll`. <br />
   Exemplo: `3`
@@ -298,7 +298,7 @@ Cria uma nova campanha de envio em massa com configurações simplificadas. Idea
   **Carousel:** Formato especial com imagens
 </ParamField>
 
-<ParamField path="imageButton" type="string">
+<ParamField path="image_button" type="string">
   URL da imagem do botão. <br />
   Usado com tipo `button`. <br />
   Exemplo: `"https://exemplo.com/btn.jpg"`

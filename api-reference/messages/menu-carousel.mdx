@@ -85,24 +85,26 @@ Cada cartão é composto por uma sequência específica de elementos no array `c
   Exemplo: `5511999999999,5511888888888`
 </ParamField>
 
-<ParamField path="readchat" type="boolean">
-  Marca conversa como lida após envio. <br />
+<ParamField path="read" type="boolean">
+  Marca a conversa como lida após o envio. <br />
   Exemplo: `true`
 </ParamField>
 
-<ParamField path="readmessages" type="boolean">
-  Marca últimas mensagens recebidas como lidas. <br />
+<ParamField path="read_messages" type="boolean">
+  Marca as últimas mensagens como lidas após o envio. <br />
   Exemplo: `true`
 </ParamField>
 
-<ParamField path="track_source" type="string">
-  Origem do rastreamento da mensagem. <br />
-  Exemplo: `chatwoot`
+<ParamField path="message_source" type="string">
+  Origem do envio da mensagem. <br />
+  Normalmente usado para rastreamento da mensagem. <br />
+  Exemplo: `typebot`
 </ParamField>
 
-<ParamField path="track_id" type="string">
-  ID para rastreamento da mensagem (aceita valores duplicados). <br />
-  Exemplo: `msg_123456789`
+<ParamField path="message_id" type="string">
+  Identificador do envio da mensagem. <br />
+  Combinado com o `message_source` pode ser usado para rastreamento. <br />
+  Exemplo: `f47ac10b-58cc-4372-a567-0e02b2c3d479`
 </ParamField>
 
 <RequestExample>
