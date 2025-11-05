@@ -52,7 +52,7 @@ description: "Enviar mensagem de vídeo"
 
 <ParamField path="message_reply_id" type="string">
   Identificador da mensagem para responder. <br />
-  Exemplo: `9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2`
+  Exemplo: `5511999999999:1AB2C3DEFG4H56I78JKL9M`
 </ParamField>
 
 <ParamField path="message_source" type="string">
@@ -64,7 +64,7 @@ description: "Enviar mensagem de vídeo"
 <ParamField path="message_id" type="string">
   Identificador do envio da mensagem. <br />
   Combinado com o `message_source` pode ser usado para rastreamento. <br />
-  Exemplo: `f47ac10b-58cc-4372-a567-0e02b2c3d479`
+  Exemplo: `5511999999999:1AB2C3DEFG4H56I78JKL9M`
 </ParamField>
 
 <ParamField path="mentions" type="string">
@@ -95,9 +95,9 @@ curl -X POST https://zapclass.com.br/api/messages/video \
     "message": "Veja o vídeo aqui",
     "delay": 3000,
     "forward": true,
-    "message_repy_id": "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
+    "message_repy_id": "5511999999999:1AB2C3DEFG4H56I78JKL9M",
     "message_source": "typebot",
-    "message_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "message_id": "5511999999999:1AB2C3DEFG4H56I78JKL9M",
     "mentions": "5511999999999,5511888888888",
     "read": true,
     "read_messages": true
@@ -117,9 +117,9 @@ const response = await fetch("https://zapclass.com.br/api/messages/video", {
     message: "Veja o vídeo aqui",
     delay: 3000,
     forward: true,
-    message_repy_id: "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
+    message_repy_id: "5511999999999:1AB2C3DEFG4H56I78JKL9M",
     message_source: "typebot",
-    message_id: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    message_id: "5511999999999:1AB2C3DEFG4H56I78JKL9M",
     mentions: "5511999999999,5511888888888",
     read: true,
     read_messages: true,
@@ -137,9 +137,9 @@ $payload = [
     "message" => "Veja o vídeo aqui",
     "delay" => 3000,
     "forward" => true,
-    "message_repy_id" => "9a7b3308-5e3a-4d5f-9f4d-1f3d9a7b89c2",
+    "message_repy_id" => "5511999999999:1AB2C3DEFG4H56I78JKL9M",
     "message_source" => "typebot",
-    "message_id" => "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "message_id" => "5511999999999:1AB2C3DEFG4H56I78JKL9M",
     "mentions" => "5511999999999,5511888888888",
     "read" => true,
     "read_messages" => true
@@ -165,7 +165,7 @@ curl_close($ch);
 ```json 200
 {
   "success": true,
-  "token": "550e8400-e29b-41d4-a716-446655440000"
+  "message_id": "5511999999999:1AB2C3DEFG4H56I78JKL9M"
 }
 ```
 

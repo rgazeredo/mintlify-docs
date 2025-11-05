@@ -1,0 +1,153 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "willow",
+  "name": "ZapClass API",
+  "colors": {
+    "primary": "#0080fe",
+    "light": "#4da6fe",
+    "dark": "#005ab2"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Iniciar",
+            "pages": ["api-reference/introduction"]
+          },
+          {
+            "group": "Mensagens",
+            "pages": [
+              "api-reference/messages/text",
+              "api-reference/messages/image",
+              "api-reference/messages/audio",
+              "api-reference/messages/record",
+              "api-reference/messages/video",
+              "api-reference/messages/document",
+              "api-reference/messages/download",
+              "api-reference/messages/menu-list",
+              "api-reference/messages/menu-button",
+              "api-reference/messages/menu-poll",
+              "api-reference/messages/menu-carousel",
+              "api-reference/messages/contact",
+              "api-reference/messages/delete",
+              "api-reference/messages/document",
+              "api-reference/messages/edit",
+              "api-reference/messages/find",
+              "api-reference/messages/location",
+              "api-reference/messages/markread",
+              "api-reference/messages/media",
+              "api-reference/messages/react",
+              "api-reference/messages/status"
+            ]
+          },
+          {
+            "group": "Campanha",
+            "pages": [
+              "api-reference/campaigns/cleanup",
+              "api-reference/campaigns/clear-all",
+              "api-reference/campaigns/control",
+              "api-reference/campaigns/create-advanced",
+              "api-reference/campaigns/create-simple",
+              "api-reference/campaigns/list-messages",
+              "api-reference/campaigns/list"
+            ]
+          },
+          {
+            "group": "Comunidade",
+            "pages": [
+              "api-reference/communities/create",
+              "api-reference/communities/edit-groups"
+            ]
+          },
+          {
+            "group": "Contatos",
+            "pages": [
+              "api-reference/contacts/add",
+              "api-reference/contacts/block",
+              "api-reference/contacts/blocklist",
+              "api-reference/contacts/details",
+              "api-reference/contacts/list",
+              "api-reference/contacts/remove"
+            ]
+          },
+          {
+            "group": "CRM",
+            "pages": [
+              "api-reference/crm/edit-lead",
+              "api-reference/crm/update-fields"
+            ]
+          },
+          {
+            "group": "Grupos",
+            "pages": [
+              "api-reference/groups/create",
+              "api-reference/groups/info",
+              "api-reference/groups/invite-info",
+              "api-reference/groups/invite-link",
+              "api-reference/groups/join",
+              "api-reference/groups/leave",
+              "api-reference/groups/list",
+              "api-reference/groups/reset-invite",
+              "api-reference/groups/update-announce",
+              "api-reference/groups/update-description",
+              "api-reference/groups/update-image",
+              "api-reference/groups/update-locked",
+              "api-reference/groups/update-name",
+              "api-reference/groups/update-participants"
+            ]
+          },
+          {
+            "group": "Etiqueta",
+            "pages": [
+              "api-reference/labels/edit",
+              "api-reference/labels/list",
+              "api-reference/labels/manage"
+            ]
+          },
+          {
+            "group": "Perfil",
+            "pages": [
+              "api-reference/profile/update-image",
+              "api-reference/profile/update-name"
+            ]
+          },
+          {
+            "group": "Resposta Rapida",
+            "pages": [
+              "api-reference/quickreply/create",
+              "api-reference/quickreply/delete",
+              "api-reference/quickreply/edit",
+              "api-reference/quickreply/list"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png"
+  },
+  "api": {
+    "mdx": {
+      "auth": {
+        "method": "bearer"
+      }
+    }
+  },
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "ZapClass",
+      "href": "https://zapclass.com.br"
+    }
+  },
+  "footer": {
+    "socials": {
+      "instagram": "https://www.instagram.com/zap.class"
+    }
+  }
+}

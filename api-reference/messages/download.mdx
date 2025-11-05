@@ -4,7 +4,7 @@ api: "POST /message/download"
 description: "Baixar arquivo de uma mensagem de mídia"
 ---
 
-Realiza o download de arquivos associados a mensagens de mídia (imagem, vídeo, áudio, documento ou sticker).
+Realiza o download de arquivos associados a mensagens de mídia (imagem, vídeo, áudio ou documento).
 
 ## Casos de Uso
 
@@ -65,13 +65,13 @@ Realiza o download de arquivos associados a mensagens de mídia (imagem, vídeo,
   Exemplo: `7EB0F01D7244B421048F0706368376E0`
 </ParamField>
 
-<ParamField path="return_base64" type="boolean">
+<ParamField path="base64" type="boolean">
   Se verdadeiro, retorna o conteúdo em base64. <br />
   Padrão: `false` <br />
   Exemplo: `true`
 </ParamField>
 
-<ParamField path="generate_mp3" type="boolean">
+<ParamField path="mp3" type="boolean">
   Para áudios, define formato de retorno. <br />
   - `true`: Retorna MP3 <br />
   - `false`: Retorna OGG <br />
@@ -79,31 +79,22 @@ Realiza o download de arquivos associados a mensagens de mídia (imagem, vídeo,
   Exemplo: `true`
 </ParamField>
 
-<ParamField path="return_link" type="boolean">
+<ParamField path="link" type="boolean">
   Salva e retorna URL pública do arquivo. <br />
   Padrão: `true` <br />
   Exemplo: `true`
 </ParamField>
 
-<ParamField path="transcribe" type="boolean">
-  Se verdadeiro, transcreve áudios para texto. <br />
-  Requer chave OpenAI válida. <br />
-  Padrão: `false` <br />
-  Exemplo: `true`
-</ParamField>
-
-<ParamField path="openai_apikey" type="string">
-  Chave da API OpenAI para transcrição (opcional). <br />
-  - Se não informada, usa a chave salva na instância <br />
-  - Se informada, atualiza e salva na instância para próximas chamadas <br />
-  Exemplo: `sk-proj-...`
-</ParamField>
-
-<ParamField path="download_quoted" type="boolean">
+<ParamField path="quoted" type="boolean">
   Baixa mídia da mensagem citada ao invés da mensagem principal. <br />
   Útil para baixar conteúdo original de status do WhatsApp. <br />
   Padrão: `false` <br />
   Exemplo: `true`
+</ParamField>
+
+<ParamField path="openai_api_key" type="string">
+  Chave da API OpenAI para transcrição áudios para texto. <br />
+  Exemplo: `sk-proj-...`
 </ParamField>
 
 <Info>
@@ -119,10 +110,11 @@ curl -X POST https://zapclass.com.br/api/message/download \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "id": "7EB0F01D7244B421048F0706368376E0",
-    "generate_mp3": true,
-    "transcribe": true,
-    "return_base64": false,
-    "return_link": true
+    "mp3": true,
+    "base64": true,
+    "link": true,
+    "quoted": true,
+    "openai_api_key": "sk-proj-..."
   }'
 ```
 
@@ -135,16 +127,13 @@ const response = await fetch("https://zapclass.com.br/api/message/download", {
   },
   body: JSON.stringify({
     id: "7EB0F01D7244B421048F0706368376E0",
-    transcribe: true,
-    generate_mp3: true,
-    return_base64: false,
-    return_link: true,
+    mp3: true,
+    base64: true,
+    link: true,
+    quoted: true,
+    openai_api_key: "sk-proj-...",
   }),
 });
-
-const data = await response.json();
-console.log("Arquivo:", data.fileURL);
-console.log("Transcrição:", data.transcription);
 ```
 
 ```php PHP
@@ -153,10 +142,11 @@ $ch = curl_init('https://zapclass.com.br/api/message/download');
 
 $payload = [
     "id" => "7EB0F01D7244B421048F0706368376E0",
-    "generate_mp3" => true,
-    "transcribe" => true,
-    "return_base64" => false,
-    "return_link" => true
+    "mp3" => true,
+    "base64" => true,
+    "link" => true,
+    "quoted" => true,
+    "openai_api_key" => "sk-proj-...",
 ];
 
 curl_setopt($ch, CURLOPT_POST, 1);
@@ -181,7 +171,8 @@ curl_close($ch);
 
 ```json 200
 {
-  "fileURL": "https://api.exemplo.com/files/arquivo.mp3",
+  "url": "https://api.exemplo.com/files/arquivo.mp3",
+  "base64": "base64encodedstring",
   "mimetype": "audio/mpeg",
   "transcription": "Olá, gostaria de saber mais informações sobre o produto que você postou no status"
 }
@@ -190,7 +181,7 @@ curl_close($ch);
 ```json 400
 {
   "success": false,
-  "message": "ID da mensagem é obrigatório"
+  "message": "Token de autenticação inválido"
 }
 ```
 
