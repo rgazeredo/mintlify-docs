@@ -75,12 +75,12 @@ Adiciona ou remove reações em mensagens utilizando emojis Unicode, permitindo 
 ### Body Parameters
 
 <ParamField path="number" type="string" required>
-  Número do chat no formato internacional. <br />
-  Formato: número@s.whatsapp.net <br />
-  Exemplo: `5511999999999@s.whatsapp.net`
+  Número do destinatário no formato internacional. <br />
+  Deve incluir código do país DDI + DDD + número. <br />
+  Exemplo: `5511999999999`
 </ParamField>
 
-<ParamField path="text" type="string" required>
+<ParamField path="message" type="string" required>
   Emoji Unicode da reação. <br />
   Use string vazia (`""`) para remover reação existente. <br />
   Exemplo: `👍`
@@ -88,7 +88,7 @@ Adiciona ou remove reações em mensagens utilizando emojis Unicode, permitindo 
 
 <ParamField path="id" type="string" required>
   ID da mensagem que receberá a reação. <br />
-  Exemplo: `3EB0538DA65A59F6D8A251`
+  Exemplo: `5511999999999:1AB2C3DEFG4H56I78JKL9M`
 </ParamField>
 
 <Info>
@@ -103,9 +103,9 @@ curl -X POST https://zapclass.com.br/api/message/react \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
-    "number": "5511999999999@s.whatsapp.net",
-    "text": "👍",
-    "id": "3EB0538DA65A59F6D8A251"
+    "number": "5511999999999",
+    "message": "👍",
+    "id": "5511999999999:1AB2C3DEFG4H56I78JKL9M"
   }'
 ```
 
@@ -117,14 +117,11 @@ const response = await fetch("https://zapclass.com.br/api/message/react", {
     Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
-    number: "5511999999999@s.whatsapp.net",
-    text: "👍",
-    id: "3EB0538DA65A59F6D8A251",
+    number: "5511999999999",
+    message: "👍",
+    id: "5511999999999:1AB2C3DEFG4H56I78JKL9M",
   }),
 });
-
-const data = await response.json();
-console.log(`Reação ${data.reaction.emoji} enviada com sucesso`);
 ```
 
 ```php PHP
@@ -132,9 +129,9 @@ console.log(`Reação ${data.reaction.emoji} enviada com sucesso`);
 $ch = curl_init('https://zapclass.com.br/api/message/react');
 
 $payload = [
-    "number" => "5511999999999@s.whatsapp.net",
-    "text" => "👍",
-    "id" => "3EB0538DA65A59F6D8A251"
+    "number" => "5511999999999",
+    "message" => "👍",
+    "id" => "5511999999999:1AB2C3DEFG4H56I78JKL9M"
 ];
 
 curl_setopt($ch, CURLOPT_POST, 1);
@@ -145,10 +142,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-$response = curl_exec($ch);
-$data = json_decode($response, true);
-
-echo "Reação enviada: " . $data['reaction']['emoji'];
+curl_exec($ch);
 curl_close($ch);
 ?>
 ```
@@ -159,21 +153,14 @@ curl_close($ch);
 
 ```json 200
 {
-  "success": true,
-  "message": "Reaction sent",
-  "reaction": {
-    "id": "3EB0538DA65A59F6D8A251",
-    "emoji": "👍",
-    "timestamp": 1672531200000,
-    "status": "sent"
-  }
+  "success": true
 }
 ```
 
 ```json 400
 {
   "success": false,
-  "message": "Número inválido ou emoji não suportado"
+  "message": "Token de autenticação inválido"
 }
 ```
 

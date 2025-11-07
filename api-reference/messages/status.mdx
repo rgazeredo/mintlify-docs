@@ -60,21 +60,21 @@ description: "Enviar mensagem de status (stories do WhatsApp)"
   Exemplo: `text`
 </ParamField>
 
-<ParamField path="status_message" type="string">
+<ParamField path="message" type="string">
   Conteúdo da mensagem de status a ser enviada. <br />
   Suporta texto simples, emojis e caracteres especiais. <br />
   Obrigatório quando o tipo for `text`. <br />
   Exemplo: `Novidades chegando em breve!`
 </ParamField>
 
-<ParamField path="status_background" type="integer">
+<ParamField path="background" type="integer">
   Código da cor de fundo do status. <br />
   Valores: 1-19 (veja tabela de cores acima). <br />
   Usado apenas quando o tipo for `text`. <br />
   Exemplo: `5` (tom de verde)
 </ParamField>
 
-<ParamField path="status_font" type="integer">
+<ParamField path="font" type="integer">
   Código do tipo de fonte para o texto do status. <br />
   Valores: 0-8 (veja tabela de fontes acima). <br />
   Usado apenas quando o tipo for `text`. <br />
@@ -118,10 +118,9 @@ curl -X POST https://zapclass.com.br/api/messages/status \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
     "type": "text",
-    "status_message": "Novidades chegando em breve!",
-    "status_background": 5,
-    "status_font": 1,
-    "delay": 3000,
+    "message": "Novidades chegando em breve!",
+    "background": 5,
+    "font": 1,
     "message_source": "typebot",
     "message_id": "5511999999999:1AB2C3DEFG4H56I78JKL9M"
   }'
@@ -136,10 +135,9 @@ const response = await fetch("https://zapclass.com.br/api/messages/status", {
   },
   body: JSON.stringify({
     type: "text",
-    status_message: "Novidades chegando em breve!",
-    status_background: 5,
-    status_font: 1,
-    delay: 3000,
+    message: "Novidades chegando em breve!",
+    background: 5,
+    font: 1,
     message_source: "typebot",
     message_id: "5511999999999:1AB2C3DEFG4H56I78JKL9M",
   }),
@@ -152,10 +150,9 @@ $ch = curl_init('https://zapclass.com.br/api/messages/status');
 
 $payload = [
     "type" => "text",
-    "status_message" => "Novidades chegando em breve!",
-    "status_background" => 5,
-    "status_font" => 1,
-    "delay" => 3000,
+    "message" => "Novidades chegando em breve!",
+    "background" => 5,
+    "font" => 1,
     "message_source" => "typebot",
     "message_id" => "5511999999999:1AB2C3DEFG4H56I78JKL9M"
 ];
@@ -179,8 +176,7 @@ curl_close($ch);
 
 ```json 200
 {
-  "success": true,
-  "token": "550e8400-e29b-41d4-a716-446655440000"
+  "success": true
 }
 ```
 

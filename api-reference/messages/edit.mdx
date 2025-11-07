@@ -71,11 +71,10 @@ Modifica o texto de mensagens enviadas pela sua instância, utilizando a funcion
 
 <ParamField path="id" type="string" required>
   ID único da mensagem que será editada. <br />
-  Aceita formato completo (owner:messageid) ou simplificado (messageid). <br />
-  Exemplo: `3A12345678901234567890123456789012`
+  Exemplo: `5511999999999:1AB2C3DEFG4H56I78JKL9M`
 </ParamField>
 
-<ParamField path="text" type="string" required>
+<ParamField path="message" type="string" required>
   Novo conteúdo de texto da mensagem. <br />
   Substitui completamente o texto original. <br />
   Exemplo: `Texto editado da mensagem`
@@ -93,8 +92,8 @@ curl -X POST https://zapclass.com.br/api/message/edit \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
-    "id": "3A12345678901234567890123456789012",
-    "text": "Texto corrigido da mensagem"
+    "id": "5511999999999:1AB2C3DEFG4H56I78JKL9M",
+    "message": "Texto corrigido da mensagem"
   }'
 ```
 
@@ -106,13 +105,10 @@ const response = await fetch("https://zapclass.com.br/api/message/edit", {
     Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
-    id: "3A12345678901234567890123456789012",
-    text: "Texto corrigido da mensagem",
+    id: "5511999999999:1AB2C3DEFG4H56I78JKL9M",
+    message: "Texto corrigido da mensagem",
   }),
 });
-
-const data = await response.json();
-console.log("Mensagem editada:", data.message);
 ```
 
 ```php PHP
@@ -120,8 +116,8 @@ console.log("Mensagem editada:", data.message);
 $ch = curl_init('https://zapclass.com.br/api/message/edit');
 
 $payload = [
-    "id" => "3A12345678901234567890123456789012",
-    "text" => "Texto corrigido da mensagem"
+    "id" => "5511999999999:1AB2C3DEFG4H56I78JKL9M",
+    "message" => "Texto corrigido da mensagem"
 ];
 
 curl_setopt($ch, CURLOPT_POST, 1);
@@ -132,10 +128,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-$response = curl_exec($ch);
-$data = json_decode($response, true);
-
-echo "Mensagem editada: " . $data['message']['text'];
+curl_exec($ch);
 curl_close($ch);
 ?>
 ```
@@ -146,23 +139,14 @@ curl_close($ch);
 
 ```json 200
 {
-  "success": true,
-  "message": {
-    "id": "3A12345678901234567890123456789013",
-    "chatId": "5511999999999@s.whatsapp.net",
-    "text": "Texto editado da mensagem",
-    "timestamp": 1672531200000,
-    "fromMe": true,
-    "edited": true,
-    "editedTimestamp": 1672531260000
-  }
+  "success": true
 }
 ```
 
 ```json 400
 {
   "success": false,
-  "message": "ID ou texto da mensagem inválido"
+  "message": "Token de autenticação inválido"
 }
 ```
 

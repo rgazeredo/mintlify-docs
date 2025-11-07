@@ -1,6 +1,6 @@
 ---
 title: "Marcar como Lidas"
-api: "POST /message/markread"
+api: "POST /message/read"
 description: "Marcar uma ou mais mensagens como lidas"
 ---
 
@@ -52,11 +52,11 @@ Marca mensagens recebidas como lidas, atualizando o status de visualização no 
 
 ### Body Parameters
 
-<ParamField path="id" type="array" required>
+<ParamField path="ids" type="array" required>
   Lista de IDs das mensagens a serem marcadas como lidas. <br />
   Aceita um ou múltiplos IDs de mensagens. <br />
   Exemplo:
-  `["62AD1AD844E518180227BF68DA7ED710","ECB9DE48EB41F77BFA8491BFA8D6EF9B"]`
+  `["5511999999999:1AB2C3DEFG4H56I78JKL9M","5511999999999:2AB2C3DEFG4H56I78JKL9M"]`
 </ParamField>
 
 <Tip>
@@ -67,45 +67,41 @@ Marca mensagens recebidas como lidas, atualizando o status de visualização no 
 <RequestExample>
 
 ```bash cURL
-curl -X POST https://zapclass.com.br/api/message/markread \
+curl -X POST https://zapclass.com.br/api/message/read \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
-    "id": [
-      "62AD1AD844E518180227BF68DA7ED710",
-      "ECB9DE48EB41F77BFA8491BFA8D6EF9B",
-      "7F3A2B1C8D9E4F5A6B7C8D9E0F1A2B3C"
+    "ids": [
+      "5511999999999:1AB2C3DEFG4H56I78JKL9M",
+      "5511999999999:2AB2C3DEFG4H56I78JKL9M",
     ]
   }'
 ```
 
 ```javascript JavaScript
-const response = await fetch("https://zapclass.com.br/api/message/markread", {
+const response = await fetch("https://zapclass.com.br/api/message/read", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
     Authorization: "Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP",
   },
   body: JSON.stringify({
-    id: [
-      "62AD1AD844E518180227BF68DA7ED710",
-      "ECB9DE48EB41F77BFA8491BFA8D6EF9B",
+    ids: [
+      "5511999999999:1AB2C3DEFG4H56I78JKL9M",
+      "5511999999999:2AB2C3DEFG4H56I78JKL9M",
     ],
   }),
 });
-
-const data = await response.json();
-console.log(`${data.markedMessages.length} mensagens marcadas como lidas`);
 ```
 
 ```php PHP
 <?php
-$ch = curl_init('https://zapclass.com.br/api/message/markread');
+$ch = curl_init('https://zapclass.com.br/api/message/read');
 
 $payload = [
-    "id" => [
-        "62AD1AD844E518180227BF68DA7ED710",
-        "ECB9DE48EB41F77BFA8491BFA8D6EF9B"
+    "ids" => [
+        "5511999999999:1AB2C3DEFG4H56I78JKL9M",
+        "5511999999999:2AB2C3DEFG4H56I78JKL9M"
     ]
 ];
 
@@ -117,10 +113,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-$response = curl_exec($ch);
-$data = json_decode($response, true);
-
-echo "Total de mensagens marcadas: " . count($data['markedMessages']);
+curl_exec($ch);
 curl_close($ch);
 ?>
 ```
@@ -131,25 +124,14 @@ curl_close($ch);
 
 ```json 200
 {
-  "success": true,
-  "message": "Messages marked as read",
-  "markedMessages": [
-    {
-      "id": "62AD1AD844E518180227BF68DA7ED710",
-      "timestamp": 1672531200000
-    },
-    {
-      "id": "ECB9DE48EB41F77BFA8491BFA8D6EF9B",
-      "timestamp": 1672531300000
-    }
-  ]
+  "success": true
 }
 ```
 
 ```json 400
 {
   "success": false,
-  "message": "Lista de IDs vazia ou inválida"
+  "message": "Token de autenticação inválido"
 }
 ```
 
