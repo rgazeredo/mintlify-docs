@@ -1,6 +1,6 @@
 ---
 title: "Buscar Mensagens"
-api: "POST /message/find"
+api: "POST /messages/find"
 description: "Buscar mensagens em um chat com filtros avançados"
 ---
 
@@ -100,7 +100,7 @@ Realiza buscas de mensagens utilizando múltiplos filtros disponíveis para loca
 <RequestExample>
 
 ```bash cURL
-curl -X POST https://zapclass.com.br/api/message/find \
+curl -X POST https://zapclass.com.br/api/messages/find \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -111,7 +111,7 @@ curl -X POST https://zapclass.com.br/api/message/find \
 ```
 
 ```javascript JavaScript
-const response = await fetch("https://zapclass.com.br/api/message/find", {
+const response = await fetch("https://zapclass.com.br/api/messages/find", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -127,7 +127,7 @@ const response = await fetch("https://zapclass.com.br/api/message/find", {
 
 ```php PHP
 <?php
-$ch = curl_init('https://zapclass.com.br/api/message/find');
+$ch = curl_init('https://zapclass.com.br/api/messages/find');
 
 $payload = [
     "chat_id" => "5511999999999@s.whatsapp.net",

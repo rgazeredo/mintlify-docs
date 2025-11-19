@@ -1,6 +1,6 @@
 ---
 title: "Editar Mensagem"
-api: "POST /message/edit"
+api: "POST /messages/edit"
 description: "Editar o conteúdo de uma mensagem já enviada"
 ---
 
@@ -88,7 +88,7 @@ Modifica o texto de mensagens enviadas pela sua instância, utilizando a funcion
 <RequestExample>
 
 ```bash cURL
-curl -X POST https://zapclass.com.br/api/message/edit \
+curl -X POST https://zapclass.com.br/api/messages/edit \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -98,7 +98,7 @@ curl -X POST https://zapclass.com.br/api/message/edit \
 ```
 
 ```javascript JavaScript
-const response = await fetch("https://zapclass.com.br/api/message/edit", {
+const response = await fetch("https://zapclass.com.br/api/messages/edit", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -113,7 +113,7 @@ const response = await fetch("https://zapclass.com.br/api/message/edit", {
 
 ```php PHP
 <?php
-$ch = curl_init('https://zapclass.com.br/api/message/edit');
+$ch = curl_init('https://zapclass.com.br/api/messages/edit');
 
 $payload = [
     "id" => "5511999999999:1AB2C3DEFG4H56I78JKL9M",

@@ -1,6 +1,6 @@
 ---
 title: "Marcar como Lidas"
-api: "POST /message/read"
+api: "POST /messages/read"
 description: "Marcar uma ou mais mensagens como lidas"
 ---
 
@@ -67,7 +67,7 @@ Marca mensagens recebidas como lidas, atualizando o status de visualização no 
 <RequestExample>
 
 ```bash cURL
-curl -X POST https://zapclass.com.br/api/message/read \
+curl -X POST https://zapclass.com.br/api/messages/read \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -79,7 +79,7 @@ curl -X POST https://zapclass.com.br/api/message/read \
 ```
 
 ```javascript JavaScript
-const response = await fetch("https://zapclass.com.br/api/message/read", {
+const response = await fetch("https://zapclass.com.br/api/messages/read", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -96,7 +96,7 @@ const response = await fetch("https://zapclass.com.br/api/message/read", {
 
 ```php PHP
 <?php
-$ch = curl_init('https://zapclass.com.br/api/message/read');
+$ch = curl_init('https://zapclass.com.br/api/messages/read');
 
 $payload = [
     "ids" => [

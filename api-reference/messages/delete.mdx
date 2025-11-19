@@ -1,6 +1,6 @@
 ---
 title: "Apagar Mensagem"
-api: "POST /message/delete"
+api: "POST /messages/delete"
 description: "Apagar mensagem para todos os participantes da conversa"
 ---
 
@@ -76,7 +76,7 @@ Remove mensagens enviadas ou recebidas para todos os participantes, atualizando 
 <RequestExample>
 
 ```bash cURL
-curl -X POST https://zapclass.com.br/api/message/delete \
+curl -X POST https://zapclass.com.br/api/messages/delete \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -85,7 +85,7 @@ curl -X POST https://zapclass.com.br/api/message/delete \
 ```
 
 ```javascript JavaScript
-const response = await fetch("https://zapclass.com.br/api/message/delete", {
+const response = await fetch("https://zapclass.com.br/api/messages/delete", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -99,7 +99,7 @@ const response = await fetch("https://zapclass.com.br/api/message/delete", {
 
 ```php PHP
 <?php
-$ch = curl_init('https://zapclass.com.br/api/message/delete');
+$ch = curl_init('https://zapclass.com.br/api/messages/delete');
 
 $payload = [
     "id" => "5511999999999:1AB2C3DEFG4H56I78JKL9M"
