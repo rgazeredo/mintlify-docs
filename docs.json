@@ -39,6 +39,32 @@
               "api-reference/messages/read",
               "api-reference/messages/react"
             ]
+          },
+          {
+            "group": "Grupos",
+            "pages": [
+              "api-reference/groups/create",
+              "api-reference/groups/list",
+              "api-reference/groups/info",
+              "api-reference/groups/update-participants",
+              "api-reference/groups/update-name",
+              "api-reference/groups/update-description",
+              "api-reference/groups/update-image",
+              "api-reference/groups/update-locked",
+              "api-reference/groups/update-announce",
+              "api-reference/groups/invite-link",
+              "api-reference/groups/invite-info",
+              "api-reference/groups/reset-invite",
+              "api-reference/groups/join",
+              "api-reference/groups/leave"
+            ]
+          },
+          {
+            "group": "Comunidades",
+            "pages": [
+              "api-reference/communities/create",
+              "api-reference/communities/edit-groups"
+            ]
           }
         ]
       }
