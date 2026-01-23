@@ -1,6 +1,6 @@
 ---
 title: "Entrar em Grupo"
-api: "POST /group/join"
+api: "POST /groups/join"
 description: "Entrar em um grupo usando código de convite"
 ---
 
@@ -96,7 +96,7 @@ Permite que sua instância entre em um grupo do WhatsApp usando um código ou UR
 <RequestExample>
 
 ```bash cURL - Código curto
-curl -X POST https://zapclass.com.br/api/group/join \
+curl -X POST https://zapclass.com.br/api/groups/join \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -105,7 +105,7 @@ curl -X POST https://zapclass.com.br/api/group/join \
 ```
 
 ```bash cURL - URL completa
-curl -X POST https://zapclass.com.br/api/group/join \
+curl -X POST https://zapclass.com.br/api/groups/join \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -114,7 +114,7 @@ curl -X POST https://zapclass.com.br/api/group/join \
 ```
 
 ```javascript JavaScript - Entrar no grupo
-const response = await fetch("https://zapclass.com.br/api/group/join", {
+const response = await fetch("https://zapclass.com.br/api/groups/join", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -134,7 +134,7 @@ if (data.success) {
 
 ```javascript JavaScript - Entrar com validação
 async function joinGroup(inviteCode) {
-  const response = await fetch("https://zapclass.com.br/api/group/join", {
+  const response = await fetch("https://zapclass.com.br/api/groups/join", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -181,7 +181,7 @@ async function joinMultipleGroups(inviteCodes) {
 
   for (const code of inviteCodes) {
     try {
-      const response = await fetch("https://zapclass.com.br/api/group/join", {
+      const response = await fetch("https://zapclass.com.br/api/groups/join", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -235,7 +235,7 @@ results.forEach((result) => {
 async function joinGroupWithConfirmation(inviteCode) {
   // Primeiro, busca informações do grupo
   const infoResponse = await fetch(
-    "https://zapclass.com.br/api/group/inviteInfo",
+    "https://zapclass.com.br/api/groups/inviteInfo",
     {
       method: "POST",
       headers: {
@@ -269,7 +269,7 @@ async function joinGroupWithConfirmation(inviteCode) {
   }
 
   // Entra no grupo
-  const joinResponse = await fetch("https://zapclass.com.br/api/group/join", {
+  const joinResponse = await fetch("https://zapclass.com.br/api/groups/join", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -295,7 +295,7 @@ await joinGroupWithConfirmation(
 
 ```php PHP - Entrar no grupo
 <?php
-$ch = curl_init('https://zapclass.com.br/api/group/join');
+$ch = curl_init('https://zapclass.com.br/api/groups/join');
 
 $payload = [
     "inviteCode" => "https://chat.whatsapp.com/IYnl5Zg9bUcJD32rJrDzO7"
@@ -326,7 +326,7 @@ curl_close($ch);
 ```php PHP - Entrar com relatório
 <?php
 function joinGroupWithReport($inviteCode) {
-    $ch = curl_init('https://zapclass.com.br/api/group/join');
+    $ch = curl_init('https://zapclass.com.br/api/groups/join');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -388,7 +388,7 @@ class GroupManager {
     }
 
     public function joinGroup($inviteCode) {
-        $ch = curl_init($this->baseUrl . '/group/join');
+        $ch = curl_init($this->baseUrl . '/groups/join');
 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -396,7 +396,7 @@ class GroupManager {
         ]));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            "Token: {$this->token}"
+            "Authorization: Bearer {$this->token}"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

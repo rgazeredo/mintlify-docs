@@ -1,6 +1,6 @@
 ---
 title: "Atualizar Imagem"
-api: "POST /group/updateImage"
+api: "POST /groups/update-image"
 description: "Modificar ou remover a foto de perfil do grupo"
 ---
 
@@ -119,7 +119,7 @@ Atualiza a foto de perfil de um grupo do WhatsApp através de URL ou base64, ou 
 <RequestExample>
 
 ```bash cURL - Atualizar com URL
-curl -X POST https://zapclass.com.br/api/group/updateImage \
+curl -X POST https://zapclass.com.br/api/groups/update-image \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -129,7 +129,7 @@ curl -X POST https://zapclass.com.br/api/group/updateImage \
 ```
 
 ```bash cURL - Remover imagem
-curl -X POST https://zapclass.com.br/api/group/updateImage \
+curl -X POST https://zapclass.com.br/api/groups/update-image \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -139,7 +139,7 @@ curl -X POST https://zapclass.com.br/api/group/updateImage \
 ```
 
 ```javascript JavaScript - Atualizar com URL
-const response = await fetch("https://zapclass.com.br/api/group/updateImage", {
+const response = await fetch("https://zapclass.com.br/api/groups/update-image", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -167,7 +167,7 @@ async function updateGroupImageFromFile(groupJid, imageFile) {
       const base64 = e.target.result;
 
       const response = await fetch(
-        "https://zapclass.com.br/api/group/updateImage",
+        "https://zapclass.com.br/api/groups/update-image",
         {
           method: "POST",
           headers: {
@@ -223,7 +223,7 @@ async function updateGroupImageWithValidation(groupJid, imageUrl) {
 
   // Atualiza a imagem
   const response = await fetch(
-    "https://zapclass.com.br/api/group/updateImage",
+    "https://zapclass.com.br/api/groups/update-image",
     {
       method: "POST",
       headers: {
@@ -261,7 +261,7 @@ try {
 ```javascript JavaScript - Remover imagem
 async function removeGroupImage(groupJid) {
   const response = await fetch(
-    "https://zapclass.com.br/api/group/updateImage",
+    "https://zapclass.com.br/api/groups/update-image",
     {
       method: "POST",
       headers: {
@@ -295,7 +295,7 @@ async function updateMultipleGroupImages(updates) {
   for (const update of updates) {
     try {
       const response = await fetch(
-        "https://zapclass.com.br/api/group/updateImage",
+        "https://zapclass.com.br/api/groups/update-image",
         {
           method: "POST",
           headers: {
@@ -366,7 +366,7 @@ async function setSeasonalImage(groupJid, event, durationDays) {
   console.log(`Aplicando imagem de ${event}...`);
 
   // Define imagem do evento
-  await fetch("https://zapclass.com.br/api/group/updateImage", {
+  await fetch("https://zapclass.com.br/api/groups/update-image", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -385,7 +385,7 @@ async function setSeasonalImage(groupJid, event, durationDays) {
   setTimeout(async () => {
     console.log("Retornando à imagem padrão...");
 
-    await fetch("https://zapclass.com.br/api/group/updateImage", {
+    await fetch("https://zapclass.com.br/api/groups/update-image", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -407,7 +407,7 @@ setSeasonalImage("120363308883996631@g.us", "natal", 30);
 
 ```php PHP - Atualizar com URL
 <?php
-$ch = curl_init('https://zapclass.com.br/api/group/updateImage');
+$ch = curl_init('https://zapclass.com.br/api/groups/update-image');
 
 $payload = [
     "groupjid" => "120363308883996631@g.us",
@@ -458,7 +458,7 @@ function updateGroupImageFromFile($groupJid, $imagePath) {
     $base64 = base64_encode($imageData);
     $base64Image = "data:image/jpeg;base64,{$base64}";
 
-    $ch = curl_init('https://zapclass.com.br/api/group/updateImage');
+    $ch = curl_init('https://zapclass.com.br/api/groups/update-image');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -498,7 +498,7 @@ try {
 ```php PHP - Remover imagem
 <?php
 function removeGroupImage($groupJid) {
-    $ch = curl_init('https://zapclass.com.br/api/group/updateImage');
+    $ch = curl_init('https://zapclass.com.br/api/groups/update-image');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -546,7 +546,7 @@ class GroupImageManager {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            "Token: {$this->token}"
+            "Authorization: Bearer {$this->token}"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -557,7 +557,7 @@ class GroupImageManager {
     }
 
     public function updateFromUrl($groupJid, $imageUrl) {
-        $data = $this->makeRequest('/group/updateImage', [
+        $data = $this->makeRequest('/groups/update-image', [
             'groupjid' => $groupJid,
             'image' => $imageUrl
         ]);
@@ -587,14 +587,14 @@ class GroupImageManager {
         $imageData = file_get_contents($imagePath);
         $base64 = "data:image/jpeg;base64," . base64_encode($imageData);
 
-        return $this->makeRequest('/group/updateImage', [
+        return $this->makeRequest('/groups/update-image', [
             'groupjid' => $groupJid,
             'image' => $base64
         ]);
     }
 
     public function remove($groupJid) {
-        return $this->makeRequest('/group/updateImage', [
+        return $this->makeRequest('/groups/update-image', [
             'groupjid' => $groupJid,
             'image' => 'remove'
         ]);

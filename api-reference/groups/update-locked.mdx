@@ -1,6 +1,6 @@
 ---
 title: "Bloquear Edição de Informações"
-api: "POST /group/updateLocked"
+api: "POST /groups/update-locked"
 description: "Controlar quem pode editar informações do grupo"
 ---
 
@@ -114,7 +114,7 @@ Define se apenas administradores podem modificar as informações do grupo (nome
 <RequestExample>
 
 ```bash cURL - Bloquear edição
-curl -X POST https://zapclass.com.br/api/group/updateLocked \
+curl -X POST https://zapclass.com.br/api/groups/update-locked \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -124,7 +124,7 @@ curl -X POST https://zapclass.com.br/api/group/updateLocked \
 ```
 
 ```bash cURL - Desbloquear edição
-curl -X POST https://zapclass.com.br/api/group/updateLocked \
+curl -X POST https://zapclass.com.br/api/groups/update-locked \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -134,7 +134,7 @@ curl -X POST https://zapclass.com.br/api/group/updateLocked \
 ```
 
 ```javascript JavaScript - Bloquear edição
-const response = await fetch("https://zapclass.com.br/api/group/updateLocked", {
+const response = await fetch("https://zapclass.com.br/api/groups/update-locked", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -155,7 +155,7 @@ if (data.success) {
 ```javascript JavaScript - Alternar bloqueio
 async function toggleGroupLock(groupJid) {
   // Busca estado atual
-  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+  const infoResponse = await fetch("https://zapclass.com.br/api/groups/info", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -186,7 +186,7 @@ async function toggleGroupLock(groupJid) {
 
   // Alterna o bloqueio
   const updateResponse = await fetch(
-    "https://zapclass.com.br/api/group/updateLocked",
+    "https://zapclass.com.br/api/groups/update-locked",
     {
       method: "POST",
       headers: {
@@ -220,7 +220,7 @@ async function setGroupLockWithNotification(
   notifyMembers = false
 ) {
   const response = await fetch(
-    "https://zapclass.com.br/api/group/updateLocked",
+    "https://zapclass.com.br/api/groups/update-locked",
     {
       method: "POST",
       headers: {
@@ -274,7 +274,7 @@ async function applyLockPolicyToGroups(groupJids, locked) {
   for (const groupJid of groupJids) {
     try {
       const response = await fetch(
-        "https://zapclass.com.br/api/group/updateLocked",
+        "https://zapclass.com.br/api/groups/update-locked",
         {
           method: "POST",
           headers: {
@@ -329,7 +329,7 @@ async function setupCorporateGroup(groupJid) {
 
   try {
     // 1. Bloquear edição de informações
-    await fetch("https://zapclass.com.br/api/group/updateLocked", {
+    await fetch("https://zapclass.com.br/api/groups/update-locked", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -340,7 +340,7 @@ async function setupCorporateGroup(groupJid) {
     console.log("✓ Edição bloqueada (apenas admins)");
 
     // 2. Ativar modo anúncio
-    await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
+    await fetch("https://zapclass.com.br/api/groups/updateAnnounce", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -357,7 +357,7 @@ async function setupCorporateGroup(groupJid) {
       "Apenas administradores podem editar informações e enviar mensagens.\n\n" +
       "Para dúvidas, entre em contato com os administradores.";
 
-    await fetch("https://zapclass.com.br/api/group/updateDescription", {
+    await fetch("https://zapclass.com.br/api/groups/updateDescription", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -379,7 +379,7 @@ await setupCorporateGroup("120363308883996631@g.us");
 
 ```php PHP - Bloquear edição
 <?php
-$ch = curl_init('https://zapclass.com.br/api/group/updateLocked');
+$ch = curl_init('https://zapclass.com.br/api/groups/update-locked');
 
 $payload = [
     "groupjid" => "120363308883996631@g.us",
@@ -411,7 +411,7 @@ curl_close($ch);
 <?php
 function toggleGroupLock($groupJid) {
     // Busca estado atual
-    $ch = curl_init('https://zapclass.com.br/api/group/info');
+    $ch = curl_init('https://zapclass.com.br/api/groups/info');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -438,7 +438,7 @@ function toggleGroupLock($groupJid) {
     echo "Alterando para: " . ($newLocked ? 'Bloqueado' : 'Desbloqueado') . "\n";
 
     // Alterna o bloqueio
-    $ch = curl_init('https://zapclass.com.br/api/group/updateLocked');
+    $ch = curl_init('https://zapclass.com.br/api/groups/update-locked');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -479,7 +479,7 @@ function applyLockPolicyToGroups($groupJids, $locked) {
     $results = [];
 
     foreach ($groupJids as $groupJid) {
-        $ch = curl_init('https://zapclass.com.br/api/group/updateLocked');
+        $ch = curl_init('https://zapclass.com.br/api/groups/update-locked');
 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -546,7 +546,7 @@ class GroupLockManager {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            "Token: {$this->token}"
+            "Authorization: Bearer {$this->token}"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -557,13 +557,13 @@ class GroupLockManager {
     }
 
     public function getGroupInfo($groupJid) {
-        return $this->makeRequest('/group/info', [
+        return $this->makeRequest('/groups/info', [
             'groupjid' => $groupJid
         ]);
     }
 
     public function setLocked($groupJid, $locked) {
-        $data = $this->makeRequest('/group/updateLocked', [
+        $data = $this->makeRequest('/groups/update-locked', [
             'groupjid' => $groupJid,
             'locked' => $locked
         ]);
@@ -644,7 +644,7 @@ class GroupLockManager {
         $this->lock($groupJid);
 
         // Ativa modo anúncio
-        $this->makeRequest('/group/updateAnnounce', [
+        $this->makeRequest('/groups/updateAnnounce', [
             'groupjid' => $groupJid,
             'announce' => true
         ]);
@@ -654,7 +654,7 @@ class GroupLockManager {
                       "Este é um grupo oficial da empresa.\n" .
                       "Apenas administradores podem editar informações e enviar mensagens.";
 
-        $this->makeRequest('/group/updateDescription', [
+        $this->makeRequest('/groups/updateDescription', [
             'groupjid' => $groupJid,
             'description' => $description
         ]);

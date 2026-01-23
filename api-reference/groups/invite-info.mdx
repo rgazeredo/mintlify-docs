@@ -1,6 +1,6 @@
 ---
 title: "Informações por Convite"
-api: "POST /group/inviteInfo"
+api: "POST /groups/inviteInfo"
 description: "Obter informações de um grupo usando código de convite"
 ---
 
@@ -93,7 +93,7 @@ Recupera informações detalhadas de um grupo através de um código ou URL de c
 <RequestExample>
 
 ```bash cURL - Código curto
-curl -X POST https://zapclass.com.br/api/group/inviteInfo \
+curl -X POST https://zapclass.com.br/api/groups/inviteInfo \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -102,7 +102,7 @@ curl -X POST https://zapclass.com.br/api/group/inviteInfo \
 ```
 
 ```bash cURL - URL completa
-curl -X POST https://zapclass.com.br/api/group/inviteInfo \
+curl -X POST https://zapclass.com.br/api/groups/inviteInfo \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -111,7 +111,7 @@ curl -X POST https://zapclass.com.br/api/group/inviteInfo \
 ```
 
 ```javascript JavaScript - Validar convite
-const response = await fetch("https://zapclass.com.br/api/group/inviteInfo", {
+const response = await fetch("https://zapclass.com.br/api/groups/inviteInfo", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -147,7 +147,7 @@ async function validateGroupInvite(inviteLink) {
     const code = extractInviteCode(inviteLink);
 
     const response = await fetch(
-      "https://zapclass.com.br/api/group/inviteInfo",
+      "https://zapclass.com.br/api/groups/inviteInfo",
       {
         method: "POST",
         headers: {
@@ -197,7 +197,7 @@ if (result.valid) {
 
 ```javascript JavaScript - Pré-visualização para usuário
 async function previewGroup(inviteCode) {
-  const response = await fetch("https://zapclass.com.br/api/group/inviteInfo", {
+  const response = await fetch("https://zapclass.com.br/api/groups/inviteInfo", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -236,7 +236,7 @@ await previewGroup("AbCdEfGhIjKlMnOpQrSt");
 
 ```php PHP - Validar convite
 <?php
-$ch = curl_init('https://zapclass.com.br/api/group/inviteInfo');
+$ch = curl_init('https://zapclass.com.br/api/groups/inviteInfo');
 
 $payload = [
     "inviteCode" => "https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt"
@@ -285,7 +285,7 @@ function validateGroupInvite($inviteLink) {
     try {
         $code = extractInviteCode($inviteLink);
 
-        $ch = curl_init('https://zapclass.com.br/api/group/inviteInfo');
+        $ch = curl_init('https://zapclass.com.br/api/groups/inviteInfo');
 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -353,7 +353,7 @@ class GroupInviteModerator {
     }
 
     public function checkInvite($inviteCode) {
-        $ch = curl_init($this->baseUrl . '/group/inviteInfo');
+        $ch = curl_init($this->baseUrl . '/groups/inviteInfo');
 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -361,7 +361,7 @@ class GroupInviteModerator {
         ]));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            "Token: {$this->token}"
+            "Authorization: Bearer {$this->token}"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

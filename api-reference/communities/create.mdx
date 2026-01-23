@@ -106,7 +106,7 @@ Cria uma nova comunidade do WhatsApp, que permite agrupar múltiplos grupos rela
 <RequestExample>
 
 ```bash cURL - Criar comunidade
-curl -X POST https://zapclass.com.br/api/community/create \
+curl -X POST https://zapclass.com.br/api/communities/create \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -115,7 +115,7 @@ curl -X POST https://zapclass.com.br/api/community/create \
 ```
 
 ```bash cURL - Criar e capturar ID
-RESPONSE=$(curl -s -X POST https://zapclass.com.br/api/community/create \
+RESPONSE=$(curl -s -X POST https://zapclass.com.br/api/communities/create \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -127,7 +127,7 @@ echo "ID da comunidade criada: $COMMUNITY_ID"
 ```
 
 ```javascript JavaScript - Criar comunidade
-const response = await fetch("https://zapclass.com.br/api/community/create", {
+const response = await fetch("https://zapclass.com.br/api/communities/create", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -159,7 +159,7 @@ async function createCommunity(name) {
 
   console.log(`Criando comunidade: "${name}"...`);
 
-  const response = await fetch("https://zapclass.com.br/api/community/create", {
+  const response = await fetch("https://zapclass.com.br/api/communities/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -197,7 +197,7 @@ try {
 async function createAndSetupCommunity(name, description) {
   // Cria a comunidade
   const createResponse = await fetch(
-    "https://zapclass.com.br/api/community/create",
+    "https://zapclass.com.br/api/communities/create",
     {
       method: "POST",
       headers: {
@@ -219,7 +219,7 @@ async function createAndSetupCommunity(name, description) {
   // Configura descrição do grupo de anúncios (se tiver o JID)
   if (community.community.announcementGroup) {
     try {
-      await fetch("https://zapclass.com.br/api/group/updateDescription", {
+      await fetch("https://zapclass.com.br/api/groups/updateDescription", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -254,7 +254,7 @@ async function createMultipleCommunities(names) {
   for (const name of names) {
     try {
       const response = await fetch(
-        "https://zapclass.com.br/api/community/create",
+        "https://zapclass.com.br/api/communities/create",
         {
           method: "POST",
           headers: {
@@ -318,7 +318,7 @@ async function createCommunityWithStructure(config) {
 
   // 1. Cria a comunidade
   const createResponse = await fetch(
-    "https://zapclass.com.br/api/community/create",
+    "https://zapclass.com.br/api/communities/create",
     {
       method: "POST",
       headers: {
@@ -347,7 +347,7 @@ async function createCommunityWithStructure(config) {
     for (const groupConfig of initialGroups) {
       try {
         const groupResponse = await fetch(
-          "https://zapclass.com.br/api/group/create",
+          "https://zapclass.com.br/api/groups/create",
           {
             method: "POST",
             headers: {
@@ -401,7 +401,7 @@ console.log("Grupos criados:", structure.groups.length);
 
 ```php PHP - Criar comunidade
 <?php
-$ch = curl_init('https://zapclass.com.br/api/community/create');
+$ch = curl_init('https://zapclass.com.br/api/communities/create');
 
 $payload = [
     "name" => "Comunidade do Bairro"
@@ -443,7 +443,7 @@ function createCommunity($name) {
 
     echo "Criando comunidade: \"{$name}\"...\n";
 
-    $ch = curl_init('https://zapclass.com.br/api/community/create');
+    $ch = curl_init('https://zapclass.com.br/api/communities/create');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -486,7 +486,7 @@ function createMultipleCommunities($names) {
     $results = [];
 
     foreach ($names as $name) {
-        $ch = curl_init('https://zapclass.com.br/api/community/create');
+        $ch = curl_init('https://zapclass.com.br/api/communities/create');
 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -596,7 +596,7 @@ class CommunityManager {
 
         foreach ($groupNames as $groupName) {
             try {
-                $groupData = $this->makeRequest('/group/create', [
+                $groupData = $this->makeRequest('/groups/create', [
                     'name' => $groupName,
                     'participants' => []
                 ]);

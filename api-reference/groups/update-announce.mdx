@@ -1,6 +1,6 @@
 ---
 title: "Configurar Modo Anúncio"
-api: "POST /group/updateAnnounce"
+api: "POST /groups/update-announce"
 description: "Controlar permissões de envio de mensagens no grupo"
 ---
 
@@ -111,7 +111,7 @@ Define quem pode enviar mensagens no grupo, permitindo restringir a comunicaçã
 <RequestExample>
 
 ```bash cURL - Ativar modo anúncio
-curl -X POST https://zapclass.com.br/api/group/updateAnnounce \
+curl -X POST https://zapclass.com.br/api/groups/update-announce \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -121,7 +121,7 @@ curl -X POST https://zapclass.com.br/api/group/updateAnnounce \
 ```
 
 ```bash cURL - Desativar modo anúncio
-curl -X POST https://zapclass.com.br/api/group/updateAnnounce \
+curl -X POST https://zapclass.com.br/api/groups/update-announce \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -132,7 +132,7 @@ curl -X POST https://zapclass.com.br/api/group/updateAnnounce \
 
 ```javascript JavaScript - Ativar modo anúncio
 const response = await fetch(
-  "https://zapclass.com.br/api/group/updateAnnounce",
+  "https://zapclass.com.br/api/groups/update-announce",
   {
     method: "POST",
     headers: {
@@ -155,7 +155,7 @@ if (data.success) {
 ```javascript JavaScript - Alternar modo
 async function toggleAnnounceMode(groupJid) {
   // Busca estado atual
-  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+  const infoResponse = await fetch("https://zapclass.com.br/api/groups/info", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -182,7 +182,7 @@ async function toggleAnnounceMode(groupJid) {
 
   // Alterna o modo
   const updateResponse = await fetch(
-    "https://zapclass.com.br/api/group/updateAnnounce",
+    "https://zapclass.com.br/api/groups/update-announce",
     {
       method: "POST",
       headers: {
@@ -216,7 +216,7 @@ async function setAnnounceWithNotification(
   notifyMembers = false
 ) {
   const response = await fetch(
-    "https://zapclass.com.br/api/group/updateAnnounce",
+    "https://zapclass.com.br/api/groups/update-announce",
     {
       method: "POST",
       headers: {
@@ -268,7 +268,7 @@ async function temporaryAnnounceMode(groupJid, durationMinutes) {
   console.log(`Ativando modo anúncio por ${durationMinutes} minutos...`);
 
   // Ativa modo anúncio
-  await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
+  await fetch("https://zapclass.com.br/api/groups/update-announce", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -286,7 +286,7 @@ async function temporaryAnnounceMode(groupJid, durationMinutes) {
   setTimeout(async () => {
     console.log("Desativando modo anúncio...");
 
-    await fetch("https://zapclass.com.br/api/group/updateAnnounce", {
+    await fetch("https://zapclass.com.br/api/groups/update-announce", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -313,7 +313,7 @@ async function updateMultipleGroupsAnnounce(groupJids, announce) {
   for (const groupJid of groupJids) {
     try {
       const response = await fetch(
-        "https://zapclass.com.br/api/group/updateAnnounce",
+        "https://zapclass.com.br/api/groups/update-announce",
         {
           method: "POST",
           headers: {
@@ -364,7 +364,7 @@ results.forEach((result) => {
 
 ```php PHP - Ativar modo anúncio
 <?php
-$ch = curl_init('https://zapclass.com.br/api/group/updateAnnounce');
+$ch = curl_init('https://zapclass.com.br/api/groups/update-announce');
 
 $payload = [
     "groupjid" => "120363339858396166@g.us",
@@ -396,7 +396,7 @@ curl_close($ch);
 <?php
 function toggleAnnounceMode($groupJid) {
     // Busca estado atual
-    $ch = curl_init('https://zapclass.com.br/api/group/info');
+    $ch = curl_init('https://zapclass.com.br/api/groups/info');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -423,7 +423,7 @@ function toggleAnnounceMode($groupJid) {
     echo "Alterando para: " . ($newAnnounce ? 'Apenas admins' : 'Todos podem enviar') . "\n";
 
     // Alterna o modo
-    $ch = curl_init('https://zapclass.com.br/api/group/updateAnnounce');
+    $ch = curl_init('https://zapclass.com.br/api/groups/update-announce');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -464,7 +464,7 @@ function updateMultipleGroupsAnnounce($groupJids, $announce) {
     $results = [];
 
     foreach ($groupJids as $groupJid) {
-        $ch = curl_init('https://zapclass.com.br/api/group/updateAnnounce');
+        $ch = curl_init('https://zapclass.com.br/api/groups/update-announce');
 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -531,7 +531,7 @@ class GroupAnnounceManager {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            "Token: {$this->token}"
+            "Authorization: Bearer {$this->token}"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -542,13 +542,13 @@ class GroupAnnounceManager {
     }
 
     public function getGroupInfo($groupJid) {
-        return $this->makeRequest('/group/info', [
+        return $this->makeRequest('/groups/info', [
             'groupjid' => $groupJid
         ]);
     }
 
     public function setAnnounce($groupJid, $announce) {
-        $data = $this->makeRequest('/group/updateAnnounce', [
+        $data = $this->makeRequest('/groups/update-announce', [
             'groupjid' => $groupJid,
             'announce' => $announce
         ]);

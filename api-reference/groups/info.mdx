@@ -1,6 +1,6 @@
 ---
 title: "Informações do Grupo"
-api: "POST /group/info"
+api: "POST /groups/info"
 description: "Obter informações detalhadas de um grupo do WhatsApp"
 ---
 
@@ -120,7 +120,7 @@ Recupera informações completas de um grupo, incluindo detalhes, participantes,
 <RequestExample>
 
 ```bash cURL - Informações básicas
-curl -X POST https://zapclass.com.br/api/group/info \
+curl -X POST https://zapclass.com.br/api/groups/info \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -129,7 +129,7 @@ curl -X POST https://zapclass.com.br/api/group/info \
 ```
 
 ```bash cURL - Com link de convite
-curl -X POST https://zapclass.com.br/api/group/info \
+curl -X POST https://zapclass.com.br/api/groups/info \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -139,7 +139,7 @@ curl -X POST https://zapclass.com.br/api/group/info \
 ```
 
 ```bash cURL - Informações completas
-curl -X POST https://zapclass.com.br/api/group/info \
+curl -X POST https://zapclass.com.br/api/groups/info \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -151,7 +151,7 @@ curl -X POST https://zapclass.com.br/api/group/info \
 ```
 
 ```javascript JavaScript - Buscar informações
-const response = await fetch("https://zapclass.com.br/api/group/info", {
+const response = await fetch("https://zapclass.com.br/api/groups/info", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -169,7 +169,7 @@ console.log("Descrição:", data.group.description);
 ```
 
 ```javascript JavaScript - Com análise detalhada
-const response = await fetch("https://zapclass.com.br/api/group/info", {
+const response = await fetch("https://zapclass.com.br/api/groups/info", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -217,7 +217,7 @@ if (data.success) {
 
 ```javascript JavaScript - Listar administradores
 async function getGroupAdmins(groupJid) {
-  const response = await fetch("https://zapclass.com.br/api/group/info", {
+  const response = await fetch("https://zapclass.com.br/api/groups/info", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -248,7 +248,7 @@ console.log("Administradores:", admins);
 
 ```php PHP - Buscar informações
 <?php
-$ch = curl_init('https://zapclass.com.br/api/group/info');
+$ch = curl_init('https://zapclass.com.br/api/groups/info');
 
 $payload = [
     "groupjid" => "120363153742561022@g.us",
@@ -286,7 +286,7 @@ curl_close($ch);
 
 ```php PHP - Relatório completo
 <?php
-$ch = curl_init('https://zapclass.com.br/api/group/info');
+$ch = curl_init('https://zapclass.com.br/api/groups/info');
 
 $payload = [
     "groupjid" => "120363153742561022@g.us",

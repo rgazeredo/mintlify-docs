@@ -1,6 +1,6 @@
 ---
 title: "Listar Grupos"
-api: "GET /group/list"
+api: "GET /groups/list"
 description: "Recuperar lista completa de grupos do WhatsApp"
 ---
 
@@ -113,31 +113,31 @@ Retorna todos os grupos aos quais a instância conectada pertence, com opções 
 <RequestExample>
 
 ```bash cURL - Listar grupos
-curl -X GET "https://zapclass.com.br/api/group/list" \
+curl -X GET "https://zapclass.com.br/api/groups/list" \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP"
 ```
 
 ```bash cURL - Listar com atualização forçada
-curl -X GET "https://zapclass.com.br/api/group/list?force=true" \
+curl -X GET "https://zapclass.com.br/api/groups/list?force=true" \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP"
 ```
 
 ```bash cURL - Listar sem participantes
-curl -X GET "https://zapclass.com.br/api/group/list?noparticipants=true" \
+curl -X GET "https://zapclass.com.br/api/groups/list?noparticipants=true" \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP"
 ```
 
 ```bash cURL - Atualizar e sem participantes
-curl -X GET "https://zapclass.com.br/api/group/list?force=true&noparticipants=true" \
+curl -X GET "https://zapclass.com.br/api/groups/list?force=true&noparticipants=true" \
   -H "Content-Type: application/json" \
-  -H "Token: zt_BppKZWtzvj1X2SbJAuOSkA0Z63uDBQ0wkb28NJaloKeOUnHk"
+  -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP"
 ```
 
 ```javascript JavaScript - Listar grupos
-const response = await fetch("https://zapclass.com.br/api/group/list", {
+const response = await fetch("https://zapclass.com.br/api/groups/list", {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
@@ -162,7 +162,7 @@ async function listGroups(options = {}) {
   if (force) params.append("force", "true");
   if (noparticipants) params.append("noparticipants", "true");
 
-  const url = `https://zapclass.com.br/api/group/list${
+  const url = `https://zapclass.com.br/api/groups/list${
     params.toString() ? "?" + params.toString() : ""
   }`;
 
@@ -198,7 +198,7 @@ console.log(`Grupos atualizados: ${freshGroups.length}`);
 ```javascript JavaScript - Análise detalhada
 async function analyzeGroups() {
   const response = await fetch(
-    "https://zapclass.com.br/api/group/list?force=true",
+    "https://zapclass.com.br/api/groups/list?force=true",
     {
       method: "GET",
       headers: {
@@ -280,7 +280,7 @@ await analyzeGroups();
 ```javascript JavaScript - Filtrar grupos
 async function filterGroups(criteria) {
   const response = await fetch(
-    "https://zapclass.com.br/api/group/list?force=true",
+    "https://zapclass.com.br/api/groups/list?force=true",
     {
       method: "GET",
       headers: {
@@ -351,7 +351,7 @@ console.log(`\nGrupos onde sou admin: ${myAdminGroups.length}`);
 ```javascript JavaScript - Exportar para CSV
 async function exportGroupsToCSV() {
   const response = await fetch(
-    "https://zapclass.com.br/api/group/list?force=true&noparticipants=true",
+    "https://zapclass.com.br/api/groups/list?force=true&noparticipants=true",
     {
       method: "GET",
       headers: {
@@ -399,7 +399,7 @@ console.log(csv);
 
 ```php PHP - Listar grupos
 <?php
-$url = 'https://zapclass.com.br/api/group/list';
+$url = 'https://zapclass.com.br/api/groups/list';
 $ch = curl_init($url);
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -432,7 +432,7 @@ function listGroups($force = false, $noparticipants = false) {
     if ($force) $params[] = 'force=true';
     if ($noparticipants) $params[] = 'noparticipants=true';
 
-    $url = 'https://zapclass.com.br/api/group/list';
+    $url = 'https://zapclass.com.br/api/groups/list';
     if (!empty($params)) {
         $url .= '?' . implode('&', $params);
     }
@@ -469,7 +469,7 @@ echo "Grupos atualizados: " . count($freshGroups) . "\n";
 ```php PHP - Análise e relatório
 <?php
 function analyzeGroups() {
-    $url = 'https://zapclass.com.br/api/group/list?force=true';
+    $url = 'https://zapclass.com.br/api/groups/list?force=true';
     $ch = curl_init($url);
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -565,7 +565,7 @@ class GroupListManager {
         if ($force) $params[] = 'force=true';
         if ($noparticipants) $params[] = 'noparticipants=true';
 
-        $url = $this->baseUrl . '/group/list';
+        $url = $this->baseUrl . '/groups/list';
         if (!empty($params)) {
             $url .= '?' . implode('&', $params);
         }
@@ -574,7 +574,7 @@ class GroupListManager {
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            "Token: {$this->token}"
+            "Authorization: Bearer {$this->token}"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

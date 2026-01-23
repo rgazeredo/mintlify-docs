@@ -1,6 +1,6 @@
 ---
 title: "Atualizar Nome"
-api: "POST /group/updateName"
+api: "POST /groups/update-name"
 description: "Modificar o nome de um grupo do WhatsApp"
 ---
 
@@ -110,7 +110,7 @@ Altera o nome de um grupo do WhatsApp, permitindo personalizar a identificação
 <RequestExample>
 
 ```bash cURL - Atualizar nome
-curl -X POST https://zapclass.com.br/api/group/updateName \
+curl -X POST https://zapclass.com.br/api/groups/update-name \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -120,7 +120,7 @@ curl -X POST https://zapclass.com.br/api/group/updateName \
 ```
 
 ```bash cURL - Nome com emoji
-curl -X POST https://zapclass.com.br/api/group/updateName \
+curl -X POST https://zapclass.com.br/api/groups/update-name \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -130,7 +130,7 @@ curl -X POST https://zapclass.com.br/api/group/updateName \
 ```
 
 ```javascript JavaScript - Atualizar nome
-const response = await fetch("https://zapclass.com.br/api/group/updateName", {
+const response = await fetch("https://zapclass.com.br/api/groups/update-name", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -159,7 +159,7 @@ async function updateGroupName(groupJid, newName) {
     throw new Error("Nome deve ter no máximo 25 caracteres");
   }
 
-  const response = await fetch("https://zapclass.com.br/api/group/updateName", {
+  const response = await fetch("https://zapclass.com.br/api/groups/update-name", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -208,7 +208,7 @@ async function updateGroupNameWithYear(groupJid, baseName) {
     var finalName = newName;
   }
 
-  const response = await fetch("https://zapclass.com.br/api/group/updateName", {
+  const response = await fetch("https://zapclass.com.br/api/groups/update-name", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -256,7 +256,7 @@ async function standardizeGroupName(groupJid, department, purpose) {
     }
   }
 
-  const response = await fetch("https://zapclass.com.br/api/group/updateName", {
+  const response = await fetch("https://zapclass.com.br/api/groups/update-name", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -285,7 +285,7 @@ async function updateMultipleGroupNames(updates) {
   for (const update of updates) {
     try {
       const response = await fetch(
-        "https://zapclass.com.br/api/group/updateName",
+        "https://zapclass.com.br/api/groups/update-name",
         {
           method: "POST",
           headers: {
@@ -353,7 +353,7 @@ results.forEach((result) => {
 ```javascript JavaScript - Backup antes de renomear
 async function renameWithBackup(groupJid, newName) {
   // Busca nome atual
-  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+  const infoResponse = await fetch("https://zapclass.com.br/api/groups/info", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -375,7 +375,7 @@ async function renameWithBackup(groupJid, newName) {
 
   // Atualiza nome
   const updateResponse = await fetch(
-    "https://zapclass.com.br/api/group/updateName",
+    "https://zapclass.com.br/api/groups/update-name",
     {
       method: "POST",
       headers: {
@@ -411,7 +411,7 @@ console.log("Backup:", backup);
 
 ```php PHP - Atualizar nome
 <?php
-$ch = curl_init('https://zapclass.com.br/api/group/updateName');
+$ch = curl_init('https://zapclass.com.br/api/groups/update-name');
 
 $payload = [
     "groupjid" => "120363339858396166@g.us",
@@ -451,7 +451,7 @@ function updateGroupName($groupJid, $newName) {
         throw new Exception("Nome deve ter no máximo 25 caracteres");
     }
 
-    $ch = curl_init('https://zapclass.com.br/api/group/updateName');
+    $ch = curl_init('https://zapclass.com.br/api/groups/update-name');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -507,7 +507,7 @@ function updateGroupNameWithYear($groupJid, $baseName) {
         $finalName = $newName;
     }
 
-    $ch = curl_init('https://zapclass.com.br/api/group/updateName');
+    $ch = curl_init('https://zapclass.com.br/api/groups/update-name');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -553,7 +553,7 @@ class GroupNameManager {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            "Token: {$this->token}"
+            "Authorization: Bearer {$this->token}"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -575,14 +575,14 @@ class GroupNameManager {
         return ['valid' => true, 'length' => strlen($name)];
     }
 
-    public function updateName($groupJid, $name) {
+    public function update-name($groupJid, $name) {
         $validation = $this->validateName($name);
 
         if (!$validation['valid']) {
             throw new Exception($validation['error']);
         }
 
-        $data = $this->makeRequest('/group/updateName', [
+        $data = $this->makeRequest('/groups/update-name', [
             'groupjid' => $groupJid,
             'name' => $name
         ]);
@@ -595,7 +595,7 @@ class GroupNameManager {
     }
 
     public function getCurrentName($groupJid) {
-        $data = $this->makeRequest('/group/info', [
+        $data = $this->makeRequest('/groups/info', [
             'groupjid' => $groupJid
         ]);
 
@@ -614,7 +614,7 @@ class GroupNameManager {
             $name = $baseName;
         }
 
-        return $this->updateName($groupJid, $name);
+        return $this->update-name($groupJid, $name);
     }
 
     public function standardize($groupJid, $department, $purpose = null) {
@@ -641,7 +641,7 @@ class GroupNameManager {
             }
         }
 
-        return $this->updateName($groupJid, $name);
+        return $this->update-name($groupJid, $name);
     }
 
     public function updateMultiple($updates, $delay = 1) {
@@ -649,7 +649,7 @@ class GroupNameManager {
 
         foreach ($updates as $update) {
             try {
-                $this->updateName($update['groupJid'], $update['name']);
+                $this->update-name($update['groupJid'], $update['name']);
                 $results[$update['groupJid']] = [
                     'success' => true,
                     'name' => $update['name']
@@ -672,7 +672,7 @@ class GroupNameManager {
     public function renameWithBackup($groupJid, $newName) {
         $oldName = $this->getCurrentName($groupJid);
 
-        $this->updateName($groupJid, $newName);
+        $this->update-name($groupJid, $newName);
 
         return [
             'oldName' => $oldName,
@@ -693,7 +693,7 @@ try {
     }
 
     // Atualizar nome
-    $manager->updateName("120363339858396166@g.us", "Vendas 2024");
+    $manager->update-name("120363339858396166@g.us", "Vendas 2024");
     echo "✓ Nome atualizado\n\n";
 
     // Atualizar com ano

@@ -1,6 +1,6 @@
 ---
 title: "Sair do Grupo"
-api: "POST /group/leave"
+api: "POST /groups/leave"
 description: "Remover o usuário atual de um grupo do WhatsApp"
 ---
 
@@ -90,7 +90,7 @@ Remove o usuário conectado de um grupo específico, com comportamentos diferent
 <RequestExample>
 
 ```bash cURL - Sair do grupo
-curl -X POST https://zapclass.com.br/api/group/leave \
+curl -X POST https://zapclass.com.br/api/groups/leave \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -102,7 +102,7 @@ curl -X POST https://zapclass.com.br/api/group/leave \
 GROUP_JID="120363324255083289@g.us"
 
 # Verifica se é administrador antes de sair
-GROUP_INFO=$(curl -s -X POST https://zapclass.com.br/api/group/info \
+GROUP_INFO=$(curl -s -X POST https://zapclass.com.br/api/groups/info \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d "{\"groupjid\": \"$GROUP_JID\"}")
@@ -110,14 +110,14 @@ GROUP_INFO=$(curl -s -X POST https://zapclass.com.br/api/group/info \
 echo "Informações do grupo: $GROUP_INFO"
 
 # Sai do grupo
-curl -X POST https://zapclass.com.br/api/group/leave \
+curl -X POST https://zapclass.com.br/api/groups/leave \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d "{\"groupjid\": \"$GROUP_JID\"}"
 ```
 
 ```javascript JavaScript - Sair do grupo
-const response = await fetch("https://zapclass.com.br/api/group/leave", {
+const response = await fetch("https://zapclass.com.br/api/groups/leave", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -137,7 +137,7 @@ if (data.success) {
 ```javascript JavaScript - Sair com verificação de admin
 async function leaveGroupSafely(groupJid) {
   // Primeiro, busca informações do grupo
-  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+  const infoResponse = await fetch("https://zapclass.com.br/api/groups/info", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -170,7 +170,7 @@ async function leaveGroupSafely(groupJid) {
   }
 
   // Sai do grupo
-  const leaveResponse = await fetch("https://zapclass.com.br/api/group/leave", {
+  const leaveResponse = await fetch("https://zapclass.com.br/api/groups/leave", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -205,7 +205,7 @@ async function leaveMultipleGroups(groupJids) {
 
   for (const groupJid of groupJids) {
     try {
-      const response = await fetch("https://zapclass.com.br/api/group/leave", {
+      const response = await fetch("https://zapclass.com.br/api/groups/leave", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -261,7 +261,7 @@ async function scheduleGroupExit(groupJid, delayMinutes) {
 
   console.log("Saindo do grupo agora...");
 
-  const response = await fetch("https://zapclass.com.br/api/group/leave", {
+  const response = await fetch("https://zapclass.com.br/api/groups/leave", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -287,7 +287,7 @@ scheduleGroupExit("120363324255083289@g.us", 30);
 
 ```php PHP - Sair do grupo
 <?php
-$ch = curl_init('https://zapclass.com.br/api/group/leave');
+$ch = curl_init('https://zapclass.com.br/api/groups/leave');
 
 $payload = [
     "groupjid" => "120363324255083289@g.us"
@@ -318,7 +318,7 @@ curl_close($ch);
 <?php
 function leaveGroupWithCheck($groupJid) {
     // Busca informações do grupo
-    $ch = curl_init('https://zapclass.com.br/api/group/info');
+    $ch = curl_init('https://zapclass.com.br/api/groups/info');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -352,7 +352,7 @@ function leaveGroupWithCheck($groupJid) {
     }
 
     // Sai do grupo
-    $ch = curl_init('https://zapclass.com.br/api/group/leave');
+    $ch = curl_init('https://zapclass.com.br/api/groups/leave');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -406,7 +406,7 @@ class GroupManager {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            "Token: {$this->token}"
+            "Authorization: Bearer {$this->token}"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -417,7 +417,7 @@ class GroupManager {
     }
 
     public function getGroupInfo($groupJid) {
-        return $this->makeRequest('/group/info', [
+        return $this->makeRequest('/groups/info', [
             'groupjid' => $groupJid
         ]);
     }
@@ -444,7 +444,7 @@ class GroupManager {
             }
         }
 
-        return $this->makeRequest('/group/leave', [
+        return $this->makeRequest('/groups/leave', [
             'groupjid' => $groupJid
         ]);
     }
@@ -467,7 +467,7 @@ class GroupManager {
     }
 
     public function forceLeave($groupJid) {
-        return $this->makeRequest('/group/leave', [
+        return $this->makeRequest('/groups/leave', [
             'groupjid' => $groupJid
         ]);
     }

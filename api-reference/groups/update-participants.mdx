@@ -1,6 +1,6 @@
 ---
 title: "Gerenciar Participantes"
-api: "POST /group/updateParticipants"
+api: "POST /groups/update-participants"
 description: "Adicionar, remover, promover ou gerenciar participantes do grupo"
 ---
 
@@ -86,7 +86,7 @@ Gerencia participantes de um grupo através de múltiplas ações: adicionar, re
     - Aprova participantes aguardando entrada
     - Membro entra imediatamente no grupo
     - Recebe notificação de aprovação
-    - Lista de pendentes visível em `/group/info`
+    - Lista de pendentes visível em `/groups/info`
 
     Útil para grupos privados e seletivos.
 
@@ -145,7 +145,7 @@ Gerencia participantes de um grupo através de múltiplas ações: adicionar, re
 <RequestExample>
 
 ```bash cURL - Adicionar participantes
-curl -X POST https://zapclass.com.br/api/group/updateParticipants \
+curl -X POST https://zapclass.com.br/api/groups/update-participants \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -156,7 +156,7 @@ curl -X POST https://zapclass.com.br/api/group/updateParticipants \
 ```
 
 ```bash cURL - Promover a admin
-curl -X POST https://zapclass.com.br/api/group/updateParticipants \
+curl -X POST https://zapclass.com.br/api/groups/update-participants \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -167,7 +167,7 @@ curl -X POST https://zapclass.com.br/api/group/updateParticipants \
 ```
 
 ```bash cURL - Remover participantes
-curl -X POST https://zapclass.com.br/api/group/updateParticipants \
+curl -X POST https://zapclass.com.br/api/groups/update-participants \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer zc_6FrX2qjM4bHT9pR6cC0sD8wLkG3nE2tZfV5uN1aP" \
   -d '{
@@ -179,7 +179,7 @@ curl -X POST https://zapclass.com.br/api/group/updateParticipants \
 
 ```javascript JavaScript - Adicionar participantes
 const response = await fetch(
-  "https://zapclass.com.br/api/group/updateParticipants",
+  "https://zapclass.com.br/api/groups/update-participants",
   {
     method: "POST",
     headers: {
@@ -209,7 +209,7 @@ class GroupParticipantManager {
   }
 
   async executeAction(groupJid, action, participants) {
-    const response = await fetch(`${this.baseUrl}/group/updateParticipants`, {
+    const response = await fetch(`${this.baseUrl}/groups/update-participants`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -301,7 +301,7 @@ async function addParticipantsValidated(groupJid, numbers) {
   console.log(`Adicionando ${validNumbers.length} participantes...`);
 
   const response = await fetch(
-    "https://zapclass.com.br/api/group/updateParticipants",
+    "https://zapclass.com.br/api/groups/update-participants",
     {
       method: "POST",
       headers: {
@@ -349,7 +349,7 @@ await addParticipantsValidated("120363308883996631@g.us", [
 ```javascript JavaScript - Aprovar solicitações pendentes
 async function approvePendingRequests(groupJid) {
   // Busca solicitações pendentes
-  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+  const infoResponse = await fetch("https://zapclass.com.br/api/groups/info", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -383,7 +383,7 @@ async function approvePendingRequests(groupJid) {
 
   // Aprova todas
   const response = await fetch(
-    "https://zapclass.com.br/api/group/updateParticipants",
+    "https://zapclass.com.br/api/groups/update-participants",
     {
       method: "POST",
       headers: {
@@ -414,7 +414,7 @@ await approvePendingRequests("120363308883996631@g.us");
 ```javascript JavaScript - Sincronizar participantes
 async function syncGroupParticipants(groupJid, desiredParticipants) {
   // Busca participantes atuais
-  const infoResponse = await fetch("https://zapclass.com.br/api/group/info", {
+  const infoResponse = await fetch("https://zapclass.com.br/api/groups/info", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -445,7 +445,7 @@ async function syncGroupParticipants(groupJid, desiredParticipants) {
 
   // Adiciona novos
   if (toAdd.length > 0) {
-    await fetch("https://zapclass.com.br/api/group/updateParticipants", {
+    await fetch("https://zapclass.com.br/api/groups/update-participants", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -462,7 +462,7 @@ async function syncGroupParticipants(groupJid, desiredParticipants) {
 
   // Remove antigos
   if (toRemove.length > 0) {
-    await fetch("https://zapclass.com.br/api/group/updateParticipants", {
+    await fetch("https://zapclass.com.br/api/groups/update-participants", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -489,7 +489,7 @@ await syncGroupParticipants("120363308883996631@g.us", desired);
 
 ```php PHP - Adicionar participantes
 <?php
-$ch = curl_init('https://zapclass.com.br/api/group/updateParticipants');
+$ch = curl_init('https://zapclass.com.br/api/groups/update-participants');
 
 $payload = [
     "groupjid" => "120363308883996631@g.us",
@@ -527,7 +527,7 @@ curl_close($ch);
 ```php PHP - Promover a admin
 <?php
 function promoteToAdmin($groupJid, $participants) {
-    $ch = curl_init('https://zapclass.com.br/api/group/updateParticipants');
+    $ch = curl_init('https://zapclass.com.br/api/groups/update-participants');
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -570,7 +570,7 @@ class GroupParticipantManager {
     }
 
     private function executeAction($groupJid, $action, $participants) {
-        $ch = curl_init($this->baseUrl . '/group/updateParticipants');
+        $ch = curl_init($this->baseUrl . '/groups/update-participants');
 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -580,7 +580,7 @@ class GroupParticipantManager {
         ]));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            "Token: {$this->token}"
+            "Authorization: Bearer {$this->token}"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -644,7 +644,7 @@ class GroupParticipantManager {
     }
 
     public function getParticipants($groupJid) {
-        $ch = curl_init($this->baseUrl . '/group/info');
+        $ch = curl_init($this->baseUrl . '/groups/info');
 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -652,7 +652,7 @@ class GroupParticipantManager {
         ]));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            "Token: {$this->token}"
+            "Authorization: Bearer {$this->token}"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
